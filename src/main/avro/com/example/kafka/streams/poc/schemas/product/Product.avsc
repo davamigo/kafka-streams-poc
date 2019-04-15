@@ -1,0 +1,22 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.product",
+  "name": "Product",
+  "fields": [
+    {
+      "name": "uuid",
+      "type": "string",
+      "doc": "The unique identifier of the product"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "doc": "The name of the product"
+    },
+    {
+      "name": "price",
+      "type": "float",
+      "doc": "The sell price of the product"
+    }
+  ]
+}

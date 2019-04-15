@@ -1,0 +1,54 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.payment",
+  "name": "Payment",
+  "fields": [
+    {
+      "name": "uuid",
+      "type": "string",
+      "doc": "The unique identifier of the payment"
+    },
+    {
+      "name": "datetime",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "The date and time of when the payment was created"
+    },
+    {
+      "name": "commercialOrderUuid",
+      "type": "string",
+      "doc": "The unique identifier of the commercial order"
+    },
+    {
+      "name": "type",
+      "type": {
+        "name": "PaymentType",
+        "type": "enum",
+        "symbols": [
+          "AUTHORIZATION",
+          "CAPTURE",
+          "REFUND"
+        ]
+      },
+      "doc": "The payment type: AUTHORIZATION, CAPTURE or REFUND"
+    },
+    {
+      "name": "status",
+      "type": {
+        "name": "PaymentStatus",
+        "type": "enum",
+        "symbols": [
+          "APROVED",
+          "CANCELLED"
+        ]
+      },
+      "default": "APROVED",
+      "doc": "The payment status: APROVED or CANCELLED"
+    },
+    {
+      "name": "amount",
+      "type": "float",
+      "doc": "The amount of the payment"
+    }
+  ]
+}

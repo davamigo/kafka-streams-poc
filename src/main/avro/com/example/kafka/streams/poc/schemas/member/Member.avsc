@@ -1,0 +1,86 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.member",
+  "name": "Member",
+  "fields": [
+    {
+      "name": "uuid",
+      "type": "string",
+      "doc": "The unique identifier of the member"
+    },
+    {
+      "name": "fistName",
+      "type": "string",
+      "doc": "The first name of the member"
+    },
+    {
+      "name": "lastName",
+      "type": "string",
+      "doc": "The last name of the member"
+    },
+    {
+      "name": "addresses",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "MemberAddress",
+          "type": "record",
+          "fields": [
+            {
+              "name": "country",
+              "type": "string",
+              "doc": "The Alpha-2 ISO 3166 country code"
+            },
+            {
+              "name": "state",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null,
+              "doc": "The state, province or department"
+            },
+            {
+              "name": "city",
+              "type": "string",
+              "doc": "The name of the city"
+            },
+            {
+              "name": "zipCode",
+              "type": "string",
+              "doc": "The zip code"
+            },
+            {
+              "name": "street",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null,
+              "doc": "The name of the street"
+            },
+            {
+              "name": "number",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null,
+              "doc": "The number in the street"
+            },
+            {
+              "name": "extra",
+              "type": [
+                "null",
+                "string"
+              ],
+              "default": null,
+              "doc": "The extra data of the address: stairs, floor, door, etc."
+            }
+          ]
+        }
+      },
+      "doc": "The addresses of the member"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.order",
+  "name": "CommercialOrder",
+  "fields": [
+    {
+      "name": "uuid",
+      "type": "string",
+      "doc": "The unique identifier of the order"
+    },
+    {
+      "name": "datetime",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "The date and time of when the order was created"
+    },
+    {
+      "name": "memberUuid",
+      "type": "string",
+      "doc": "The unique identifier of the member (client)"
+    },
+    {
+      "name": "shippingAddress",
+      "type": {
+        "name": "CommercialOrderAddress",
+        "type": "record",
+        "fields": [
+          {
+            "name": "country",
+            "type": "string",
+            "doc": "The Alpha-2 ISO 3166 country code"
+          },
+          {
+            "name": "state",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null,
+            "doc": "The state, province or department"
+          },
+          {
+            "name": "city",
+            "type": "string",
+            "doc": "The name of the city"
+          },
+          {
+            "name": "zipCode",
+            "type": "string",
+            "doc": "The zip code"
+          },
+          {
+            "name": "street",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null,
+            "doc": "The name of the street"
+          },
+          {
+            "name": "number",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null,
+            "doc": "The number in the street"
+          },
+          {
+            "name": "extra",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null,
+            "doc": "The extra data of the address: stairs, floor, door, etc."
+          }
+        ]
+      },
+      "doc": "The address where to ship the order"
+    },
+    {
+      "name": "billingAddress",
+      "type": [
+        "null",
+        "CommercialOrderAddress"
+      ],
+      "default": null,
+      "doc": "The billing address"
+    },
+    {
+      "name": "lines",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "CommercialOrderLine",
+          "type": "record",
+          "fields": [
+            {
+              "name": "uuid",
+              "type": "string",
+              "doc": "The unique identifier of the order line"
+            },
+            {
+              "name": "productUuid",
+              "type": "string",
+              "doc": "The unique identifier of the product ot the order line"
+            },
+            {
+              "name": "price",
+              "type": "float",
+              "doc": "The unit price for the products of the order line"
+            },
+            {
+              "name": "quantity",
+              "type": "int",
+              "default": 1,
+              "doc": "The quantity of the products for this order line"
+            }
+          ]
+        }
+      },
+      "doc": "The order lines"
+    }
+  ]
+}
