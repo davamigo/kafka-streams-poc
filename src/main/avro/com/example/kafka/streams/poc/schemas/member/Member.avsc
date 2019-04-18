@@ -9,7 +9,7 @@
       "doc": "The unique identifier of the member"
     },
     {
-      "name": "fistName",
+      "name": "firstName",
       "type": "string",
       "doc": "The first name of the member"
     },

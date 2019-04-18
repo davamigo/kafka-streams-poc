@@ -72,26 +72,27 @@ _**TBD**_
 
 #### CommercialOrder
 
-- **uuid**: string
-- **datetime**: long
-- **memberUuid**: string
-- **shippingAddress**: _CommercialOrderAddress_
-- **billingAddress**: _CommercialOrderAddress_, nullable, default null.
-- **lines**: array of _CommercialOrderLine_
+- **`uuid`**: string
+- **`datetime`**: long
+- **`memberUuid`**: string
+- **`shippingAddress`**: _CommercialOrderAddress_
+- **`billingAddress`**: _CommercialOrderAddress_, nullable, default null.
+- **`lines`**: array of _CommercialOrderLine_
 
 #### CommercialOrderLine
 
-- **uuid**: string
-- **productUuid**: string
-- **price**: float
-- **quantity**: int, default 1
+- **`uuid`**: string
+- **`commercialOrderUuid`**: string
+- **`productUuid`**: string
+- **`price`**: float
+- **`quantity`**: int, default 1
 
 #### CommercialOrderAddress
 
-- **country**: string
-- **state**: string, nullable, default null
-- **city**: string
-- **zipCode**: string
-- **street**: string, nullable, default null
-- **number**: string, nullable, default null
-- **extra**: string, nullable, default null
+- **`country`**: string
+- **`state`**: string, nullable, default null
+- **`city`**: string
+- **`zipCode`**: string
+- **`street`**: string, nullable, default null
+- **`number`**: string, nullable, default null
+- **`extra`**: string, nullable, default null

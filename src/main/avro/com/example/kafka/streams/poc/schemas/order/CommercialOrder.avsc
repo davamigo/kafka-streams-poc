@@ -103,6 +103,11 @@
               "doc": "The unique identifier of the order line"
             },
             {
+              "name": "commercialOrderUuid",
+              "type": "string",
+              "doc": "The unique identifier of the commercial order where the line belongs"
+            },
+            {
               "name": "productUuid",
               "type": "string",
               "doc": "The unique identifier of the product ot the order line"
