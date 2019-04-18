@@ -1,6 +1,7 @@
 package com.example.kafka.streams.poc.domain.entity.order;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
+import com.example.kafka.streams.poc.domain.entity.member.Member;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,8 +19,8 @@ public class CommercialOrder {
     /** The date and time of when the order was created */
     private Date datetime;
 
-    /** The unique identifier of the member (client) */
-    private String memberUuid;
+    /** The member (client) of the order */
+    private Member member;
 
     /** The address where to ship the order */
     private Address shippingAddress;
@@ -35,9 +36,9 @@ public class CommercialOrder {
      */
     public CommercialOrder() {
         this.uuid = null;
-        this.datetime = null;
-        this.memberUuid = null;
-        this.shippingAddress = null;
+        this.datetime = new Date();
+        this.member = new Member();
+        this.shippingAddress = new Address();
         this.billingAddress = null;
         this.lines = new ArrayList<>();
     }
@@ -47,18 +48,18 @@ public class CommercialOrder {
      *
      * @param uuid            the unique identifier of the order
      * @param datetime        the date and time of when the order was created
-     * @param memberUuid      the unique identifier of the member (client)
+     * @param member          the member (client) of the order
      * @param shippingAddress the address where to ship the order
      * @param billingAddress  the billing address
      * @param lines           the order lines
      */
-    public CommercialOrder(String uuid, Date datetime, String memberUuid, Address shippingAddress, Address billingAddress, List<CommercialOrderLine> lines) {
+    public CommercialOrder(String uuid, Date datetime, Member member, Address shippingAddress, Address billingAddress, List<CommercialOrderLine> lines) {
         this.uuid = uuid;
-        this.datetime = datetime;
-        this.memberUuid = memberUuid;
-        this.shippingAddress = shippingAddress;
-        this.billingAddress = billingAddress;
-        this.lines = lines;
+        this.datetime = datetime != null ? datetime : new Date();
+        this.member = member != null ? member : new Member();
+        this.shippingAddress = shippingAddress != null ? shippingAddress : new Address();
+        this.billingAddress = billingAddress; // Nullable
+        this.lines = lines != null ? new ArrayList<>(lines) : new ArrayList<>();
     }
 
     /**
@@ -76,10 +77,10 @@ public class CommercialOrder {
     }
 
     /**
-     * @return the unique identifier of the member (client)
+     * @return the member (client) of the order
      */
-    public String getMemberUuid() {
-        return memberUuid;
+    public Member getMember() {
+        return member;
     }
 
     /**
@@ -171,12 +172,22 @@ public class CommercialOrder {
          * @return this
          */
         public Builder set(CommercialOrder order) {
+
+            Member member = Member.newBuilder().set(order.getMember()).build();
+
+            Address shippingAddress = Address.newBuilder().set(order.getShippingAddress()).build();
+
+            Address billingAddress = null;
+            if (order.getBillingAddress() != null) {
+                billingAddress = Address.newBuilder().set(order.getBillingAddress()).build();
+            }
+
             return this
                     .setUuid(order.getUuid())
                     .setDatetime(order.getDatetime())
-                    .setMemberUuid(order.getMemberUuid())
-                    .setShippingAddress(order.getShippingAddress())
-                    .setBillingAddress(order.getBillingAddress())
+                    .setMember(member)
+                    .setShippingAddress(shippingAddress)
+                    .setBillingAddress(billingAddress)
                     .setLines(order.getLines());
         }
 
@@ -187,6 +198,10 @@ public class CommercialOrder {
          * @return this
          */
         public Builder set(com.example.kafka.streams.poc.schemas.order.CommercialOrder order) {
+
+            Date datetime = new Date(order.getDatetime());
+
+            Member member = Member.newBuilder().setUuid(order.getMemberUuid()).build();
 
             Address shippingAddress = null;
             com.example.kafka.streams.poc.schemas.order.CommercialOrderAddress sourceShippingAddress = order.getShippingAddress();
@@ -207,8 +222,8 @@ public class CommercialOrder {
 
             return this
                     .setUuid(order.getUuid())
-                    .setDatetime(new Date(order.getDatetime()))
-                    .setMemberUuid(order.getMemberUuid())
+                    .setDatetime(datetime)
+                    .setMember(member)
                     .setShippingAddress(shippingAddress)
                     .setBillingAddress(billingAddress)
                     .setLines(lines);
@@ -233,11 +248,11 @@ public class CommercialOrder {
         }
 
         /**
-         * @param memberUuid the unique identifier of the member (client)
+         * @param member the member (client) of the order
          * @return this
          */
-        public Builder setMemberUuid(String memberUuid) {
-            this.order.memberUuid = memberUuid;
+        public Builder setMember (Member member) {
+            this.order.member = member != null ? member : new Member();
             return this;
         }
 
@@ -246,7 +261,7 @@ public class CommercialOrder {
          * @return this
          */
         public Builder setShippingAddress(Address shippingAddress) {
-            this.order.shippingAddress = shippingAddress;
+            this.order.shippingAddress = shippingAddress != null ? shippingAddress : new Address();
             return this;
         }
 
@@ -285,7 +300,7 @@ public class CommercialOrder {
          * @return this
          */
         public Builder setLines(List<CommercialOrderLine> lines) {
-            this.order.lines = new ArrayList<>(lines);
+            this.order.lines = lines != null ? new ArrayList<>(lines) : new ArrayList<>();
             return this;
         }
     }
@@ -334,7 +349,7 @@ public class CommercialOrder {
             return com.example.kafka.streams.poc.schemas.order.CommercialOrder.newBuilder()
                     .setUuid(commercialOrder.getUuid())
                     .setDatetime(commercialOrder.getDatetime().getTime())
-                    .setMemberUuid(commercialOrder.getMemberUuid())
+                    .setMemberUuid(commercialOrder.getMember().getUuid())
                     .setShippingAddress(shippingAddress)
                     .setBillingAddress(billingAddress)
                     .setLines(lines)

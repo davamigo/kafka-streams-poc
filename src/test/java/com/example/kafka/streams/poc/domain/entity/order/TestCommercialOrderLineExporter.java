@@ -1,5 +1,6 @@
 package com.example.kafka.streams.poc.domain.entity.order;
 
+import com.example.kafka.streams.poc.domain.entity.product.Product;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -17,19 +18,21 @@ public class TestCommercialOrderLineExporter {
     @Test
     public void testExport() {
 
+        Product product = new Product("111", "112", 113f);
         CommercialOrderLine line = CommercialOrderLine.newBuilder()
                 .setUuid("101")
                 .setCommercialOrderUuid("102")
-                .setProductUuid("103")
+                .setProduct(product)
                 .setPrice(104f)
                 .setQuantity(105)
                 .build();
 
-        com.example.kafka.streams.poc.schemas.order.CommercialOrderLine avroLine = CommercialOrderLine.newAvroExporter(line).export();
+        com.example.kafka.streams.poc.schemas.order.CommercialOrderLine avroLine
+                = CommercialOrderLine.newAvroExporter(line).export();
 
         assertEquals("101", avroLine.getUuid());
         assertEquals("102", avroLine.getCommercialOrderUuid());
-        assertEquals("103", avroLine.getProductUuid());
+        assertEquals("111", avroLine.getProductUuid());
         assertEquals(104f, line.getPrice(), 0.001);
         assertEquals(105, line.getQuantity());
     }

@@ -1,5 +1,7 @@
 package com.example.kafka.streams.poc.domain.entity.order;
 
+import com.example.kafka.streams.poc.domain.entity.product.Product;
+
 import java.util.Objects;
 
 /**
@@ -13,13 +15,13 @@ public class CommercialOrderLine {
     /** The unique identifier of the commercial order where the line belongs */
     private String commercialOrderUuid;
 
-    /** The unique identifier of the product of the order line */
-    private String productUuid;
+    /** The product in the order line */
+    private Product product;
 
-    /** The unit price for the products of the order line */
+    /** The unit price for the product in the order line */
     private float price;
 
-    /** The quantity of the products for this order line */
+    /** The quantity of the product in the order line */
     private int quantity;
 
     /**
@@ -28,7 +30,7 @@ public class CommercialOrderLine {
     public CommercialOrderLine() {
         this.uuid = null;
         this.commercialOrderUuid = null;
-        this.productUuid = null;
+        this.product = new Product();
         this.price = 0.0f;
         this.quantity = 1;
     }
@@ -38,14 +40,14 @@ public class CommercialOrderLine {
      *
      * @param uuid                the unique identifier of the order line
      * @param commercialOrderUuid the unique identifier of the commercial order where the line belongs
-     * @param productUuid         the unique identifier of the product of the order line
-     * @param price               the unit price for the products of the order line
-     * @param quantity            the quantity of the products for this order line
+     * @param product             the product in the order line
+     * @param price               the unit price for the product in the order line
+     * @param quantity            the quantity of the product in the order line
      */
-    public CommercialOrderLine(String uuid, String commercialOrderUuid, String productUuid, float price, int quantity) {
+    public CommercialOrderLine(String uuid, String commercialOrderUuid, Product product, float price, int quantity) {
         this.uuid = uuid;
         this.commercialOrderUuid = commercialOrderUuid;
-        this.productUuid = productUuid;
+        this.product = product != null ? product : new Product();
         this.price = price;
         this.quantity = quantity;
     }
@@ -65,21 +67,21 @@ public class CommercialOrderLine {
     }
 
     /**
-     * @return the unique identifier of the product of the order line
+     * @return the product in the order line
      */
-    public String getProductUuid() {
-        return productUuid;
+    public Product getProduct() {
+        return product;
     }
 
     /**
-     * @return the unit price for the products of the order line
+     * @return the unit price for the product in the order line
      */
     public float getPrice() {
         return price;
     }
 
     /**
-     * @return the quantity of the products for this order line
+     * @return the quantity of the product in the order line
      */
     public int getQuantity() {
         return quantity;
@@ -154,7 +156,7 @@ public class CommercialOrderLine {
             return this
                     .setUuid(line.getUuid())
                     .setCommercialOrderUuid(line.getCommercialOrderUuid())
-                    .setProductUuid(line.getProductUuid())
+                    .setProduct(Product.newBuilder().set(line.getProduct()).build())
                     .setPrice(line.getPrice())
                     .setQuantity(line.getQuantity());
         }
@@ -169,7 +171,7 @@ public class CommercialOrderLine {
             return this
                     .setUuid(line.getUuid())
                     .setCommercialOrderUuid(line.getCommercialOrderUuid())
-                    .setProductUuid(line.getProductUuid())
+                    .setProduct(Product.newBuilder().setUuid(line.getProductUuid()).build())
                     .setPrice(line.getPrice())
                     .setQuantity(line.getQuantity());
         }
@@ -193,16 +195,16 @@ public class CommercialOrderLine {
         }
 
         /**
-         * @param productUuid the unique identifier of the product ot the order line
+         * @param product the product in the order line
          * @return this
          */
-        public Builder setProductUuid(String productUuid) {
-            this.line.productUuid = productUuid;
+        public Builder setProduct(Product product) {
+            this.line.product = product != null ? product : new Product();
             return this;
         }
 
         /**
-         * @param price the The unit price for the products of the order line
+         * @param price the The unit price for the product in the order line
          * @return this
          */
         public Builder setPrice(float price) {
@@ -211,7 +213,7 @@ public class CommercialOrderLine {
         }
 
         /**
-         * @param quantity the quantity of the products for this order line
+         * @param quantity the quantity of the product in the order line
          * @return this
          */
         public Builder setQuantity(int quantity) {
@@ -246,7 +248,7 @@ public class CommercialOrderLine {
             return com.example.kafka.streams.poc.schemas.order.CommercialOrderLine.newBuilder()
                     .setUuid(commercialOrderLine.getUuid())
                     .setCommercialOrderUuid(commercialOrderLine.getCommercialOrderUuid())
-                    .setProductUuid(commercialOrderLine.getProductUuid())
+                    .setProductUuid(commercialOrderLine.getProduct().getUuid())
                     .setPrice(commercialOrderLine.getPrice())
                     .setQuantity(commercialOrderLine.getQuantity())
                     .build();

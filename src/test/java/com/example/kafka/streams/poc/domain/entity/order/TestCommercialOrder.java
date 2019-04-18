@@ -1,6 +1,7 @@
 package com.example.kafka.streams.poc.domain.entity.order;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
+import com.example.kafka.streams.poc.domain.entity.member.Member;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -23,37 +24,53 @@ public class TestCommercialOrder {
         CommercialOrder commercialOrder = new CommercialOrder();
 
         assertNull(commercialOrder.getUuid());
-        assertNull(commercialOrder.getDatetime());
-        assertNull(commercialOrder.getMemberUuid());
-        assertNull(commercialOrder.getShippingAddress());
+        assertNotNull(commercialOrder.getDatetime());
+        assertNotNull(commercialOrder.getMember());
+        assertNotNull(commercialOrder.getShippingAddress());
         assertNull(commercialOrder.getBillingAddress());
         assertNotNull(commercialOrder.getLines());
         assertTrue(commercialOrder.getLines().isEmpty());
     }
 
     @Test
-    public void testCompleteConstructor() {
+    public void testCompleteConstructorWithNullValues() {
+
+        CommercialOrder commercialOrder = new CommercialOrder(null, null, null, null, null, null);
+
+        assertNull(commercialOrder.getUuid());
+        assertNotNull(commercialOrder.getDatetime());
+        assertNotNull(commercialOrder.getMember());
+        assertNotNull(commercialOrder.getShippingAddress());
+        assertNull(commercialOrder.getBillingAddress());
+        assertNotNull(commercialOrder.getLines());
+        assertTrue(commercialOrder.getLines().isEmpty());
+    }
+
+    @Test
+    public void testCompleteConstructorWithAllValues() {
 
         Date datetime = new Date();
-        Address address1 = Address.newBuilder().setZipCode("111").build();
-        Address address2 = Address.newBuilder().setZipCode("121").build();
+        Member member = Member.newBuilder().setUuid("111").build();
+        Address address1 = Address.newBuilder().setZipCode("121").build();
+        Address address2 = Address.newBuilder().setZipCode("131").build();
+        CommercialOrderLine line = CommercialOrderLine.newBuilder().setUuid("141").build();
         List<CommercialOrderLine> lines = new ArrayList<>();
-        lines.add(CommercialOrderLine.newBuilder().setUuid("131").build());
-        CommercialOrder commercialOrder = new CommercialOrder("101", datetime, "102", address1, address2, lines);
+        lines.add(line);
+        CommercialOrder commercialOrder = new CommercialOrder("101", datetime, member, address1, address2, lines);
 
         assertEquals("101", commercialOrder.getUuid());
-        assertEquals("102", commercialOrder.getMemberUuid());
+        assertEquals(member, commercialOrder.getMember());
         assertEquals(datetime, commercialOrder.getDatetime());
         assertEquals(address1, commercialOrder.getShippingAddress());
         assertEquals(address2, commercialOrder.getBillingAddress());
         assertEquals(1, commercialOrder.getLines().size());
-        assertEquals("131", commercialOrder.getLines().get(0).getUuid());
+        assertEquals(line, commercialOrder.getLines().get(0));
     }
 
     @Test
     public void testTwoCommercialOrdersAreEqualWhenTheyHaveTheSameUuid() {
-        CommercialOrder commercialOrder1 = new CommercialOrder("201", null, "202", null, null, new ArrayList<>());
-        CommercialOrder commercialOrder2 = new CommercialOrder("201", null, "212", null, null, new ArrayList<>());
+        CommercialOrder commercialOrder1 = new CommercialOrder("201", null, null, null, null, null);
+        CommercialOrder commercialOrder2 = new CommercialOrder("201", null, null, null, null, null);
 
         assertEquals(commercialOrder1, commercialOrder2);
         assertNotSame(commercialOrder1, commercialOrder2);
@@ -61,8 +78,8 @@ public class TestCommercialOrder {
 
     @Test
     public void testTwoCommercialOrdersAreDifferentWhenTheyHaveDifferentUuid() {
-        CommercialOrder commercialOrder1 = new CommercialOrder("301", null, null, null, null, new ArrayList<>());
-        CommercialOrder commercialOrder2 = new CommercialOrder("401", null, null, null, null, new ArrayList<>());
+        CommercialOrder commercialOrder1 = new CommercialOrder("301", null, null, null, null, null);
+        CommercialOrder commercialOrder2 = new CommercialOrder("401", null, null, null, null, null);
 
         assertNotEquals(commercialOrder1, commercialOrder2);
     }

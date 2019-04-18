@@ -1,6 +1,7 @@
 package com.example.kafka.streams.poc.domain.entity.order;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
+import com.example.kafka.streams.poc.domain.entity.member.Member;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -23,20 +24,21 @@ public class TestCommercialOrderBuilder {
     public void testBuiderSettersReturnExpectedResults() {
 
         Date datetime = new Date();
-        Address address1 = Address.newBuilder().setZipCode("111").build();
-        Address address2 = Address.newBuilder().setZipCode("121").build();
+        Member member = Member.newBuilder().setUuid("111").build();
+        Address address1 = Address.newBuilder().setZipCode("121").build();
+        Address address2 = Address.newBuilder().setZipCode("131").build();
 
         CommercialOrder.Builder builder = CommercialOrder.newBuilder();
         CommercialOrder commercialOrder = builder
                 .setUuid("101")
                 .setDatetime(datetime)
-                .setMemberUuid("102")
+                .setMember(member)
                 .setShippingAddress(address1)
                 .setBillingAddress(address2)
                 .build();
 
         assertEquals("101", commercialOrder.getUuid());
-        assertEquals("102", commercialOrder.getMemberUuid());
+        assertEquals(member, commercialOrder.getMember());
         assertEquals(datetime, commercialOrder.getDatetime());
         assertEquals(address1, commercialOrder.getShippingAddress());
         assertEquals(address2, commercialOrder.getBillingAddress());
@@ -47,17 +49,26 @@ public class TestCommercialOrderBuilder {
     public void testSetCopiesTheContentFromSourceObject() {
 
         Date datetime = new Date();
-        Address address1 = Address.newBuilder().setZipCode("211").build();
-        Address address2 = Address.newBuilder().setZipCode("221").build();
+        Member member = Member.newBuilder().setUuid("211").build();
+        Address address1 = Address.newBuilder().setZipCode("221").build();
+        Address address2 = Address.newBuilder().setZipCode("231").build();
+        CommercialOrderLine line = CommercialOrderLine.newBuilder().setUuid("241").build();
         List<CommercialOrderLine> lines = new ArrayList<>();
-        lines.add(CommercialOrderLine.newBuilder().setUuid("231").build());
-        CommercialOrder source = new CommercialOrder("201", datetime, "202", address1, address2, lines);
+        lines.add(line);
 
+        CommercialOrder source = new CommercialOrder("201", datetime, member, address1, address2, lines);
         CommercialOrder.Builder builder = CommercialOrder.newBuilder().set(source);
         CommercialOrder commercialOrder = builder.build();
 
         assertEquals(source, commercialOrder);
         assertNotSame(source, commercialOrder);
+        assertEquals("201", commercialOrder.getUuid());
+        assertEquals(member, commercialOrder.getMember());
+        assertEquals(datetime, commercialOrder.getDatetime());
+        assertEquals(address1, commercialOrder.getShippingAddress());
+        assertEquals(address2, commercialOrder.getBillingAddress());
+        assertEquals(1, commercialOrder.getLines().size());
+        assertEquals(line, commercialOrder.getLines().get(0));
     }
 
     @Test
@@ -109,7 +120,7 @@ public class TestCommercialOrderBuilder {
         CommercialOrder commercialOrder = builder.build();
 
         assertEquals("301", commercialOrder.getUuid());
-        assertEquals("302", commercialOrder.getMemberUuid());
+        assertEquals("302", commercialOrder.getMember().getUuid());
         assertEquals(datetime, commercialOrder.getDatetime());
 
         assertEquals("311", commercialOrder.getShippingAddress().getCountry());

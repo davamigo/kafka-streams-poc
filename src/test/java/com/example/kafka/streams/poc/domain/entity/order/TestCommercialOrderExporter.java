@@ -1,6 +1,8 @@
 package com.example.kafka.streams.poc.domain.entity.order;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
+import com.example.kafka.streams.poc.domain.entity.member.Member;
+import com.example.kafka.streams.poc.domain.entity.product.Product;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -21,38 +23,43 @@ public class TestCommercialOrderExporter {
     public void testExport() {
 
         Date datetime = new Date();
-        Address address1 = Address.newBuilder()
-                .setCountry("111")
-                .setCity("112")
-                .setZipCode("113")
+
+        Member member = Member.newBuilder()
+                .setUuid("111")
                 .build();
 
-        Address address2 = Address.newBuilder()
+        Address address1 = Address.newBuilder()
                 .setCountry("121")
                 .setCity("122")
                 .setZipCode("123")
                 .build();
 
+        Address address2 = Address.newBuilder()
+                .setCountry("131")
+                .setCity("132")
+                .setZipCode("133")
+                .build();
+
         CommercialOrderLine commercialOrderLine1 = CommercialOrderLine.newBuilder()
-                .setUuid("131")
-                .setCommercialOrderUuid("132")
-                .setProductUuid("133")
-                .setPrice(134f)
-                .setQuantity(135)
+                .setUuid("141")
+                .setCommercialOrderUuid("142")
+                .setProduct(Product.newBuilder().setUuid("433").build())
+                .setPrice(434f)
+                .setQuantity(435)
                 .build();
 
         CommercialOrderLine commercialOrderLine2 = CommercialOrderLine.newBuilder()
-                .setUuid("141")
-                .setCommercialOrderUuid("142")
-                .setProductUuid("143")
-                .setPrice(144f)
-                .setQuantity(145)
+                .setUuid("151")
+                .setCommercialOrderUuid("152")
+                .setProduct(Product.newBuilder().setUuid("143").build())
+                .setPrice(154f)
+                .setQuantity(155)
                 .build();
 
         CommercialOrder commercialOrder = CommercialOrder.newBuilder()
                 .setUuid("101")
                 .setDatetime(datetime)
-                .setMemberUuid("102")
+                .setMember(member)
                 .setShippingAddress(address1)
                 .setBillingAddress(address2)
                 .addLine(commercialOrderLine1)
@@ -63,12 +70,12 @@ public class TestCommercialOrderExporter {
                 = CommercialOrder.newAvroExporter(commercialOrder).export();
 
         assertEquals("101", avroCommercialOrder.getUuid());
-        assertEquals("102", avroCommercialOrder.getMemberUuid());
+        assertEquals("111", avroCommercialOrder.getMemberUuid());
         assertEquals(datetime.getTime(), avroCommercialOrder.getDatetime().longValue());
-        assertEquals("111", avroCommercialOrder.getShippingAddress().getCountry());
-        assertEquals("121", avroCommercialOrder.getBillingAddress().getCountry());
+        assertEquals("121", avroCommercialOrder.getShippingAddress().getCountry());
+        assertEquals("131", avroCommercialOrder.getBillingAddress().getCountry());
         assertEquals(2, avroCommercialOrder.getLines().size());
-        assertEquals("131", avroCommercialOrder.getLines().get(0).getUuid());
-        assertEquals("141", avroCommercialOrder.getLines().get(1).getUuid());
+        assertEquals("141", avroCommercialOrder.getLines().get(0).getUuid());
+        assertEquals("151", avroCommercialOrder.getLines().get(1).getUuid());
     }
 }
