@@ -1,5 +1,7 @@
 package com.example.kafka.streams.poc.kafka.config;
 
+import com.example.kafka.streams.poc.schemas.member.Member;
+import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.product.Product;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
@@ -57,7 +59,17 @@ public class KafkaConfig {
     }
 
     /**
-     * Creates a factory for a Kafka producer
+     * Creates a factory for producing Member messages to Kafka
+     *
+     * @param props the configuration for the Kafka producer
+     * @return the default kafka producer factory
+     */
+    ProducerFactory<String, Member> memberProducerFactory(Map<String, Object> props) {
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+
+    /**
+     * Creates a factory for producing Product messages to Kafka
      *
      * @param props the configuration for the Kafka producer
      * @return the default kafka producer factory
@@ -67,12 +79,42 @@ public class KafkaConfig {
     }
 
     /**
-     * Kafka template for producing messages
+     * Creates a factory for producing CommercialOrder messages to Kafka
+     *
+     * @param props the configuration for the Kafka producer
+     * @return the default kafka producer factory
+     */
+    ProducerFactory<String, CommercialOrder> commercialOrderProducerFactory(Map<String, Object> props) {
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+
+    /**
+     * Kafka template for producing Member messages to Kafka
+     *
+     * @return a new Kafka template for producing messages
+     */
+    @Bean
+    public KafkaTemplate<String, Member> memberKafkaProducerTemplate() {
+        return new KafkaTemplate<>(memberProducerFactory(producerConfigs()));
+    }
+
+    /**
+     * Kafka template for producing Product messages to Kafka
      *
      * @return a new Kafka template for producing messages
      */
     @Bean
     public KafkaTemplate<String, Product> productKafkaProducerTemplate() {
         return new KafkaTemplate<>(productProducerFactory(producerConfigs()));
+    }
+
+    /**
+     * Kafka template for producing CommercialOrder messages to Kafka
+     *
+     * @return a new Kafka template for producing messages
+     */
+    @Bean
+    public KafkaTemplate<String, CommercialOrder> commercialOrderKafkaProducerTemplate() {
+        return new KafkaTemplate<>(commercialOrderProducerFactory(producerConfigs()));
     }
 }

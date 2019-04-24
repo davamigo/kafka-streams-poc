@@ -1,22 +1,22 @@
 {
   "type": "record",
-  "namespace": "com.example.kafka.streams.poc.schemas.product",
+  "namespace": "com.example.kafka.streams.poc.schemas.recordData",
   "name": "Product",
   "fields": [
     {
       "name": "uuid",
       "type": "string",
-      "doc": "The unique identifier of the product"
+      "doc": "The unique identifier of the recordData"
     },
     {
       "name": "name",
       "type": "string",
-      "doc": "The name of the product"
+      "doc": "The name of the recordData"
     },
     {
       "name": "price",
       "type": "float",
-      "doc": "The sell price of the product"
+      "doc": "The sell price of the recordData"
     }
   ]
 }
