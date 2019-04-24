@@ -1,0 +1,12 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    schema-registry-url: http://localhost:8081
+    producer:
+      acks: "all"
+      retries: 3
+      linger-ms: 2
+    topics:
+      members-new: "t.members.new"
+      products-new: "t.products.new"
+      commercial-orders-new: "t.commercial-orders.new"

@@ -1,0 +1,6 @@
+spring:
+  kafka:
+    topics:
+      members-new: "t.members.new.test"
+      products-new: "t.products.new.test"
+      commercial-orders-new: "t.commercial-orders.new.test"
