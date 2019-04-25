@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Homepage - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Homepage</h2>
+<ul>
+    <li>
+        <form id="orderCountForm" action="#" th:action="@{/commercial-order/create}" method="post">
+            <label for="orderCount">Create random orders (1-500):</label>
+            <input type="number" id="orderCount" name="orderCount" placeholder="count" value="1" min="1" max="500">
+            <button type="submit">Create</button>
+        </form>
+    </li>
+    <li>Show orders</li>
+    <li>Show products</li>
+    <li>Show members</li>
+</ul>
+</body>
+</html>

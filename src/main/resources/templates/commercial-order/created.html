@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Commercial Orders Creation - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Commercial Orders Creation</h2>
+
+<div th:if="${errorText != null}">
+    <p>
+        An error occurred trying to create
+        <span th:text="${orderCount}"></span>
+        commercial orders!
+    </p>
+    <p>
+        Error message:
+        <strong th:text="${errorText}"></strong>
+    </p>
+</div>
+
+<div th:if="${errorText == null}">
+    <p>
+        Created
+        <span th:text="${commercialOrders.size()}"></span>
+        of
+        <span th:text="${orderCount}"></span>
+        commercial orders...
+    </p>
+    <ul th:if="${commercialOrders != null}" th:each="commercialOrder : ${commercialOrders}">
+        <li th:text="${commercialOrder.getUuid()}"></li>
+    </ul>
+</div>
+
+<p>
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
