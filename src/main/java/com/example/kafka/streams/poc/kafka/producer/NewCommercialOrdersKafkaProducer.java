@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Kafka producer to publish the commercial orders data
+ * Kafka producer to publish the new commercial orders data
  */
 @Component
 public class NewCommercialOrdersKafkaProducer {

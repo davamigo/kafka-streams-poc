@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Kafka producer to publish the members data
+ * Kafka producer to publish the new members data
  */
 @Component
 public class NewMembersKafkaProducer {
