@@ -6,7 +6,7 @@ COMMAND="docker exec -it \
     docker_kafka_dev \
     kafka-topics \
         --create \
-        --zookeeper 127.0.0.1:2181 |
+        --zookeeper 127.0.0.1:2181 \
         --partitions 3 \
         --replication-factor 1 \
         --config cleanup.policy=compact \
@@ -25,7 +25,7 @@ COMMAND="docker exec -it \
     docker_kafka_dev \
     kafka-topics \
         --create \
-        --zookeeper 127.0.0.1:2181 |
+        --zookeeper 127.0.0.1:2181 \
         --partitions 3 \
         --replication-factor 1 \
         --config cleanup.policy=compact \
@@ -44,7 +44,7 @@ COMMAND="docker exec -it \
     docker_kafka_dev \
     kafka-topics \
         --create \
-        --zookeeper 127.0.0.1:2181 |
+        --zookeeper 127.0.0.1:2181 \
         --partitions 3 \
         --replication-factor 1 \
         --config cleanup.policy=compact \

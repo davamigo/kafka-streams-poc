@@ -3,6 +3,7 @@ package com.example.kafka.streams.poc.kafka.config;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.product.Product;
+import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,8 +80,8 @@ public class TestKafkaConfig {
         assertEquals("202", props.get("auto.offset.reset"));
         assertEquals("203", props.get("enable.auto.commit"));
         assertEquals("204", props.get("schema.registry.url"));
-        assertEquals(KafkaAvroSerializer.class, props.get("key.deserializer"));
-        assertEquals(KafkaAvroSerializer.class, props.get("value.deserializer"));
+        assertEquals(KafkaAvroDeserializer.class, props.get("key.deserializer"));
+        assertEquals(KafkaAvroDeserializer.class, props.get("value.deserializer"));
     }
 
     @Test

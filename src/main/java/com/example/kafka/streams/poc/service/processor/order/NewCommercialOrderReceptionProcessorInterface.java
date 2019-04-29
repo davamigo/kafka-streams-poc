@@ -4,7 +4,7 @@ import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
 import com.example.kafka.streams.poc.service.processor.ProcessorException;
 
 /**
- * Interface to a service to do process the reception of a new CommercialOrder
+ * Interface to a service to process the reception of a new CommercialOrder
  */
 public interface NewCommercialOrderReceptionProcessorInterface {
 
