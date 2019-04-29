@@ -1,0 +1,38 @@
+version: "3.5"
+services:
+
+  kafka_dev:
+
+    image: "landoop/fast-data-dev:2.0"
+
+    restart: "always"
+
+    container_name: "docker_kafka_dev"
+
+    environment:
+      ADV_HOST: "127.0.0.1"
+      SAMPLEDATA: 0
+      RUNTESTS: 0
+      FORWARDLOGS: 0
+
+    ports:
+      - "2181:2181"
+      - "3030:3030"
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+      - "9092:9092"
+
+  mongo_dev:
+
+    image: "bitnami/mongodb:3.7"
+
+    restart: "always"
+
+    container_name: "docker_mongo_dev"
+
+    environment:
+      MONGODB_ROOT_PASSWORD: "temporal"
+
+    ports:
+      - "27017:27017"
