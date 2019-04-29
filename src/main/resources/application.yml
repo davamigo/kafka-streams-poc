@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: "kafka-streams-poc"
+
   kafka:
     bootstrap-servers: localhost:9092
     schema-registry-url: http://localhost:8081
@@ -6,6 +9,11 @@ spring:
       acks: "all"
       retries: 3
       linger-ms: 2
+    consumer:
+      auto-offset-reset: "earliest"
+      enable-auto-commit: "false"
+    group-ids:
+      commercial-orders-new: "${spring.application.name}.commercial-orders.new"
     topics:
       members-new: "t.members.new"
       products-new: "t.products.new"

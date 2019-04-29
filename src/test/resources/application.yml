@@ -1,4 +1,7 @@
 spring:
+  application:
+    name: "kafka-streams-poc"
+
   kafka:
     topics:
       members-new: "t.members.new.test"
