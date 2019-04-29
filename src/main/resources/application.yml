@@ -2,6 +2,15 @@ spring:
   application:
     name: "kafka-streams-poc"
 
+  data:
+    mongodb:
+      host: "localhost"
+      port: "27017"
+      username: "root"
+      password: "temporal"
+      database: "kafka"
+      authentication-database: "admin"
+
   kafka:
     bootstrap-servers: localhost:9092
     schema-registry-url: http://localhost:8081
