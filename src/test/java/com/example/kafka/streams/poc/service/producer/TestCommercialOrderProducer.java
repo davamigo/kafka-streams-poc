@@ -1,4 +1,4 @@
-package com.example.kafka.streams.poc.usecase;
+package com.example.kafka.streams.poc.service.producer;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
 import com.example.kafka.streams.poc.domain.entity.member.Member;
@@ -9,7 +9,6 @@ import com.example.kafka.streams.poc.kafka.producer.NewCommercialOrdersKafkaProd
 import com.example.kafka.streams.poc.kafka.producer.NewMembersKafkaProducer;
 import com.example.kafka.streams.poc.kafka.producer.NewProductsKafkaProducer;
 import com.example.kafka.streams.poc.service.generator.order.CommercialOrderGeneratorInterface;
-import com.example.kafka.streams.poc.usecase.exception.InvalidArgumentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,11 +24,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit test RandomCommercialOrderProducerUseCase
+ * Unit test CommercialOrderProducer
  */
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class TestRandomCommercialOrderProducerUseCase {
+public class TestCommercialOrderProducer {
 
     @Mock
     private CommercialOrderGeneratorInterface commercialOrderGenerator;
@@ -63,14 +62,14 @@ public class TestRandomCommercialOrderProducerUseCase {
 
         when(commercialOrderGenerator.getCommercialOrder()).thenReturn(commercialOrder);
 
-        RandomCommercialOrderProducerUseCase useCase = new RandomCommercialOrderProducerUseCase(
+        CommercialOrderProducer service = new CommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,
                 newProductsKafkaProducer
         );
 
-        List<CommercialOrder> commercialOrders = useCase.run(1);
+        List<CommercialOrder> commercialOrders = service.produce(1);
 
         assertEquals(1, commercialOrders.size());
         verify(commercialOrderGenerator, times(1)).getCommercialOrder();
@@ -100,14 +99,14 @@ public class TestRandomCommercialOrderProducerUseCase {
 
         when(commercialOrderGenerator.getCommercialOrder()).thenReturn(commercialOrder);
 
-        RandomCommercialOrderProducerUseCase useCase = new RandomCommercialOrderProducerUseCase(
+        CommercialOrderProducer service = new CommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,
                 newProductsKafkaProducer
         );
 
-        List<CommercialOrder> commercialOrders = useCase.run(3);
+        List<CommercialOrder> commercialOrders = service.produce(3);
 
         assertEquals(3, commercialOrders.size());
         verify(commercialOrderGenerator, times(3)).getCommercialOrder();
@@ -119,14 +118,14 @@ public class TestRandomCommercialOrderProducerUseCase {
     @Test(expected = InvalidArgumentException.class)
     public void testRunWhenInvalidArgument() {
 
-        RandomCommercialOrderProducerUseCase useCase = new RandomCommercialOrderProducerUseCase(
+        CommercialOrderProducer service = new CommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,
                 newProductsKafkaProducer
         );
 
-        useCase.run(-1);
+        service.produce(-1);
     }
 
     @Test(expected = Exception.class)
@@ -134,13 +133,13 @@ public class TestRandomCommercialOrderProducerUseCase {
 
         when(commercialOrderGenerator.getCommercialOrder()).thenThrow(new Exception());
 
-        RandomCommercialOrderProducerUseCase useCase = new RandomCommercialOrderProducerUseCase(
+        CommercialOrderProducer service = new CommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,
                 newProductsKafkaProducer
         );
 
-        useCase.run(1);
+        service.produce(1);
     }
 }

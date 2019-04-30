@@ -3,18 +3,15 @@ package com.example.kafka.streams.poc.controller;
 import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
 import com.example.kafka.streams.poc.mongodb.entity.CommercialOrderEntity;
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderRepository;
-import com.example.kafka.streams.poc.usecase.RandomCommercialOrderProducerUseCase;
+import com.example.kafka.streams.poc.service.producer.CommercialOrderProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -26,7 +23,7 @@ import java.util.Optional;
 public class CommercialOrderController {
 
     /** Use case to produce one or more commercial order with random data */
-    private RandomCommercialOrderProducerUseCase commercialOrderProducerUseCase;
+    private CommercialOrderProducer commercialOrderProducer;
 
     /** The mongoDB repository where to retrieve the commercial orders */
     private CommercialOrderRepository commercialOrderRepository;
@@ -34,15 +31,15 @@ public class CommercialOrderController {
     /**
      * Autowired constructor
      *
-     * @param commercialOrderProducerUseCase use case
+     * @param commercialOrderProducer use case
      * @param commercialOrderRepository the mongoDB commercial order repository
      */
     @Autowired
     public CommercialOrderController(
-            RandomCommercialOrderProducerUseCase commercialOrderProducerUseCase,
+            CommercialOrderProducer commercialOrderProducer,
             CommercialOrderRepository commercialOrderRepository
     ) {
-        this.commercialOrderProducerUseCase = commercialOrderProducerUseCase;
+        this.commercialOrderProducer = commercialOrderProducer;
         this.commercialOrderRepository = commercialOrderRepository;
     }
 
@@ -60,7 +57,7 @@ public class CommercialOrderController {
         mav.addObject("orderCount", orderCount);
 
         try {
-            List<CommercialOrder> commercialOrders = commercialOrderProducerUseCase.run(orderCount);
+            List<CommercialOrder> commercialOrders = commercialOrderProducer.produce(orderCount);
             mav.addObject("commercialOrders", commercialOrders);
         }
         catch (Exception exc) {

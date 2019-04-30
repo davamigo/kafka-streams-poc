@@ -1,4 +1,4 @@
-package com.example.kafka.streams.poc.usecase;
+package com.example.kafka.streams.poc.service.producer;
 
 import com.example.kafka.streams.poc.domain.entity.member.Member;
 import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
@@ -8,7 +8,6 @@ import com.example.kafka.streams.poc.kafka.producer.NewCommercialOrdersKafkaProd
 import com.example.kafka.streams.poc.kafka.producer.NewMembersKafkaProducer;
 import com.example.kafka.streams.poc.kafka.producer.NewProductsKafkaProducer;
 import com.example.kafka.streams.poc.service.generator.order.CommercialOrderGeneratorInterface;
-import com.example.kafka.streams.poc.usecase.exception.InvalidArgumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,7 @@ import java.util.List;
  * Use case to produce one or more commercial order with random data
  */
 @Component
-public class RandomCommercialOrderProducerUseCase {
+public class CommercialOrderProducer {
 
     /** Service to generate a commercial order with random data */
     private CommercialOrderGeneratorInterface commercialOrderGenerator;
@@ -42,7 +41,7 @@ public class RandomCommercialOrderProducerUseCase {
      * @param newProductsKafkaProducer         Kafka producer to publish the new products data
      */
     @Autowired
-    public RandomCommercialOrderProducerUseCase(
+    public CommercialOrderProducer(
             CommercialOrderGeneratorInterface commercialOrderGenerator,
             NewCommercialOrdersKafkaProducer newCommercialOrdersKafkaProducer,
             NewMembersKafkaProducer newMembersKafkaProducer,
@@ -60,7 +59,7 @@ public class RandomCommercialOrderProducerUseCase {
      * @param count the number of commercial orders to produce (1-500)
      * @return the list of the commercial orders produceed
      */
-    public List<CommercialOrder> run(int count) {
+    public List<CommercialOrder> produce(int count) {
 
         if (count < 1 || count > 500) {
             throw new InvalidArgumentException("The count of commercial orders to create must be between 1 and 500!");

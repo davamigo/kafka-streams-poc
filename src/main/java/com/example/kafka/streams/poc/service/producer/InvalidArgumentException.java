@@ -1,4 +1,4 @@
-package com.example.kafka.streams.poc.usecase.exception;
+package com.example.kafka.streams.poc.service.producer;
 
 /**
  * Invalid argument in the use case exception
