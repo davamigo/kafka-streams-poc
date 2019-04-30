@@ -29,11 +29,15 @@
         commercial orders...
     </p>
     <ul th:if="${commercialOrders != null}" th:each="commercialOrder : ${commercialOrders}">
-        <li th:text="${commercialOrder.getUuid()}"></li>
+        <li>
+            <a th:href="@{/commercial-order/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+        </li>
     </ul>
 </div>
 
 <p>
+    Navigation
+    &ndash;
     <a th:href="@{/}">Homepage</a>
 </p>
 </body>

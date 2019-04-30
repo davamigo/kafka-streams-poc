@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Commercial Order - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Commercial Order</h2>
+
+<div th:if="${null == commercialOrder}">
+    <p>
+        The commercial order with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != commercialOrder}">
+    <dl>
+        <dt>UUID:</dt>
+        <dd th:text="${commercialOrder.getUuid()}"></dd>
+
+        <dt>Date:</dt>
+        <dd th:text="${commercialOrder.getDatetime()}"></dd>
+
+        <dt>Member:</dt>
+        <dd th:text="${commercialOrder.getMemberUUid()}"></dd>
+
+        <dt>Shipping Address:</dt>
+        <dd>
+            <span th:text="${commercialOrder.getShippingAddress().getStreet()}"></span>
+            <span th:text="${commercialOrder.getShippingAddress().getNumber()}"></span>
+            <span th:text="${commercialOrder.getShippingAddress().getExtra()}"></span>
+            <span th:text="${commercialOrder.getShippingAddress().getZipCode()}"></span>
+            <span th:text="${commercialOrder.getShippingAddress().getCity()}"></span>
+            <span th:text="${commercialOrder.getShippingAddress().getState()}"></span>
+            <span th:text="${commercialOrder.getShippingAddress().getCountry()}"></span>
+        </dd>
+
+        <dt>Billing Address:</dt>
+        <dd th:if="${null == commercialOrder.getBillingAddress()}">
+            &ndash;
+        </dd>
+        <dd th:if="${null != commercialOrder.getBillingAddress()}">
+            <span th:text="${commercialOrder.getBillingAddress().getStreet()}"></span>
+            <span th:text="${commercialOrder.getBillingAddress().getNumber()}"></span>
+            <span th:text="${commercialOrder.getBillingAddress().getExtra()}"></span>
+            <span th:text="${commercialOrder.getBillingAddress().getZipCode()}"></span>
+            <span th:text="${commercialOrder.getBillingAddress().getCity()}"></span>
+            <span th:text="${commercialOrder.getBillingAddress().getState()}"></span>
+            <span th:text="${commercialOrder.getBillingAddress().getCountry()}"></span>
+        </dd>
+
+        <dt>Lines:</dt>
+        <dd th:if="${commercialOrder.getLines().isEmpty()}">
+            Commercial Order without lines!
+        </dd>
+        <dd th:if="${!commercialOrder.getLines().isEmpty()}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Id.</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="commercialOrderLine : ${commercialOrder.getLines()}">
+                        <td th:text="${commercialOrderLine.getUuid()}"></td>
+                        <td th:text="${commercialOrderLine.getProductUuid()}"></td>
+                        <td th:text="${commercialOrderLine.getPrice()}"></td>
+                        <td th:text="${commercialOrderLine.getQuantity()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/commercial-order}">Show orders</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

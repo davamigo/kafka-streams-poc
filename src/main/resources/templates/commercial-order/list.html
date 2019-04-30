@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Commercial Orders - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Commercial Orders</h2>
+
+<div th:if="${commercialOrders.isEmpty()}">
+    <p>
+        No commercial orders found!
+    </p>
+</div>
+
+<div th:if="${!commercialOrders.isEmpty()}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Id.</th>
+                <th>Date</th>
+                <th>Member</th>
+                <th>Address</th>
+                <th>Lines</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="commercialOrder : ${commercialOrders}">
+                <td>
+                    <a th:href="@{/commercial-order/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+                </td>
+                <td th:text="${commercialOrder.getDatetime()}"></td>
+                <td th:text="${commercialOrder.getMemberUUid()}"></td>
+                <td>
+                    <span th:text="${commercialOrder.getShippingAddress().getStreet()}"></span>
+                    <span th:text="${commercialOrder.getShippingAddress().getNumber()}"></span>
+                    <span th:text="${commercialOrder.getShippingAddress().getExtra()}"></span>
+                    <span th:text="${commercialOrder.getShippingAddress().getZipCode()}"></span>
+                    <span th:text="${commercialOrder.getShippingAddress().getCity()}"></span>
+                    <span th:text="${commercialOrder.getShippingAddress().getState()}"></span>
+                    <span th:text="${commercialOrder.getShippingAddress().getCountry()}"></span>
+                </td>
+                <td th:text="${commercialOrder.getLines().size()}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${prev < page || next > page}">
+    <p>
+        Pagination
+        <span th:if="${prev < page}">
+            &ndash;
+            <a th:href="@{/commercial-order(page=0,size=${size})}">First</a>
+            &ndash;
+            <a th:href="@{/commercial-order(page=${prev},size=${size})}">Prev</a>
+        </span>
+        <span th:if="${next > page}">
+            &ndash;
+            <a th:href="@{/commercial-order(page=${next},size=${size})}">Next</a>
+        </span>
+    </p>
+</div>
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
