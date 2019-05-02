@@ -6,23 +6,29 @@
 
 Produces a commercial order with random data.
 
-- Random member: create new member or use existing.
+![](docs/images/producer-generate-commercial-order.png)
+
+- Random member: creates a new member or uses an existing one.
 - Random order lines number (1 to 10).
-    - Random products: create new product or use existing one.
+    - Random products: creates a new product or uses an existing one.
     - Random price for the new products (1 to 100).
-- Publish the new commercial oOrder in a `commercial-order` topic.
-- Publish new members in `member` topic if any.
-- Publish new products in `product` topic if any.
+    - Random quantity for the order line (1 to 5).
+- Publish the new commercial order in a `commercial-order` topic.
+- Publish new members in `member` topic.
+- Publish new products in `product` topic.
+
 
 ## Kafka Streams
 
-### Convert the commercial order
+### Convert the commercial orders
 
-Join the commercial order and member data, compute some fields like the total of the commercial order and remove the order lines.
+Join each commercial order with the member data, compute some fields like the total amount. The target contracts doen't have the order lines.
 
-- From `commercial-order`.
-- Join with `member`.
-- To `commercial-order-converted`.
+![](docs/images/stream-convert-commercial-orders.png)
+
+- From `commercial-order` (KStream).
+- Join with `member` (GlobalKTable).
+- To `commercial-order-converted` (KStream).
 
 ### Split the commercial order lines
 
@@ -70,29 +76,65 @@ _**TBD**_
 
 ### CommercialOrder
 
+#### Member
+
+- **`uuid`**: `string`
+- **`firstName`**: `string`
+- **`lastName`**: `string`
+- **`addresses`**: `Array[MemberAddress]`
+
+#### MemberAddress
+
+- **`country`**: `string`
+- **`state`**: `string`, nullable, default `null`
+- **`city`**: `string`
+- **`zipCode`**: `string`
+- **`street`**: `string`, nullable, default `null`
+- **`number`**: `string`, nullable, default `null`
+- **`extra`**: `string`, nullable, default `null`
+
+#### Product
+
+- **`uuid`**: `string`
+- **`name`**: `string`
+- **`price`**: `float`
+
 #### CommercialOrder
 
-- **`uuid`**: string
-- **`datetime`**: long
-- **`memberUuid`**: string
-- **`shippingAddress`**: _CommercialOrderAddress_
-- **`billingAddress`**: _CommercialOrderAddress_, nullable, default null.
-- **`lines`**: array of _CommercialOrderLine_
+- **`uuid`**: `string`
+- **`datetime`**: `long`
+- **`memberUuid`**: `string`
+- **`shippingAddress`**: `CommercialOrderAddress`
+- **`billingAddress`**: `CommercialOrderAddress`, nullable, default `null`
+- **`lines`**: `array[CommercialOrderLine]`
 
 #### CommercialOrderLine
 
-- **`uuid`**: string
-- **`commercialOrderUuid`**: string
-- **`productUuid`**: string
-- **`price`**: float
-- **`quantity`**: int, default 1
+- **`uuid`**: `string`
+- **`commercialOrderUuid`**: `string`
+- **`productUuid`**: `string`
+- **`price`**: `float`
+- **`quantity`**: `int`, default `1`
 
 #### CommercialOrderAddress
 
-- **`country`**: string
-- **`state`**: string, nullable, default null
-- **`city`**: string
-- **`zipCode`**: string
-- **`street`**: string, nullable, default null
-- **`number`**: string, nullable, default null
-- **`extra`**: string, nullable, default null
+- **`country`**: `string`
+- **`state`**: `string`, nullable, default `null`
+- **`city`**: `string`
+- **`zipCode`**: `string`
+- **`street`**: `string`, nullable, default `null`
+- **`number`**: `string`, nullable, default `null`
+- **`extra`**: `string`, nullable, default `null`
+
+#### CommercialOrderConverted
+
+- **`uuid`**: `string`
+- **`datetime`**: `long`
+- **`memberUuid`**: `string`
+- **`memberFirstName`**: `string`
+- **`memberLastName`**: `string`
+- **`shippingCountry`**: `string`
+- **`shippingCity`**: `string`
+- **`shippingZipCode`**: `string`
+- **`totalAmount`**: `float`
+- **`totalQuantity`**: `int`

@@ -20,19 +20,13 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class NewMembersKafkaProducer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(NewMembersKafkaProducer.class);
 
-    /**
-     * Kafka template for producing messages when new members created
-     */
+    /** Kafka template for producing messages when new members created */
     private final KafkaTemplate<String, Member> memberKafkaProducerTemplate;
 
-    /**
-     * The name of the Kafka topic to read messages
-     */
+    /** The name of the Kafka topic to read messages */
     private final String newMembersTopic;
 
     /**
@@ -67,13 +61,13 @@ public class NewMembersKafkaProducer {
      * @throws KafkaProducerException when can't publish
      */
     void publish(Member member, String topic) throws KafkaProducerException {
-        LOGGER.info("Publishing the member {} to the topic {}...", member.getUuid(), topic);
+        LOGGER.info(">>> Publishing the member {} to the topic {}...", member.getUuid(), topic);
         ProducerRecord<String, Member> record = new ProducerRecord<>(topic, member.getUuid(), member);
         try {
             SendResult<String, Member> result = memberKafkaProducerTemplate.send(record).get();
-            LOGGER.info("The member {} has been published to the topic {}!", member.getUuid(), result.getRecordMetadata().toString());
+            LOGGER.info(">>> The member {} has been published to the topic {}!", member.getUuid(), result.getRecordMetadata().toString());
         } catch (InterruptedException | ExecutionException | KafkaException exc) {
-            LOGGER.error("An error occurred publishing the member {} to the topic {}", member.getUuid(), topic);
+            LOGGER.error(">>> An error occurred publishing the member {} to the topic {}", member.getUuid(), topic);
             throw new KafkaProducerException(exc, member, topic);
         }
     }

@@ -1,0 +1,58 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.order",
+  "name": "CommercialOrderConverted",
+  "fields": [
+    {
+      "name": "uuid",
+      "type": "string",
+      "doc": "The unique identifier of the order"
+    },
+    {
+      "name": "datetime",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "The date and time of when the order was created"
+    },
+    {
+      "name": "memberUuid",
+      "type": "string",
+      "doc": "The unique identifier of the member (client)"
+    },
+    {
+      "name": "memberFirstName",
+      "type": "string",
+      "doc": "The first name of the member"
+    },
+    {
+      "name": "memberLastName",
+      "type": "string",
+      "doc": "The last name of the member"
+    },
+    {
+      "name": "shippingCountry",
+      "type": "string",
+      "doc": "The Alpha-2 ISO 3166 country code of the shipping address"
+    },
+    {
+      "name": "shippingCity",
+      "type": "string",
+      "doc": "The name of the city of the shipping address"
+    },
+    {
+      "name": "shippingZipCode",
+      "type": "string",
+      "doc": "The zip code of the shipping address"
+    },
+    {
+      "name": "totalAmount",
+      "type": "float",
+      "doc": "The total amount or the order lines: SUM(price * quantity)"
+    },
+    {
+      "name": "totalQuantity",
+      "type": "int",
+      "doc": "The quantity of the products for this order: SUM(quantity)"
+    }
+  ]
+}

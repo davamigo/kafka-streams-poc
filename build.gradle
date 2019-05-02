@@ -37,7 +37,7 @@ sourceCompatibility = '1.8'
 
 ext {
     avroVersion = '1.8.2'
-    kafkaAvroToolsVersion = '4.0.0'
+    kafkaAvroToolsVersion = '5.0.0'
 }
 
 repositories {
@@ -61,6 +61,7 @@ dependencies {
     // Avro
     implementation "org.apache.avro:avro:${avroVersion}"
     implementation "io.confluent:kafka-avro-serializer:${kafkaAvroToolsVersion}"
+    implementation "io.confluent:kafka-streams-avro-serde:${kafkaAvroToolsVersion}"
 
     // MongoDB
     implementation  'org.springframework.boot:spring-boot-starter-data-mongodb'

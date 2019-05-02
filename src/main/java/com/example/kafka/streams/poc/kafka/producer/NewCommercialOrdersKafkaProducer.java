@@ -20,19 +20,13 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class NewCommercialOrdersKafkaProducer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(NewCommercialOrdersKafkaProducer.class);
 
-    /**
-     * Kafka template for producing messages when new commercial orders created
-     */
+    /** Kafka template for producing messages when new commercial orders created */
     private final KafkaTemplate<String, CommercialOrder> commercialOrderKafkaProducerTemplate;
 
-    /**
-     * The name of the Kafka topic to read messages
-     */
+    /** The name of the Kafka topic to read messages */
     private final String newCommercialOrdersTopic;
 
     /**
@@ -67,13 +61,13 @@ public class NewCommercialOrdersKafkaProducer {
      * @throws KafkaProducerException when can't publish
      */
     void publish(CommercialOrder commercialOrder, String topic) throws KafkaProducerException {
-        LOGGER.info("Publishing the commercialOrder {} to the topic {}...", commercialOrder.getUuid(), topic);
+        LOGGER.info(">>> Publishing the commercialOrder {} to the topic {}...", commercialOrder.getUuid(), topic);
         ProducerRecord<String, CommercialOrder> record = new ProducerRecord<>(topic, commercialOrder.getUuid(), commercialOrder);
         try {
             SendResult<String, CommercialOrder> result = commercialOrderKafkaProducerTemplate.send(record).get();
-            LOGGER.info("The commercial order {} has been published to the topic {}!", commercialOrder.getUuid(), result.getRecordMetadata().toString());
+            LOGGER.info(">>> The commercial order {} has been published to the topic {}!", commercialOrder.getUuid(), result.getRecordMetadata().toString());
         } catch (InterruptedException | ExecutionException | KafkaException exc) {
-            LOGGER.error("An error occurred publishing the commercial order {} to the topic {}", commercialOrder.getUuid(), topic);
+            LOGGER.error(">>> An error occurred publishing the commercial order {} to the topic {}", commercialOrder.getUuid(), topic);
             throw new KafkaProducerException(exc, commercialOrder, topic);
         }
     }

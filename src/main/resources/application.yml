@@ -21,9 +21,12 @@ spring:
     consumer:
       auto-offset-reset: "earliest"
       enable-auto-commit: "false"
+    streams:
+      threads: 1
     group-ids:
       commercial-orders-new: "${spring.application.name}.commercial-orders.new"
     topics:
       members-new: "t.members.new"
       products-new: "t.products.new"
       commercial-orders-new: "t.commercial-orders.new"
+      commercial-orders-converted: "t.commercial-orders.converted"

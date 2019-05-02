@@ -20,19 +20,13 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class NewProductsKafkaProducer {
 
-    /**
-     * Logger
-     */
+    /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(NewProductsKafkaProducer.class);
 
-    /**
-     * Kafka template for producing messages when new products created
-     */
+    /** Kafka template for producing messages when new products created */
     private final KafkaTemplate<String, Product> productKafkaProducerTemplate;
 
-    /**
-     * The name of the Kafka topic to read messages
-     */
+    /** The name of the Kafka topic to read messages */
     private final String newProductsTopic;
 
     /**
@@ -67,13 +61,13 @@ public class NewProductsKafkaProducer {
      * @throws KafkaProducerException when can't publish
      */
     void publish(Product product, String topic) throws KafkaProducerException {
-        LOGGER.info("Publishing the product {} to the topic {}...", product.getUuid(), topic);
+        LOGGER.info(">>> Publishing the product {} to the topic {}...", product.getUuid(), topic);
         ProducerRecord<String, Product> record = new ProducerRecord<>(topic, product.getUuid(), product);
         try {
             SendResult<String, Product> result = productKafkaProducerTemplate.send(record).get();
-            LOGGER.info("The product {} has been published to the topic {}!", product.getUuid(), result.getRecordMetadata().toString());
+            LOGGER.info(">>> The product {} has been published to the topic {}!", product.getUuid(), result.getRecordMetadata().toString());
         } catch (InterruptedException | ExecutionException | KafkaException exc) {
-            LOGGER.error("An error occurred publishing the product {} to the topic {}", product.getUuid(), topic);
+            LOGGER.error(">>> An error occurred publishing the product {} to the topic {}", product.getUuid(), topic);
             throw new KafkaProducerException(exc, product, topic);
         }
     }
