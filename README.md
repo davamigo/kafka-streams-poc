@@ -13,9 +13,9 @@ Produces a commercial order with random data.
     - Random products: creates a new product or uses an existing one.
     - Random price for the new products (1 to 100).
     - Random quantity for the order line (1 to 5).
-- Publish the new commercial order in a `commercial-order` topic.
-- Publish new members in `member` topic.
-- Publish new products in `product` topic.
+- Publish the new commercial order in a `t.commercial-orders.new` topic.
+- Publish new members in `t.members.new` topic.
+- Publish new products in `t.products.new` topic.
 
 
 ## Kafka Streams
@@ -26,55 +26,57 @@ Join each commercial order with the member data, compute some fields like the to
 
 ![](docs/images/stream-convert-commercial-orders.png)
 
-- From `commercial-order` (KStream).
-- Join with `member` (GlobalKTable).
-- To `commercial-order-converted` (KStream).
+- From `t.commercial-orders.new` (KStream).
+- Join with `t.members.new` (GlobalKTable).
+- To `t.commercial-orders.converted` (KStream).
 
 ### Split the commercial order lines
 
-Join the commercial order line and product data and stream the commercial order lines to a separated topic.
+Extract all order lines from the commercial orders and join each commercial order line with the product data.
 
-- From `commercial-order`.
-- Join with `product`.
-- To `commercial-order-line`.
+![](docs/images/stream-split-commercial-order-lines.png)
+
+- From `t.commercial-orders.new` (KStream).
+- Join with `t.products.new` (GlobalKTable).
+- To `t.commercial-order-lines.split` (KStream).
 
 ### Generate purchase orders
 
 Group the commercial orders per product and day to generate the purchase orders. 
 
-- From `commercial-order-line`.
-- To `purchase-order`.
+- From `t.commercial-order-lines.split`.
+- To `t.purchase-order.new`.
 
 ### Send orders to warehouse
 
 _**TBD**_
 
-- From `commercial-order-converted`
-- Join `commercial-order-line`
-- To `warehouse-order`
+- From `t.commercial-orders.converted`
+- Join `t.commercial-order-lines.split`
+- To `t.warehouse-order.new`
 
 ### Generate the bill
 
 _**TBD**_
 
-- From `commercial-order`
-- Join `member`
-- To `bill`
+- From `t.commercial-orders.new`
+- Join `t.members.new`
+- To `t.bill.new`
 
 ## Topics
 
-- `commercial-order`: All the commercial orders. No key.
-- `member`: All data of the member. The key is the member uuid.
-- `product`: All data of the product. The key is the product uuid.
-- `commercial-order-converted`: Commercial orders with member data, but without order line. The key is the commercial order uuid.
-- `commercial-order-line`: Commercial order lines. The key is the commercial order uuid.
-- `purchase-order`: Purchase order data. The key is the date (int, format YYYMMDD).
-- `warehouse-order`: The warehouse order data. The key is the commercial order uuid.
-- `bill`: The bill data. The key is the member uuid.
+- `t.commercial-orders.new`: All the commercial orders. No key.
+- `t.members.new`: All data of the member. The key is the member uuid.
+- `t.products.new`: All data of the product. The key is the product uuid.
+- `t.commercial-orders.converted`: Commercial orders with member data, but without order line. The key is the commercial order uuid.
+- `t.commercial-order-lines.split`: Commercial order lines. The key is the commercial order uuid.
+- `t.purchase-order.new`: Purchase order data. The key is the date (int, format YYYMMDD).
+- `t.warehouse-order.new`: The warehouse order data. The key is the commercial order uuid.
+- `t.bill.new`: The bill data. The key is the member uuid.
 
 ## Schemas
 
-### CommercialOrder
+### Member
 
 #### Member
 
@@ -93,11 +95,15 @@ _**TBD**_
 - **`number`**: `string`, nullable, default `null`
 - **`extra`**: `string`, nullable, default `null`
 
+### Product
+
 #### Product
 
 - **`uuid`**: `string`
 - **`name`**: `string`
 - **`price`**: `float`
+
+### CommercialOrder
 
 #### CommercialOrder
 
@@ -138,3 +144,16 @@ _**TBD**_
 - **`shippingZipCode`**: `string`
 - **`totalAmount`**: `float`
 - **`totalQuantity`**: `int`
+
+#### CommercialOrderLineSplit
+
+- **`uuid`**: `string`
+- **`commercialOrderUuid`**: `string`
+- **`commercialOrderDatetime`**: `long`
+- **`shippingCountry`**: `string`
+- **`memberUuid`**: `string`
+- **`productUuid`**: `string`
+- **`productName`**: `string`
+- **`productPrice`**: `float`
+- **`orderLinePrice`**: `float`
+- **`quantity`**: `int`

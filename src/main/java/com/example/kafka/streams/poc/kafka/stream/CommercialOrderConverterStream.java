@@ -5,7 +5,6 @@ import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderConverted;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderLine;
-import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -21,20 +20,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Map;
-
 /**
  * Kafka streams for converting the new commercial orders
  */
 @Component
-public class CommercialOrderConverterStream {
+public class CommercialOrderConverterStream extends BaseStream {
 
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(CommercialOrderConverterStream.class);
-
-    /** The URL of the schema registry */
-    private final String schemaRegistryUrl;
 
     /** The name of the new members Kafka topic (input KTable) */
     private final String newMembersTopic;
@@ -49,9 +42,9 @@ public class CommercialOrderConverterStream {
      * Autowired constructor
      *
      * @param schemaRegistryUrl              the URL of the schema registry
-     * @param newMembersTopic
-     * @param newCommercialOrdersTopic       the name of new commercial orders Kafka topic
-     * @param convertedCommercialOrdersTopic
+     * @param newMembersTopic                the name of the new members Kafka topic (input KTable)
+     * @param newCommercialOrdersTopic       the name of the new commercial orders Kafka topic (input KStream)
+     * @param convertedCommercialOrdersTopic the name of the converted commercial orders Kafka topic (output KStream)
      */
     @Autowired
     public CommercialOrderConverterStream(
@@ -60,7 +53,7 @@ public class CommercialOrderConverterStream {
             @Value("${spring.kafka.topics.commercial-orders-new}") String newCommercialOrdersTopic,
             @Value("${spring.kafka.topics.commercial-orders-converted}") String convertedCommercialOrdersTopic
     ) {
-        this.schemaRegistryUrl = schemaRegistryUrl;
+        super(schemaRegistryUrl);
         this.newMembersTopic = newMembersTopic;
         this.newCommercialOrdersTopic = newCommercialOrdersTopic;
         this.convertedCommercialOrdersTopic = convertedCommercialOrdersTopic;
@@ -72,12 +65,10 @@ public class CommercialOrderConverterStream {
      * @param builder the streams builder
      * @return the result KStream
      */
-    @Bean
+    @Bean("commercialOrderConverterStreamTopology")
     public KStream<String, CommercialOrderConverted> startProcessing(
             @Qualifier("commercialOrderConverterStreamBuilderFactoryBean") StreamsBuilder builder
     ) {
-        final Map<String, String> serdeConfig = Collections.singletonMap(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
-
         final Serde<String> stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
         stringKeyAvroSerde.configure(serdeConfig, true);
 
@@ -104,7 +95,7 @@ public class CommercialOrderConverterStream {
                 membersGlobalTable,
                 (String uuid, CommercialOrder commercialOrder) -> commercialOrder.getMemberUuid(),
                 (CommercialOrder commercialOrder, Member member) -> {
-                    LOGGER.info(">>> Stream - Member uuid={} joined with commercial order uuid={}.", commercialOrder.getMemberUuid(), commercialOrder.getUuid());
+                    LOGGER.info(">>> Stream - Commercial order uuid={} joined with member uuid={}.", commercialOrder.getUuid(), commercialOrder.getMemberUuid());
 
                     double amount = commercialOrder.getLines().stream().mapToDouble(line -> line.getPrice() * line.getQuantity()).sum();
 

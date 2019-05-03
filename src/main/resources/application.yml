@@ -30,3 +30,4 @@ spring:
       products-new: "t.products.new"
       commercial-orders-new: "t.commercial-orders.new"
       commercial-orders-converted: "t.commercial-orders.converted"
+      commercial-order-lines-split: "t.commercial-order-lines.split"

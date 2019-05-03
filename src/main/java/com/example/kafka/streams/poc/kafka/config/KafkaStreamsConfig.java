@@ -65,4 +65,16 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "commercialOrderConverterStream");
         return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
     }
+
+    /**
+     * Creates a bean for a Kafka Streams process to convert the commercial orders
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("commercialOrderLineSplitStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean commercialOrderLineSplitStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "commercialOrderLineSplitStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
 }
