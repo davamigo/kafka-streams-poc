@@ -1,5 +1,9 @@
 # Kafka Streams Proof of Concept
 
+Proof of Concept showing different use cases with Apache Kafka and Kafka Streams.
+
+**GitHub**: https://github.com/davamigo/kafka-streams-poc
+
 ## Producers
 
 ### Generate Commercial Order
