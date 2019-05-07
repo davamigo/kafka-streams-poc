@@ -1,0 +1,58 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.purchase",
+  "name": "PurchaseOrderLine",
+  "fields": [
+    {
+      "name": "key",
+      "type": "string",
+      "doc": "The key of purchase order line: country+date+product-uuid."
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "doc": "The Alpha-2 ISO 3166 country code."
+    },
+    {
+      "name": "date",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "The date and time of the purchase order line."
+    },
+    {
+      "name": "productUuid",
+      "type": "string",
+      "doc": "The unique identifier of the product."
+    },
+    {
+      "name": "productName",
+      "type": "string",
+      "doc": "The name of the product."
+    },
+    {
+      "name": "productType",
+      "type": "string",
+      "doc": "The product type."
+    },
+    {
+      "name": "productBarCode",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "doc": "The optional bar code of the product."
+    },
+    {
+      "name": "productPrice",
+      "type": "float",
+      "doc": "The cost price of the product."
+    },
+    {
+      "name": "quantity",
+      "type": "int",
+      "default": 1,
+      "doc": "The quantity of products for this purchase order line."
+    }
+  ]
+}

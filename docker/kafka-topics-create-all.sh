@@ -5,6 +5,7 @@ cd $(dirname $0)
 COMPACTED_TOPICS="\
     t.members.new \
     t.products.new \
+    t.purchase-order-lines.aggregated \
     ";
 
 for TOPIC in ${COMPACTED_TOPICS}; do

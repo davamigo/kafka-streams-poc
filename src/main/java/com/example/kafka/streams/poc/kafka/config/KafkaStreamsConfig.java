@@ -67,7 +67,7 @@ public class KafkaStreamsConfig {
     }
 
     /**
-     * Creates a bean for a Kafka Streams process to convert the commercial orders
+     * Creates a bean for a Kafka Streams process to split the commercial order lines
      *
      * @return A factory to build the stream
      */
@@ -75,6 +75,18 @@ public class KafkaStreamsConfig {
     public StreamsBuilderFactoryBean commercialOrderLineSplitStreamBuilderFactoryBean() {
         Map<String, Object> props = streamsConfigs();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "commercialOrderLineSplitStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
+
+    /**
+     * Creates a bean for a Kafka Streams process to generate the purchase order lines
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("purchaseOrderLineAggregatedStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean purchaseOrderLineAggregatedStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "purchaseOrderLineAggregatedStream");
         return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
     }
 }

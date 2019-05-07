@@ -44,12 +44,15 @@ Extract all order lines from the commercial orders and join each commercial orde
 - Join with `t.products.new` (GlobalKTable).
 - To `t.commercial-order-lines.split` (KStream).
 
-### Generate purchase orders
+### Aggregate the purchase order lines
 
-Group the commercial orders per product and day to generate the purchase orders. 
+Reduce the commercial order lines adding the quantities for the same product to generate the purchase order lines:
+One purchase order line per product, country and day.
+
+![](docs/images/stream-aggregate-purchase-order-lines.png)
 
 - From `t.commercial-order-lines.split`.
-- To `t.purchase-order.new`.
+- To `t.purchase-order-lines.aggregated`.
 
 ### Send orders to warehouse
 
