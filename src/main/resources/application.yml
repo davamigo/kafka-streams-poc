@@ -32,3 +32,4 @@ spring:
       commercial-orders-converted: "t.commercial-orders.converted"
       commercial-order-lines-split: "t.commercial-order-lines.split"
       purchase-order-lines-aggregated: "t.purchase-order-lines.aggregated"
+      purchase-orders-generated: "t.purchase-order.generated"

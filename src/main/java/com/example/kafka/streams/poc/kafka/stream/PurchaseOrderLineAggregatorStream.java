@@ -83,7 +83,7 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
         KStream<String, PurchaseOrderLine> purchaseOrderLinesUngrouppedStream = commercialOrderLinesStream
                 .map(
                         (String uuid, CommercialOrderLineSplit line) -> {
-                            SimpleDateFormat df = new SimpleDateFormat("yyy-MM-dd");
+                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                             Date datetime = new Date(line.getCommercialOrderDatetime());
                             String newKey = line.getShippingCountry() + "-" + df.format(datetime) + "-" + line.getProductUuid();
 

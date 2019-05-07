@@ -89,4 +89,16 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "purchaseOrderLineAggregatedStream");
         return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
     }
+
+    /**
+     * Creates a bean for a Kafka Streams process to generate the purchase order from the aggregated purchase order lines
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("purchaseOrderGeneratedStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean purchaseOrderGeneratedStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "purchaseOrderGeneratedStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
 }

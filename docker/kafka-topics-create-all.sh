@@ -6,6 +6,7 @@ COMPACTED_TOPICS="\
     t.members.new \
     t.products.new \
     t.purchase-order-lines.aggregated \
+    t.purchase-order.generated \
     ";
 
 for TOPIC in ${COMPACTED_TOPICS}; do

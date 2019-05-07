@@ -54,6 +54,16 @@ One purchase order line per product, country and day.
 - From `t.commercial-order-lines.split`.
 - To `t.purchase-order-lines.aggregated`.
 
+### Generate the purchase orders
+
+Generates one purchase order per country and day from the aggregated purchase order lines.
+The purchase order has a list of all order lines.
+
+![](docs/images/stream-generate-purchase-orders.png)
+
+- From `t.purchase-order-lines.aggregated`.
+- To `t.purchase-orders.generated`.
+
 ### Send orders to warehouse
 
 _**TBD**_

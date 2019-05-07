@@ -1,0 +1,66 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.purchase",
+  "name": "PurchaseOrder",
+  "fields": [
+    {
+      "name": "key",
+      "type": "string",
+      "doc": "The key of purchase order: country+date."
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "doc": "The Alpha-2 ISO 3166 country code."
+    },
+    {
+      "name": "date",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "The date and time of the purchase order."
+    },
+    {
+      "name": "lines",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "PurchaseOrderLineCondensed",
+          "type": "record",
+          "fields": [
+            {
+              "name": "purchaseOrderLineKey",
+              "type": "string",
+              "doc": "The key of purchase order line: country+date+product-uuid."
+            },
+            {
+              "name": "productUuid",
+              "type": "string",
+              "doc": "The unique identifier of the product."
+            },
+            {
+              "name": "price",
+              "type": "float",
+              "doc": "The cost price of the product."
+            },
+            {
+              "name": "quantity",
+              "type": "int",
+              "default": 1,
+              "doc": "The quantity of products for this purchase order line."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "totalAmount",
+      "type": "float",
+      "doc": "The total amount or the purchase order lines: SUM(price * quantity)"
+    },
+    {
+      "name": "totalQuantity",
+      "type": "int",
+      "doc": "The quantity of the products for this purchase order: SUM(quantity)"
+    }
+  ]
+}
