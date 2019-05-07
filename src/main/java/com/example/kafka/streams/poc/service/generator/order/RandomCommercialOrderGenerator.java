@@ -107,7 +107,7 @@ public class RandomCommercialOrderGenerator implements CommercialOrderGeneratorI
                 .setUuid(getRandomUuid())
                 .setCommercialOrderUuid(commercialOrderUuid)
                 .setProduct(product)
-                .setPrice(Math.round(100 * product.getPrice() * PRICE_MARGIN) / 100)
+                .setPrice(((float) Math.round(100 * product.getPrice() * PRICE_MARGIN)) / 100)
                 .setQuantity(1 + ((new Random()).nextInt(5)));
 
         return builder.build();
