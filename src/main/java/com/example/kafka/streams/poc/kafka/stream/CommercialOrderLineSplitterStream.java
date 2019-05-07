@@ -39,7 +39,7 @@ public class CommercialOrderLineSplitterStream extends BaseStream {
     /** The name of the new commercial orders Kafka topic (input KStream) */
     private final String newCommercialOrdersTopic;
 
-    /** The name of the split commercial order liness Kafka topic (output KStream) */
+    /** The name of the split commercial order lines Kafka topic (output KStream) */
     private final String splitCommercialOrderLinesTopic;
 
     /**
@@ -48,7 +48,7 @@ public class CommercialOrderLineSplitterStream extends BaseStream {
      * @param schemaRegistryUrl              the URL of the schema registry
      * @param newProductsTopic               the name of the new products Kafka topic (input KTable)
      * @param newCommercialOrdersTopic       the name of the new commercial orders Kafka topic (input KStream)
-     * @param splitCommercialOrderLinesTopic the name of the split commercial order liness Kafka topic (output KStream)
+     * @param splitCommercialOrderLinesTopic the name of the split commercial order lines Kafka topic (output KStream)
      */
     @Autowired
     public CommercialOrderLineSplitterStream(
@@ -70,7 +70,6 @@ public class CommercialOrderLineSplitterStream extends BaseStream {
      * @return the result KStream
      */
     @Bean("commercialOrderLineSplitStreamTopology")
-    @SuppressWarnings("unchecked")
     public KStream<String, CommercialOrderLineSplit> startProcessing(
             @Qualifier("commercialOrderLineSplitStreamBuilderFactoryBean") StreamsBuilder builder
     ) {
@@ -80,66 +79,72 @@ public class CommercialOrderLineSplitterStream extends BaseStream {
         final Serde<Product> productValueAvroSerde = new SpecificAvroSerde<>();
         productValueAvroSerde.configure(serdeConfig, false);
 
-        final Serde<CommercialOrder> newCommercialOrderValueAvroSerde = new SpecificAvroSerde<>();
-        newCommercialOrderValueAvroSerde.configure(serdeConfig, false);
+        final Serde<CommercialOrder> commercialOrderValueAvroSerde = new SpecificAvroSerde<>();
+        commercialOrderValueAvroSerde.configure(serdeConfig, false);
 
-        final Serde<CommercialOrderLineSplit> splitCommercialOrderLineValueAvroSerde = new SpecificAvroSerde<>();
-        splitCommercialOrderLineValueAvroSerde.configure(serdeConfig, false);
+        final Serde<CommercialOrderLineSplit> commercialOrderLineValueAvroSerde = new SpecificAvroSerde<>();
+        commercialOrderLineValueAvroSerde.configure(serdeConfig, false);
 
         GlobalKTable<String, Product> productsGlobalTable = builder.globalTable(
                 newProductsTopic,
                 Consumed.with(stringKeyAvroSerde, productValueAvroSerde)
         );
 
-        KStream<String, CommercialOrder> newCommercialOrdersStream = builder.stream(
+        KStream<String, CommercialOrder> commercialOrdersStream = builder.stream(
                 newCommercialOrdersTopic,
-                Consumed.with(stringKeyAvroSerde, newCommercialOrderValueAvroSerde)
+                Consumed.with(stringKeyAvroSerde, commercialOrderValueAvroSerde)
         );
 
-        KStream<String, CommercialOrderLineSplit> splitCommercialOrderLinesStream = newCommercialOrdersStream.flatMap(
-                (String uuid, CommercialOrder commercialOrder) -> {
-                    LOGGER.info(">>> Stream - Commercial order uuid={} - Splitting commercial order lines...", commercialOrder.getUuid());
+        KStream<String, CommercialOrderLineSplit> commercialOrderLinesStream = commercialOrdersStream
+                .flatMap(
+                        (String uuid, CommercialOrder commercialOrder) -> {
+                            LOGGER.info(">>> Stream - Commercial order uuid={} - Splitting commercial order lines...", commercialOrder.getUuid());
 
-                    List<KeyValue<String, CommercialOrderLineSplit>> result = new LinkedList<>();
-                    for (CommercialOrderLine line : commercialOrder.getLines()) {
-                        LOGGER.info(">>> Stream - Commercial order uuid={} - adding commercial order line uuid={}...", commercialOrder.getUuid(), line.getUuid());
+                            List<KeyValue<String, CommercialOrderLineSplit>> result = new LinkedList<>();
+                            for (CommercialOrderLine line : commercialOrder.getLines()) {
+                                LOGGER.info(">>> Stream - Commercial order uuid={} - Splitting commercial order line uuid={}...", commercialOrder.getUuid(), line.getUuid());
 
-                        CommercialOrderLineSplit commercialOrderLineSplit = CommercialOrderLineSplit
-                                .newBuilder()
-                                .setUuid(line.getUuid())
-                                .setCommercialOrderUuid(commercialOrder.getUuid())
-                                .setCommercialOrderDatetime(commercialOrder.getDatetime())
-                                .setShippingCountry(commercialOrder.getShippingAddress().getCountry())
-                                .setMemberUuid(commercialOrder.getMemberUuid())
-                                .setProductUuid(line.getProductUuid())
-                                .setProductName("--working--")
-                                .setProductPrice(0)
-                                .setOrderLinePrice(line.getPrice())
-                                .setQuantity(line.getQuantity())
-                                .build();
+                                CommercialOrderLineSplit commercialOrderLineSplit = CommercialOrderLineSplit
+                                        .newBuilder()
+                                        .setUuid(line.getUuid())
+                                        .setCommercialOrderUuid(commercialOrder.getUuid())
+                                        .setCommercialOrderDatetime(commercialOrder.getDatetime())
+                                        .setShippingCountry(commercialOrder.getShippingAddress().getCountry())
+                                        .setMemberUuid(commercialOrder.getMemberUuid())
+                                        .setProductUuid(line.getProductUuid())
+                                        .setProductName("")
+                                        .setProductType("")
+                                        .setProductBarCode("")
+                                        .setProductPrice(0)
+                                        .setOrderLinePrice(line.getPrice())
+                                        .setQuantity(line.getQuantity())
+                                        .build();
 
-                        result.add(KeyValue.pair(uuid, commercialOrderLineSplit));
-                    }
-                    return result;
-                }
-        );
+                                result.add(KeyValue.pair(uuid, commercialOrderLineSplit));
+                            }
+                            return result;
+                        }
+                );
 
-        KStream<String, CommercialOrderLineSplit> joinedCommercialOrderLinesStream = splitCommercialOrderLinesStream.join(
-                productsGlobalTable,
-                (String uuid, CommercialOrderLineSplit line) -> line.getProductUuid(),
-                (CommercialOrderLineSplit line, Product product) -> {
-                    LOGGER.info(">>> Stream - Commercial order line uuid={} joined with product uuid={}.", line.getUuid(), line.getProductUuid());
-                    return CommercialOrderLineSplit
-                            .newBuilder(line)
-                            .setProductName(product.getName())
-                            .setProductPrice(product.getPrice())
-                            .build();
-                }
-        );
+        KStream<String, CommercialOrderLineSplit> joinedCommercialOrderLinesStream = commercialOrderLinesStream
+                .join(
+                        productsGlobalTable,
+                        (String uuid, CommercialOrderLineSplit line) -> line.getProductUuid(),
+                        (CommercialOrderLineSplit line, Product product) -> {
+                            LOGGER.info(">>> Stream - Commercial order line uuid={} joined with product uuid={}.", line.getUuid(), line.getProductUuid());
+                            return CommercialOrderLineSplit
+                                    .newBuilder(line)
+                                    .setProductName(product.getName())
+                                    .setProductType(product.getType())
+                                    .setProductBarCode(product.getBarCode())
+                                    .setProductPrice(product.getPrice())
+                                    .build();
+                        }
+                );
 
         joinedCommercialOrderLinesStream.to(
                 splitCommercialOrderLinesTopic,
-                Produced.with(stringKeyAvroSerde, splitCommercialOrderLineValueAvroSerde)
+                Produced.with(stringKeyAvroSerde, commercialOrderLineValueAvroSerde)
         );
 
         return joinedCommercialOrderLinesStream;

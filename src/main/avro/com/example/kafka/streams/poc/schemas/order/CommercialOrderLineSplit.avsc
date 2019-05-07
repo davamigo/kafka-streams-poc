@@ -6,33 +6,33 @@
     {
       "name": "uuid",
       "type": "string",
-      "doc": "The unique identifier of the order line"
+      "doc": "The unique identifier of the order line."
     },
     {
       "name": "commercialOrderUuid",
       "type": "string",
-      "doc": "The unique identifier of the commercial order where the line belongs"
+      "doc": "The unique identifier of the commercial order where the line belongs."
     },
     {
       "name": "commercialOrderDatetime",
       "type": "long",
       "logicalType": "timestamp-millis",
-      "doc": "The date and time of when the commercial order was created"
+      "doc": "The date and time of when the commercial order was created."
     },
     {
       "name": "shippingCountry",
       "type": "string",
-      "doc": "The Alpha-2 ISO 3166 country code of the shipping address"
+      "doc": "The Alpha-2 ISO 3166 country code of the shipping address."
     },
     {
       "name": "memberUuid",
       "type": "string",
-      "doc": "The unique identifier of the member (client)"
+      "doc": "The unique identifier of the member (client)."
     },
     {
       "name": "productUuid",
       "type": "string",
-      "doc": "The unique identifier of the product ot the order line"
+      "doc": "The unique identifier of the product of the order line."
     },
     {
       "name": "productName",
@@ -40,20 +40,34 @@
       "doc": "The name of the product"
     },
     {
+      "name": "productType",
+      "type": "string",
+      "doc": "The product type."
+    },
+    {
+      "name": "productBarCode",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "doc": "The optional bar code of the product."
+    },
+    {
       "name": "productPrice",
       "type": "float",
-      "doc": "The unit price of the product"
+      "doc": "The cost price of the product."
     },
     {
       "name": "orderLinePrice",
       "type": "float",
-      "doc": "The unit price of the product in the order line"
+      "doc": "The sell price of the product in the order line."
     },
     {
       "name": "quantity",
       "type": "int",
       "default": 1,
-      "doc": "The quantity of products for this order line"
+      "doc": "The quantity of products for this order line."
     }
   ]
 }

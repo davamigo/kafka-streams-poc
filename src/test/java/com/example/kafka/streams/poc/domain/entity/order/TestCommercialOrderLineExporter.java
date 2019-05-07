@@ -18,7 +18,7 @@ public class TestCommercialOrderLineExporter {
     @Test
     public void testExport() {
 
-        Product product = new Product("111", "112", 113f);
+        Product product = new Product("111", "112", "113", "114", 115f);
         CommercialOrderLine line = CommercialOrderLine.newBuilder()
                 .setUuid("101")
                 .setCommercialOrderUuid("102")

@@ -6,17 +6,31 @@
     {
       "name": "uuid",
       "type": "string",
-      "doc": "The unique identifier of the product"
+      "doc": "The unique identifier of the product."
     },
     {
       "name": "name",
       "type": "string",
-      "doc": "The name of the product"
+      "doc": "The name of the product."
+    },
+    {
+      "name": "type",
+      "type": "string",
+      "doc": "The product type."
+    },
+    {
+      "name": "barCode",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "doc": "The optional bar code of the product."
     },
     {
       "name": "price",
       "type": "float",
-      "doc": "The sell price of the product"
+      "doc": "The cost price of the product."
     }
   ]
 }

@@ -24,20 +24,20 @@ public class TestCommercialOrderLineEntity {
 
         assertNull(commercialOrderLineEntity.getUuid());
         assertNull(commercialOrderLineEntity.getProductUuid());
-        assertEquals(0, commercialOrderLineEntity.getPrice(), 0.01);
+        assertEquals(0, commercialOrderLineEntity.getPrice(), 0.001);
         assertEquals(0, commercialOrderLineEntity.getQuantity());
     }
 
     @Test
     public void testCopyConstructor() {
 
-        Product product = new Product("111", "112", 113f);
+        Product product = new Product("111", "112", "113", "114", 115f);
         CommercialOrderLine commercialOrderLine = new CommercialOrderLine("101", "102", product, 104f, 105);
         CommercialOrderLineEntity commercialOrderLineEntity = new CommercialOrderLineEntity(commercialOrderLine);
 
         assertEquals("101", commercialOrderLineEntity.getUuid());
         assertEquals("111", commercialOrderLineEntity.getProductUuid());
-        assertEquals(104f, commercialOrderLineEntity.getPrice(), 0.01);
+        assertEquals(104f, commercialOrderLineEntity.getPrice(), 0.001);
         assertEquals(105, commercialOrderLineEntity.getQuantity());
     }
 }

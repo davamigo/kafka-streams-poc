@@ -75,53 +75,54 @@ public class CommercialOrderConverterStream extends BaseStream {
         final Serde<Member> memberValueAvroSerde = new SpecificAvroSerde<>();
         memberValueAvroSerde.configure(serdeConfig, false);
 
-        final Serde<CommercialOrder> newCommercialOrderValueAvroSerde = new SpecificAvroSerde<>();
-        newCommercialOrderValueAvroSerde.configure(serdeConfig, false);
+        final Serde<CommercialOrder> commercialOrderValueAvroSerde = new SpecificAvroSerde<>();
+        commercialOrderValueAvroSerde.configure(serdeConfig, false);
 
-        final Serde<CommercialOrderConverted> convertedCommercialOrderValueAvroSerde = new SpecificAvroSerde<>();
-        convertedCommercialOrderValueAvroSerde.configure(serdeConfig, false);
+        final Serde<CommercialOrderConverted> commercialOrderConvertedValueAvroSerde = new SpecificAvroSerde<>();
+        commercialOrderConvertedValueAvroSerde.configure(serdeConfig, false);
 
         GlobalKTable<String, Member> membersGlobalTable = builder.globalTable(
                 newMembersTopic,
                 Consumed.with(stringKeyAvroSerde, memberValueAvroSerde)
         );
 
-        KStream<String, CommercialOrder> newCommercialOrdersStream = builder.stream(
+        KStream<String, CommercialOrder> commercialOrdersStream = builder.stream(
                 newCommercialOrdersTopic,
-                Consumed.with(stringKeyAvroSerde, newCommercialOrderValueAvroSerde)
+                Consumed.with(stringKeyAvroSerde, commercialOrderValueAvroSerde)
         );
 
-        KStream<String, CommercialOrderConverted> commercialOrderConvertedStream = newCommercialOrdersStream.join(
-                membersGlobalTable,
-                (String uuid, CommercialOrder commercialOrder) -> commercialOrder.getMemberUuid(),
-                (CommercialOrder commercialOrder, Member member) -> {
-                    LOGGER.info(">>> Stream - Commercial order uuid={} joined with member uuid={}.", commercialOrder.getUuid(), commercialOrder.getMemberUuid());
+        KStream<String, CommercialOrderConverted> commercialOrdersConvertedStream = commercialOrdersStream
+                .join(
+                        membersGlobalTable,
+                        (String uuid, CommercialOrder commercialOrder) -> commercialOrder.getMemberUuid(),
+                        (CommercialOrder commercialOrder, Member member) -> {
+                            LOGGER.info(">>> Stream - Commercial order uuid={} joined with member uuid={}.", commercialOrder.getUuid(), commercialOrder.getMemberUuid());
 
-                    double amount = commercialOrder.getLines().stream().mapToDouble(line -> line.getPrice() * line.getQuantity()).sum();
+                        double amount = commercialOrder.getLines().stream().mapToDouble(line -> line.getPrice() * line.getQuantity()).sum();
 
-                    int quantity = commercialOrder.getLines().stream().mapToInt(CommercialOrderLine::getQuantity).sum();
+                        int quantity = commercialOrder.getLines().stream().mapToInt(CommercialOrderLine::getQuantity).sum();
 
-                    return CommercialOrderConverted
-                            .newBuilder()
-                            .setUuid(commercialOrder.getUuid())
-                            .setDatetime(commercialOrder.getDatetime())
-                            .setMemberUuid(member.getUuid())
-                            .setMemberFirstName(member.getFirstName())
-                            .setMemberLastName(member.getLastName())
-                            .setShippingCountry(commercialOrder.getShippingAddress().getCountry())
-                            .setShippingCity(commercialOrder.getShippingAddress().getCity())
-                            .setShippingZipCode(commercialOrder.getShippingAddress().getZipCode())
-                            .setTotalAmount((float) amount)
-                            .setTotalQuantity(quantity)
-                            .build();
-                }
-        );
+                            return CommercialOrderConverted
+                                    .newBuilder()
+                                    .setUuid(commercialOrder.getUuid())
+                                    .setDatetime(commercialOrder.getDatetime())
+                                    .setMemberUuid(member.getUuid())
+                                    .setMemberFirstName(member.getFirstName())
+                                    .setMemberLastName(member.getLastName())
+                                    .setShippingCountry(commercialOrder.getShippingAddress().getCountry())
+                                    .setShippingCity(commercialOrder.getShippingAddress().getCity())
+                                    .setShippingZipCode(commercialOrder.getShippingAddress().getZipCode())
+                                    .setTotalAmount((float) amount)
+                                    .setTotalQuantity(quantity)
+                                    .build();
+                        }
+                );
 
-        commercialOrderConvertedStream.to(
+        commercialOrdersConvertedStream.to(
                 convertedCommercialOrdersTopic,
-                Produced.with(stringKeyAvroSerde, convertedCommercialOrderValueAvroSerde)
+                Produced.with(stringKeyAvroSerde, commercialOrderConvertedValueAvroSerde)
         );
 
-        return commercialOrderConvertedStream;
+        return commercialOrdersConvertedStream;
     }
 }

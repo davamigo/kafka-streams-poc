@@ -21,19 +21,22 @@ public class TestProductBuilder {
         Product product = builder
                 .setUuid("101")
                 .setName("102")
-                .setPrice(103.0f)
+                .setType("103")
+                .setBarCode("104")
+                .setPrice(105f)
                 .build();
 
         assertEquals("101", product.getUuid());
         assertEquals("102", product.getName());
-        assertTrue(product.getPrice() < 103.01f);
-        assertTrue(product.getPrice() > 102.99f);
+        assertEquals("103", product.getType());
+        assertEquals("104", product.getBarCode());
+        assertEquals(105f, product.getPrice(), 0.001);
     }
 
     @Test
     public void testSetCopiesTheContentFromSourceObject() {
 
-        Product source = new Product("201", "202", 203f);
+        Product source = new Product("201", "202", "203", "204", 205f);
 
         Product.Builder builder = Product.newBuilder().set(source);
         Product product = builder.build();
@@ -49,14 +52,17 @@ public class TestProductBuilder {
                 com.example.kafka.streams.poc.schemas.product.Product.newBuilder()
                         .setUuid("301")
                         .setName("302")
-                        .setPrice(303.0f)
+                        .setType("303")
+                        .setBarCode("304")
+                        .setPrice(305f)
                         .build();
 
         Product product = Product.newBuilder().set(sourceProduct).build();
 
         assertEquals("301", product.getUuid());
         assertEquals("302", product.getName());
-        assertTrue(product.getPrice() < 303.01f);
-        assertTrue(product.getPrice() > 302.99f);
+        assertEquals("303", product.getType());
+        assertEquals("304", product.getBarCode());
+        assertEquals(305f, product.getPrice(), 0.001);
     }
 }

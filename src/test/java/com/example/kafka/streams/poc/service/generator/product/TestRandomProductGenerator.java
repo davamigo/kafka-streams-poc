@@ -6,8 +6,7 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for RandomProductGenerator service
@@ -25,6 +24,10 @@ public class TestRandomProductGenerator {
         assertNotNull(product);
         assertNotNull(product.getUuid());
         assertNotNull(product.getName());
-        assertTrue(product.getPrice() > 0.00f);
+        assertNotNull(product.getType());
+        assertNotNull(product.getBarCode());
+        assertEquals(13, product.getBarCode().length());
+        assertTrue(product.getPrice() >= 0.00f);
+        assertTrue(product.getPrice() <= 50.00f);
     }
 }

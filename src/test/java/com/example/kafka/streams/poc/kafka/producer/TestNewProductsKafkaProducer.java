@@ -35,7 +35,7 @@ public class TestNewProductsKafkaProducer {
     public void testPublishWhenEverythingOk() {
 
         // Prepare test data
-        Product product = new Product("101", "102", 103f);
+        Product product = new Product("101", "102", "103", "104", 105f);
         String topic = "111";
 
         ProducerRecord<String, Product> producerRecord = new ProducerRecord<>(topic, product);
@@ -59,7 +59,7 @@ public class TestNewProductsKafkaProducer {
     public void testPublishWhenErrorOccurred() {
 
         // Prepare test data
-        Product product = new Product("201", "202", 203f);
+        Product product = new Product("201", "202", "203", "204", 205f);
         String topic = "211";
 
         when(productKafkaProducerTemplate.send(any(ProducerRecord.class))).thenThrow(new KafkaException("_message_"));

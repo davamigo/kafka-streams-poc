@@ -49,7 +49,7 @@ public class TestCommercialOrderProducer {
         List<Address> addresses = new ArrayList<>();
         addresses.add(shippingAddress);
         Member member = new Member("201", "202", "203", addresses);
-        Product product = new Product("301", "302", 303f);
+        Product product = new Product("301", "302", "303", "304", 305f);
         CommercialOrderLine line = new CommercialOrderLine("401", "501", product, 404f, 405);
         CommercialOrder commercialOrder = CommercialOrder
                 .newBuilder()
@@ -85,7 +85,7 @@ public class TestCommercialOrderProducer {
         List<Address> addresses = new ArrayList<>();
         addresses.add(shippingAddress);
         Member member = new Member("201", "202", "203", addresses);
-        Product product = new Product("301", "302", 303f);
+        Product product = new Product("301", "302", "303", "304", 305f);
         CommercialOrderLine line = new CommercialOrderLine("401", "501", product, 404f, 405);
         CommercialOrder commercialOrder = CommercialOrder
                 .newBuilder()

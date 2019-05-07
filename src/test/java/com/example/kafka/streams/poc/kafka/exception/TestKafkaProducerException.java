@@ -20,7 +20,7 @@ public class TestKafkaProducerException {
     @Test
     public void testCreateProductExceptionWhenSuccess() {
 
-        Product product = new Product("101", "102", 103f);
+        Product product = new Product("101", "102", "103", "104", 105f);
         String topic = "111";
         Exception cause = new Exception();
 

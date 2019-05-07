@@ -20,25 +20,27 @@ public class TestProduct {
 
         assertNull(product.getUuid());
         assertNull(product.getName());
-        assertTrue(product.getPrice() < 0.01f);
-        assertTrue(product.getPrice() > -0.01f);
+        assertNull(product.getType());
+        assertNull(product.getBarCode());
+        assertEquals(0f, product.getPrice(), 0.001);
     }
 
     @Test
     public void testCompleteConstructor() {
-        Product product = new Product("101", "102", 103f);
+        Product product = new Product("101", "102", "103", "104", 105f);
 
         assertEquals("101", product.getUuid());
         assertEquals("102", product.getName());
-        assertTrue(product.getPrice() < 103.01f);
-        assertTrue(product.getPrice() > 102.99f);
+        assertEquals("103", product.getType());
+        assertEquals("104", product.getBarCode());
+        assertEquals(105f, product.getPrice(), 0.001);
     }
 
     @Test
     public void testTwoProductsAreEqualsWhenTheyHaveTheSameUuid() {
 
-        Product product1 = new Product("201", "202", 203f);
-        Product product2 = new Product("201", "204", 205f);
+        Product product1 = new Product("201", "202", "203", "204", 205f);
+        Product product2 = new Product("201", "212", "213", "214", 215f);
 
         assertEquals(product1, product2);
         assertNotSame(product1, product2);
@@ -46,8 +48,8 @@ public class TestProduct {
 
     @Test
     public void testTwoProductsAreDifferentWhenTheyHaveDifferentUuid() {
-        Product product1 = new Product("301", "302", 303f);
-        Product product2 = new Product("401", "302", 303f);
+        Product product1 = new Product("301", "302", "303", "304", 305f);
+        Product product2 = new Product("311", "302", "303", "304", 305f);
 
         assertNotEquals(product1, product2);
     }

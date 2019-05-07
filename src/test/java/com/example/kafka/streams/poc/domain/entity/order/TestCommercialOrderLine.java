@@ -29,7 +29,7 @@ public class TestCommercialOrderLine {
 
     @Test
     public void testCompleteConstructor() {
-        Product product = new Product("111", "112", 113f);
+        Product product = new Product("111", "112", "113", "114", 115f);
         CommercialOrderLine line = new CommercialOrderLine("101", "102", product, 104f, 105);
 
         assertEquals("101", line.getUuid());

@@ -13,7 +13,13 @@ public class Product {
     /** The name of the product */
     private String name;
 
-    /** The sell price of the product */
+    /** The product type */
+    private String type;
+
+    /** The optional bar code of the product */
+    private String barCode;
+
+    /** The cost price of the product */
     private float price;
 
     /**
@@ -22,19 +28,25 @@ public class Product {
     public Product() {
         this.uuid = null;
         this.name = null;
+        this.type = null;
+        this.barCode = null;
         this.price = 0.0f;
     }
 
     /**
      * Test constructor
      *
-     * @param uuid the unique identifier of the product
-     * @param name the name of the product
-     * @param price the sell price of the product
+     * @param uuid    the unique identifier of the product
+     * @param name    the name of the product
+     * @param type    the product type
+     * @param barCode the optional bar code of the product
+     * @param price   the cost price of the product
      */
-    public Product(String uuid, String name, float price) {
+    public Product(String uuid, String name, String type, String barCode, float price) {
         this.uuid = uuid;
         this.name = name;
+        this.type = type;
+        this.barCode = barCode;
         this.price = price;
     }
 
@@ -53,7 +65,21 @@ public class Product {
     }
 
     /**
-     * @return the sell price of the product
+     * @return the product type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @return the optional bar code of the product
+     */
+    public String getBarCode() {
+        return barCode;
+    }
+
+    /**
+     * @return the cost price of the product
      */
     public float getPrice() {
         return price;
@@ -128,20 +154,24 @@ public class Product {
             return this
                     .setUuid(product.getUuid())
                     .setName(product.getName())
+                    .setType(product.getType())
+                    .setBarCode(product.getBarCode())
                     .setPrice(product.getPrice());
         }
 
         /**
          * Copy data from an Avro Product object
          *
-         * @param address the Avro source product
+         * @param product the Avro source product
          * @return this
          */
-        public Builder set(com.example.kafka.streams.poc.schemas.product.Product address) {
+        public Builder set(com.example.kafka.streams.poc.schemas.product.Product product) {
             return this
-                    .setUuid(address.getUuid())
-                    .setName(address.getName())
-                    .setPrice(address.getPrice());
+                    .setUuid(product.getUuid())
+                    .setName(product.getName())
+                    .setType(product.getType())
+                    .setBarCode(product.getBarCode())
+                    .setPrice(product.getPrice());
         }
 
         /**
@@ -163,7 +193,25 @@ public class Product {
         }
 
         /**
-         * @param price the sell price of the product
+         * @param type the product type
+         * @return this
+         */
+        public Builder setType(String type) {
+            this.product.type = type;
+            return this;
+        }
+
+        /**
+         * @param barCode thr optional bar code of the product
+         * @return this
+         */
+        public Builder setBarCode(String barCode) {
+            this.product.barCode = barCode;
+            return this;
+        }
+
+        /**
+         * @param price the cost price of the product
          * @return this
          */
         public Builder setPrice(float price) {
@@ -196,6 +244,8 @@ public class Product {
             return com.example.kafka.streams.poc.schemas.product.Product.newBuilder()
                     .setUuid(product.getUuid())
                     .setName(product.getName())
+                    .setType(product.getType())
+                    .setBarCode(product.getBarCode())
                     .setPrice(product.getPrice())
                     .build();
         }

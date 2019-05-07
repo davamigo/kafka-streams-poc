@@ -18,7 +18,7 @@ public class TestCommercialOrderLineBuilder {
     @Test
     public void testBuiderSettersReturnExpectedResults() {
 
-        Product product = new Product("111", "112", 113f);
+        Product product = new Product("111", "112", "113", "114", 115f);
         CommercialOrderLine.Builder builder = CommercialOrderLine.newBuilder();
         CommercialOrderLine line = builder
                 .setUuid("101")
@@ -38,7 +38,7 @@ public class TestCommercialOrderLineBuilder {
     @Test
     public void testSetCopiesTheContentFromSourceObject() {
 
-        Product product = new Product("211", "212", 213f);
+        Product product = new Product("211", "212", "213", "214", 215f);
         CommercialOrderLine source = new CommercialOrderLine("201", "202", product, 204f, 205);
         CommercialOrderLine.Builder builder = CommercialOrderLine.newBuilder().set(source);
         CommercialOrderLine line = builder.build();

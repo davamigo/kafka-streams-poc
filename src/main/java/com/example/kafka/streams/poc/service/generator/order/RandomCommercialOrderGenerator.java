@@ -29,6 +29,9 @@ public class RandomCommercialOrderGenerator implements CommercialOrderGeneratorI
     /** Service to generate products with random data */
     private ProductGeneratorInterface productGenerator;
 
+    /** The price margin (1.3f = 3%) */
+    private static float PRICE_MARGIN = 1.3f;
+
     /**
      * Autowired constructor
      *
@@ -104,7 +107,7 @@ public class RandomCommercialOrderGenerator implements CommercialOrderGeneratorI
                 .setUuid(getRandomUuid())
                 .setCommercialOrderUuid(commercialOrderUuid)
                 .setProduct(product)
-                .setPrice(product.getPrice())
+                .setPrice(Math.round(100 * product.getPrice() * PRICE_MARGIN) / 100)
                 .setQuantity(1 + ((new Random()).nextInt(5)));
 
         return builder.build();

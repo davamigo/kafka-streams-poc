@@ -13,7 +13,7 @@ import java.util.UUID;
 public class RandomProductGenerator implements ProductGeneratorInterface {
 
     /** Array of product colors */
-    private static final String[] productColors = {
+    private static final String[] PRODUCT_COLORS = {
             "Black",
             "Red",
             "Green",
@@ -29,7 +29,7 @@ public class RandomProductGenerator implements ProductGeneratorInterface {
     };
 
     /** Array of product adjectives */
-    private static final String[] productAdjectives = {
+    private static final String[] PRODUCT_ADJECTIVES = {
             "Thin",
             "Thick",
             "Bold",
@@ -37,12 +37,18 @@ public class RandomProductGenerator implements ProductGeneratorInterface {
     };
 
     /** Array of product names */
-    private static final String[] productBaseNames = {
+    private static final String[] PRODUCT_BASE_NAMES = {
             "Pen",
             "Pencil",
             "Crayon",
             "Marker"
     };
+
+    /** The default product type */
+    private static final String DEFAULT_TYPE = "Pen";
+
+    /** The maximum price of a product * 100 (meaning 5000 => 50.00) */
+    private static int MAX_PRICE = 5000;
 
     /**
      * Default constructor
@@ -60,6 +66,8 @@ public class RandomProductGenerator implements ProductGeneratorInterface {
         Product.Builder builder = Product.newBuilder();
         builder.setUuid(UUID.randomUUID().toString());
         builder.setName(selectRandomProductName());
+        builder.setType(selectRandomType());
+        builder.setBarCode(selectRandomBarCode());
         builder.setPrice(selectRandomProductPrice());
 
         return builder.build();
@@ -72,11 +80,50 @@ public class RandomProductGenerator implements ProductGeneratorInterface {
      */
     private String selectRandomProductName() {
 
-        String color = productColors[(new Random()).nextInt(productColors.length)];
-        String adjective = productAdjectives[(new Random()).nextInt(productAdjectives.length)];
-        String baseName = productBaseNames[(new Random()).nextInt(productBaseNames.length)];
+        String color = PRODUCT_COLORS[(new Random()).nextInt(PRODUCT_COLORS.length)];
+        String adjective = PRODUCT_ADJECTIVES[(new Random()).nextInt(PRODUCT_ADJECTIVES.length)];
+        String baseName = PRODUCT_BASE_NAMES[(new Random()).nextInt(PRODUCT_BASE_NAMES.length)];
 
         return color + " " + adjective + " " + baseName;
+    }
+
+    /**
+     * Returns a random product type. For this example the type is always "Pen"
+     *
+     * @return a random product type
+     */
+    private String selectRandomType() {
+        return DEFAULT_TYPE;
+    }
+
+    /**
+     * Returns a random bar code
+     *
+     * @return a random bar code
+     */
+    private String selectRandomBarCode() {
+
+        StringBuilder builder = new StringBuilder();
+        int odds = 0;;
+        int evens = 0;
+
+        for (int i = 0; i < 12; i++) {
+            int digit = (new Random()).nextInt(10);
+            if (i % 2 == 0) {
+                evens += digit;
+            } else {
+                odds += digit;
+            }
+            builder.append(digit);
+        }
+
+        int checksum = ((3 * odds) + evens) % 10;
+        if (checksum > 0) {
+            checksum = 10 - checksum;
+        }
+        builder.append(checksum);
+
+        return builder.toString();
     }
 
     /**
@@ -85,6 +132,6 @@ public class RandomProductGenerator implements ProductGeneratorInterface {
      * @return a random product price
      */
     private float selectRandomProductPrice() {
-        return ((float)(new Random()).nextInt(10000)) / 100;
+        return ((float)(new Random()).nextInt(MAX_PRICE)) / 100;
     }
 }
