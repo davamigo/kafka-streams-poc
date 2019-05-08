@@ -25,13 +25,9 @@ import static org.junit.Assert.assertTrue;
 public class TestRandomCommercialOrderGenerator {
 
     @Test
-    public void testGetMemberReturnMemberWithRandomData() {
+    public void testGetCommercialOrderReturnCommercialOrderWithRandomData() {
 
-        RandomCommercialOrderGenerator service = new RandomCommercialOrderGenerator(
-                new ReusableMemberSelector(new RandomMemberGenerator(new RandomAddressGenerator())),
-                new ReusableProductSelector(new RandomProductGenerator())
-        );
-
+        RandomCommercialOrderGenerator service = getCommercialOrderGenerator();
         CommercialOrder commercialOrder = service.getCommercialOrder();
 
         assertNotNull(commercialOrder);
@@ -46,5 +42,28 @@ public class TestRandomCommercialOrderGenerator {
         for (CommercialOrderLine line : lines) {
             assertTrue(line.getPrice() > line.getProduct().getPrice());
         }
+    }
+
+    @Test
+    public void testGetCommercialOrderReturnShippingAddress() {
+
+        RandomCommercialOrderGenerator service = getCommercialOrderGenerator();
+        CommercialOrder commercialOrder;
+        do {
+            commercialOrder = service.getCommercialOrder();
+        }
+        while (commercialOrder.getBillingAddress() == null);
+
+        assertNotNull(commercialOrder.getBillingAddress());
+    }
+
+    /**
+     * @return a RandomCommercialOrderGenerator service for testing purposes
+     */
+    private RandomCommercialOrderGenerator getCommercialOrderGenerator() {
+        return new RandomCommercialOrderGenerator(
+                new ReusableMemberSelector(new RandomMemberGenerator(new RandomAddressGenerator())),
+                new ReusableProductSelector(new RandomProductGenerator())
+        );
     }
 }
