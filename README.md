@@ -4,6 +4,18 @@ Proof of Concept showing different use cases with Apache Kafka and Kafka Streams
 
 **GitHub**: https://github.com/davamigo/kafka-streams-poc
 
+## Architecture
+
+This PoC consist in a Producer to generate random data and send it to Kafka topics; and some Kafka Stream processes to convert the generated data into something else.
+
+![](docs/images/architecture-producers-and-streams.png)
+
+Also there are some consumers who write in a mongoDB database and a small front end to show the contents of the collections in mongoDB.
+
+![](docs/images/architecture-consumers-and-mongo.png)
+
+The whole project is designed to have a separate microservice for each process, but it is programmed as a monolith because this is just a PoC.
+
 ## Producers
 
 ### Generate Commercial Order
