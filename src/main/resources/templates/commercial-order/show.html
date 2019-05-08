@@ -73,7 +73,9 @@
                 <tbody>
                     <tr th:each="commercialOrderLine : ${commercialOrder.getLines()}">
                         <td th:text="${commercialOrderLine.getUuid()}"></td>
-                        <td th:text="${commercialOrderLine.getProductUuid()}"></td>
+                        <td>
+                            <a th:href="@{/product/{id}(id=${commercialOrderLine.getProductUuid()})}" th:text="${commercialOrderLine.getProductUuid()}"></a>
+                        </td>
                         <td th:text="${commercialOrderLine.getPrice()}"></td>
                         <td th:text="${commercialOrderLine.getQuantity()}"></td>
                     </tr>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Product - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Product</h2>
+
+<div th:if="${null == product}">
+    <p>
+        The product with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != product}">
+    <dl>
+        <dt>Uuid:</dt>
+        <dd>
+            <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
+        </dd>
+
+        <dt>Name:</dt>
+        <dd th:text="${product.getName()}"></dd>
+
+        <dt>Type:</dt>
+        <dd th:text="${product.getType()}"></dd>
+
+        <dt>Bar Code:</dt>
+        <dd th:text="${product.getBarCode()}"></dd>
+
+        <dt>Cost Price:</dt>
+        <dd th:text="${product.getPrice()}"></dd>
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/product}">Show products</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

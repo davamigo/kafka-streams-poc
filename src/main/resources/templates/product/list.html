@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Products - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Products</h2>
+
+<div th:if="${products.isEmpty()}">
+    <p>
+        No products found!
+    </p>
+</div>
+
+<div th:if="${!products.isEmpty()}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Uuid</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Barcode</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${products}">
+                <td>
+                    <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
+                </td>
+                <td th:text="${product.getName()}"></td>
+                <td th:text="${product.getType()}"></td>
+                <td th:text="${product.getBarCode()}"></td>
+                <td th:text="${product.getPrice()}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        Showing products
+        <span th:text="${(page * size) + 1}"></span>
+        to
+        <span th:text="${(page * size) + products.size()}"></span>
+        of
+        <span th:text="${count}"></span>
+    </p>
+</div>
+
+<div th:if="${prev < page || next > page}">
+    <p>
+        Pagination
+        <span th:if="${prev < page}">
+            &ndash;
+            <a th:href="@{/product(page=0,size=${size})}">First</a>
+            &ndash;
+            <a th:href="@{/product(page=${prev},size=${size})}">Prev</a>
+        </span>
+        <span th:if="${next > page}">
+            &ndash;
+            <a th:href="@{/product(page=${next},size=${size})}">Next</a>
+        </span>
+    </p>
+</div>
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

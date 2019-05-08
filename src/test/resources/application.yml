@@ -1,9 +1,3 @@
 spring:
   application:
     name: "kafka-streams-poc"
-
-  kafka:
-    topics:
-      members-new: "t.members.new.test"
-      products-new: "t.products.new.test"
-      commercial-orders-new: "t.commercial-orders.new.test"
