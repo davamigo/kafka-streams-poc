@@ -24,6 +24,7 @@ spring:
     streams:
       threads: 1
     group-ids:
+      members-new: "${spring.application.name}.members.new"
       commercial-orders-new: "${spring.application.name}.commercial-orders.new"
     topics:
       members-new: "t.members.new"

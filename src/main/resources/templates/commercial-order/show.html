@@ -18,14 +18,18 @@
 
 <div th:if="${null != commercialOrder}">
     <dl>
-        <dt>UUID:</dt>
-        <dd th:text="${commercialOrder.getUuid()}"></dd>
+        <dt>Uuid:</dt>
+        <dd>
+            <a th:href="@{/commercial-order/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+        </dd>
 
         <dt>Date:</dt>
         <dd th:text="${commercialOrder.getDatetime()}"></dd>
 
         <dt>Member:</dt>
-        <dd th:text="${commercialOrder.getMemberUUid()}"></dd>
+        <dd>
+            <a th:href="@{/member/{id}(id=${commercialOrder.getMemberUUid()})}" th:text="${commercialOrder.getMemberUUid()}"></a>
+        </dd>
 
         <dt>Shipping Address:</dt>
         <dd>
@@ -60,7 +64,7 @@
             <table border="1">
                 <thead>
                     <tr>
-                        <th>Id.</th>
+                        <th>Uuid</th>
                         <th>Product</th>
                         <th>Price</th>
                         <th>Quantity</th>
@@ -82,7 +86,7 @@
 <p>
     Navigation
     &ndash;
-    <a th:href="@{/commercial-order}">Show orders</a>
+    <a th:href="@{/commercial-order}">Show commercial orders</a>
     &ndash;
     <a th:href="@{/}">Homepage</a>
 </p>

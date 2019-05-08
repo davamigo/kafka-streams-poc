@@ -18,7 +18,7 @@
     <table border="1">
         <thead>
             <tr>
-                <th>Id.</th>
+                <th>Uuid</th>
                 <th>Date</th>
                 <th>Member</th>
                 <th>Address</th>
@@ -31,7 +31,9 @@
                     <a th:href="@{/commercial-order/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
                 </td>
                 <td th:text="${commercialOrder.getDatetime()}"></td>
-                <td th:text="${commercialOrder.getMemberUUid()}"></td>
+                <td>
+                    <a th:href="@{/member/{id}(id=${commercialOrder.getMemberUUid()})}" th:text="${commercialOrder.getMemberUUid()}"></a>
+                </td>
                 <td>
                     <span th:text="${commercialOrder.getShippingAddress().getStreet()}"></span>
                     <span th:text="${commercialOrder.getShippingAddress().getNumber()}"></span>
@@ -45,6 +47,14 @@
             </tr>
         </tbody>
     </table>
+    <p>
+        Showing commercial orders
+        <span th:text="${(page * size) + 1}"></span>
+        to
+        <span th:text="${(page * size) + commercialOrders.size()}"></span>
+        of
+        <span th:text="${count}"></span>
+    </p>
 </div>
 
 <div th:if="${prev < page || next > page}">

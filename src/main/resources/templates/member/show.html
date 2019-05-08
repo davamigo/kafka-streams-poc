@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Member - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Member</h2>
+
+<div th:if="${null == member}">
+    <p>
+        The member with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != member}">
+    <dl>
+        <dt>Uuid:</dt>
+        <dd>
+            <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
+        </dd>
+
+        <dt>First Name:</dt>
+        <dd th:text="${member.getFirstName()}"></dd>
+
+        <dt>Last Name:</dt>
+        <dd th:text="${member.getLastName()}"></dd>
+
+        <dt>Addresses:</dt>
+        <dd th:if="${member.getAddresses().isEmpty()}">
+            Member without addresses!
+        </dd>
+        <dd th:if="${!member.getAddresses().isEmpty()}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Street</th>
+                        <th>Number</th>
+                        <th>Extra</th>
+                        <th>Zip Code</th>
+                        <th>City</th>
+                        <th>State</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="address : ${member.getAddresses()}">
+                        <td th:text="${address.getStreet()}"></td>
+                        <td th:text="${address.getNumber()}"></td>
+                        <td th:text="${address.getExtra()}"></td>
+                        <td th:text="${address.getZipCode()}"></td>
+                        <td th:text="${address.getCity()}"></td>
+                        <td th:text="${address.getState()}"></td>
+                        <td th:text="${address.getCountry()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/member}">Show members</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

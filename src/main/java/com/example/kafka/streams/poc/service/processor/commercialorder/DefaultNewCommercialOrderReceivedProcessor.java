@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Service to process the reception of a new CommercialOrder whichstores the commercial order in a mongoDB collection.
+ * Service to process the reception of a new CommercialOrder which stores the commercial order in a mongoDB collection.
  */
 @Component
 public class DefaultNewCommercialOrderReceivedProcessor implements NewCommercialOrderReceptionProcessorInterface {

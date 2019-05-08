@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Members - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Members</h2>
+
+<div th:if="${members.isEmpty()}">
+    <p>
+        No members found!
+    </p>
+</div>
+
+<div th:if="${!members.isEmpty()}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Uuid</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Addresses</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="member : ${members}">
+                <td>
+                    <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
+                </td>
+                <td th:text="${member.getFirstName()}"></td>
+                <td th:text="${member.getLastName()}"></td>
+                <td th:text="${member.getAddresses().size()}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        Showing members
+        <span th:text="${(page * size) + 1}"></span>
+        to
+        <span th:text="${(page * size) + members.size()}"></span>
+        of
+        <span th:text="${count}"></span>
+    </p>
+</div>
+
+<div th:if="${prev < page || next > page}">
+    <p>
+        Pagination
+        <span th:if="${prev < page}">
+            &ndash;
+            <a th:href="@{/member(page=0,size=${size})}">First</a>
+            &ndash;
+            <a th:href="@{/member(page=${prev},size=${size})}">Prev</a>
+        </span>
+        <span th:if="${next > page}">
+            &ndash;
+            <a th:href="@{/member(page=${next},size=${size})}">Next</a>
+        </span>
+    </p>
+</div>
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

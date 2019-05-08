@@ -39,8 +39,8 @@ public class NewCommercialOrdersKafkaConsumer {
      *
      * @param order The data of the commercial order
      * @param ack   The acknowledgment object
-     * @param key   The key of the commercial order
-     * @param topic The topic name
+     * @param key   The key of the message in the topic
+     * @param topic The name of the topic
      */
     @KafkaListener(
             topics="${spring.kafka.topics.commercial-orders-new}",
