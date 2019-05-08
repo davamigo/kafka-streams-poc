@@ -1,4 +1,4 @@
-package com.example.kafka.streams.poc.service.generator.order;
+package com.example.kafka.streams.poc.service.generator.commercialorder;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
 import com.example.kafka.streams.poc.domain.entity.member.Member;

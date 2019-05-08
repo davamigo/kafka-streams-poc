@@ -3,7 +3,7 @@ package com.example.kafka.streams.poc.controller;
 import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
 import com.example.kafka.streams.poc.mongodb.entity.CommercialOrderEntity;
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderRepository;
-import com.example.kafka.streams.poc.service.producer.CommercialOrderProducer;
+import com.example.kafka.streams.poc.service.producer.commercialorder.CommercialOrderProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

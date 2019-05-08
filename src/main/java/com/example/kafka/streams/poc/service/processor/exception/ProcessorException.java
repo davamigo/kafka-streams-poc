@@ -1,4 +1,4 @@
-package com.example.kafka.streams.poc.service.processor;
+package com.example.kafka.streams.poc.service.processor.exception;
 
 /**
  * Exception to be thrown when an error occurred with the processor

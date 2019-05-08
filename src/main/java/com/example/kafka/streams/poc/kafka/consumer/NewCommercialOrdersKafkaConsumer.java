@@ -1,8 +1,8 @@
 package com.example.kafka.streams.poc.kafka.consumer;
 
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
-import com.example.kafka.streams.poc.service.processor.ProcessorException;
-import com.example.kafka.streams.poc.service.processor.order.NewCommercialOrderReceptionProcessorInterface;
+import com.example.kafka.streams.poc.service.processor.exception.ProcessorException;
+import com.example.kafka.streams.poc.service.processor.commercialorder.NewCommercialOrderReceptionProcessorInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
