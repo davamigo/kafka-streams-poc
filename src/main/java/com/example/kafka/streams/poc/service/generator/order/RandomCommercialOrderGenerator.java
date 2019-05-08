@@ -2,8 +2,8 @@ package com.example.kafka.streams.poc.service.generator.order;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
 import com.example.kafka.streams.poc.domain.entity.member.Member;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrderLine;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderLine;
 import com.example.kafka.streams.poc.domain.entity.product.Product;
 import com.example.kafka.streams.poc.service.generator.member.MemberGeneratorInterface;
 import com.example.kafka.streams.poc.service.generator.member.ReusableMemberSelector;

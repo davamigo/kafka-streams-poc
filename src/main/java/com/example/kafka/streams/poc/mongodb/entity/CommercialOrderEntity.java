@@ -1,7 +1,7 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrderLine;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderLine;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

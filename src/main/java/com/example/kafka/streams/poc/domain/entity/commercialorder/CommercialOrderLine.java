@@ -1,4 +1,4 @@
-package com.example.kafka.streams.poc.domain.entity.order;
+package com.example.kafka.streams.poc.domain.entity.commercialorder;
 
 import com.example.kafka.streams.poc.domain.entity.product.Product;
 

@@ -1,6 +1,6 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrderLine;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderLine;
 import com.example.kafka.streams.poc.domain.entity.product.Product;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -2,9 +2,8 @@ package com.example.kafka.streams.poc.mongodb.entity;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
 import com.example.kafka.streams.poc.domain.entity.member.Member;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrderLine;
-import com.example.kafka.streams.poc.domain.entity.product.Product;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderLine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;

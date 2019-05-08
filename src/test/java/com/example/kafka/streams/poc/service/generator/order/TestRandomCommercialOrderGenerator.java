@@ -1,7 +1,7 @@
 package com.example.kafka.streams.poc.service.generator.order;
 
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrderLine;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderLine;
 import com.example.kafka.streams.poc.service.generator.address.RandomAddressGenerator;
 import com.example.kafka.streams.poc.service.generator.member.RandomMemberGenerator;
 import com.example.kafka.streams.poc.service.generator.member.ReusableMemberSelector;

@@ -12,8 +12,6 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
  * Kafka consumer to receive the new commercial orders data
  */
@@ -59,7 +57,7 @@ public class NewCommercialOrdersKafkaConsumer {
 
         try {
             newCommercialOrderReceptionProcessor.process(
-                    com.example.kafka.streams.poc.domain.entity.order.CommercialOrder
+                    com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder
                             .newBuilder()
                             .set(order)
                             .build()

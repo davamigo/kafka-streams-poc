@@ -46,7 +46,7 @@ public class TestNewCommercialOrdersKafkaConsumer {
 
         // Assertions
         verify(newCommercialOrderReceptionProcessorInterface, times(1)).process(any(
-                com.example.kafka.streams.poc.domain.entity.order.CommercialOrder.class
+                com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder.class
         ));
 
         verify(ack, times(1)).acknowledge();
@@ -66,7 +66,7 @@ public class TestNewCommercialOrdersKafkaConsumer {
 
         // Assertions
         verify(newCommercialOrderReceptionProcessorInterface, times(1)).process(any(
-                com.example.kafka.streams.poc.domain.entity.order.CommercialOrder.class
+                com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder.class
         ));
 
         verify(ack, times(0)).acknowledge();

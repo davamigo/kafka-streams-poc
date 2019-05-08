@@ -1,6 +1,6 @@
 package com.example.kafka.streams.poc.service.processor.order;
 
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
 import com.example.kafka.streams.poc.mongodb.entity.CommercialOrderEntity;
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderRepository;
 import com.example.kafka.streams.poc.service.processor.ProcessorException;

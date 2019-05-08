@@ -1,8 +1,8 @@
 package com.example.kafka.streams.poc.service.producer;
 
 import com.example.kafka.streams.poc.domain.entity.member.Member;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrder;
-import com.example.kafka.streams.poc.domain.entity.order.CommercialOrderLine;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
+import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderLine;
 import com.example.kafka.streams.poc.domain.entity.product.Product;
 import com.example.kafka.streams.poc.kafka.producer.NewCommercialOrdersKafkaProducer;
 import com.example.kafka.streams.poc.kafka.producer.NewMembersKafkaProducer;
