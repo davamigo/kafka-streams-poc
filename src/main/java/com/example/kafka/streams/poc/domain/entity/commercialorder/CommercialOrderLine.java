@@ -204,7 +204,7 @@ public class CommercialOrderLine {
         }
 
         /**
-         * @param price the The unit price for the product in the order line
+         * @param price the unit price for the product in the order line
          * @return this
          */
         public Builder setPrice(float price) {

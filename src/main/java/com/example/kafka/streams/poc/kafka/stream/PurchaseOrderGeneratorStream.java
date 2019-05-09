@@ -128,7 +128,7 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
                             newAmount += newLine.getProductPrice() * newLine.getQuantity();
                             newQuantity += newLine.getQuantity();
 
-                            return PurchaseOrder
+                            PurchaseOrder result = PurchaseOrder
                                     .newBuilder(purchaseOrder)
                                     .setKey(key)
                                     .setCountry(newLine.getCountry())
@@ -137,6 +137,10 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
                                     .setTotalAmount(newAmount)
                                     .setTotalQuantity(newQuantity)
                                     .build();
+
+                            LOGGER.info(">>> Stream - Purchase order key={} - Aggregating purchase order line key={}...", key, newLine.getKey());
+
+                            return result;
                         },
                         Materialized.with(
                                 stringKeyAvroSerde,

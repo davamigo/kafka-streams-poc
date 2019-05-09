@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Purchase Order - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Purchase Order</h2>
+
+<div th:if="${null == purchaseOrder}">
+    <p>
+        The purchase order with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != purchaseOrder}">
+    <dl>
+        <dt>Key:</dt>
+        <dd>
+            <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getKey()})}" th:text="${purchaseOrder.getKey()}"></a>
+        </dd>
+
+        <dt>Country:</dt>
+        <dd th:text="${purchaseOrder.getCountry()}"></dd>
+
+        <dt>Date:</dt>
+        <dd th:text="${purchaseOrder.getDate()}"></dd>
+
+        <dt>Total Amount:</dt>
+        <dd th:text="${purchaseOrder.getTotalAmount()}"></dd>
+
+        <dt>Total Quantity:</dt>
+        <dd th:text="${purchaseOrder.getTotalQuantity()}"></dd>
+
+        <dt>Lines:</dt>
+        <dd th:if="${purchaseOrder.getLines().isEmpty()}">
+            Purchase Order without lines!
+        </dd>
+        <dd th:if="${!purchaseOrder.getLines().isEmpty()}">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="purchaseOrderLine : ${purchaseOrder.getLines()}">
+                        <td th:text="${purchaseOrderLine.getKey()}"></td>
+                        <td>
+                            <a th:href="@{/product/{id}(id=${purchaseOrderLine.getProductUuid()})}" th:text="${purchaseOrderLine.getProductUuid()}"></a>
+                        </td>
+                        <td th:text="${purchaseOrderLine.getPrice()}"></td>
+                        <td th:text="${purchaseOrderLine.getQuantity()}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/purchase-order}">Show purchase orders</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

@@ -6,7 +6,7 @@
     {
       "name": "key",
       "type": "string",
-      "doc": "The key of purchase order line: country+date+product-uuid."
+      "doc": "The key of purchase order line: country+date+product-key."
     },
     {
       "name": "country",

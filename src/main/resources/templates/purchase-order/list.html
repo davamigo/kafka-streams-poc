@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Purchase Orders - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Purchase Orders</h2>
+
+<div th:if="${purchaseOrders.isEmpty()}">
+    <p>
+        No purchase orders found!
+    </p>
+</div>
+
+<div th:if="${!purchaseOrders.isEmpty()}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Country</th>
+                <th>Date</th>
+                <th>Total Amount</th>
+                <th>Total Quantity</th>
+                <th>Num. Lines</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="purchaseOrder : ${purchaseOrders}">
+                <td>
+                    <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getKey()})}" th:text="${purchaseOrder.getKey()}"></a>
+                </td>
+                <td th:text="${purchaseOrder.getCountry()}"></td>
+                <td th:text="${purchaseOrder.getDate()}"></td>
+                <td th:text="${purchaseOrder.getTotalAmount()}"></td>
+                <td th:text="${purchaseOrder.getTotalQuantity()}"></td>
+                <td th:text="${purchaseOrder.getLines().size()}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        Showing purchase orders
+        <span th:text="${(page * size) + 1}"></span>
+        to
+        <span th:text="${(page * size) + purchaseOrders.size()}"></span>
+        of
+        <span th:text="${count}"></span>
+    </p>
+</div>
+
+<div th:if="${prev < page || next > page}">
+    <p>
+        Pagination
+        <span th:if="${prev < page}">
+            &ndash;
+            <a th:href="@{/purchase-order(page=0,size=${size})}">First</a>
+            &ndash;
+            <a th:href="@{/purchase-order(page=${prev},size=${size})}">Prev</a>
+        </span>
+        <span th:if="${next > page}">
+            &ndash;
+            <a th:href="@{/purchase-order(page=${next},size=${size})}">Next</a>
+        </span>
+    </p>
+</div>
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

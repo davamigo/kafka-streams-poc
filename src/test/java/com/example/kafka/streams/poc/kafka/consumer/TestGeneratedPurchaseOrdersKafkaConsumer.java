@@ -1,0 +1,92 @@
+package com.example.kafka.streams.poc.kafka.consumer;
+
+import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
+import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed;
+import com.example.kafka.streams.poc.service.processor.purchaseorder.GeneratedPurchaseOrderReceptionProcessorInterface;
+import com.example.kafka.streams.poc.service.processor.exception.ProcessorException;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.test.annotation.DirtiesContext;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+/**
+ * Unit tests for GeneratedPurchaseOrdersKafkaConsumer class
+ */
+@SpringBootTest
+@DirtiesContext
+@RunWith(MockitoJUnitRunner.class)
+public class TestGeneratedPurchaseOrdersKafkaConsumer {
+
+    @Mock
+    GeneratedPurchaseOrderReceptionProcessorInterface generatedPurchaseOrderReceptionProcessorInterface;
+
+    @Mock
+    Acknowledgment ack;
+
+    @Test
+    public void testListenHappyPath() {
+
+        // Prepare test data
+        PurchaseOrder purchaseOrder = getTestPurchaseOrder();
+
+        // Run the test
+        GeneratedPurchaseOrdersKafkaConsumer generatedPurchaseOrdersKafkaConsumer = new GeneratedPurchaseOrdersKafkaConsumer(generatedPurchaseOrderReceptionProcessorInterface);
+        generatedPurchaseOrdersKafkaConsumer.listen(purchaseOrder, ack, "101", "ttt");
+
+        // Assertions
+        verify(generatedPurchaseOrderReceptionProcessorInterface, times(1)).process(any(
+                com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder.class
+        ));
+
+        verify(ack, times(1)).acknowledge();
+    }
+
+    @Test
+    public void testListenWhenExceptionProcessing() {
+
+        // Prepare test data
+        PurchaseOrder purchaseOrder = getTestPurchaseOrder();
+
+        Mockito.doThrow(new ProcessorException("_msg_")).when(generatedPurchaseOrderReceptionProcessorInterface).process(any());
+
+        // Run the test
+        GeneratedPurchaseOrdersKafkaConsumer generatedPurchaseOrdersKafkaConsumer = new GeneratedPurchaseOrdersKafkaConsumer(generatedPurchaseOrderReceptionProcessorInterface);
+        generatedPurchaseOrdersKafkaConsumer.listen(purchaseOrder, ack, "101", "ttt");
+
+        // Assertions
+        verify(generatedPurchaseOrderReceptionProcessorInterface, times(1)).process(any(
+                com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder.class
+        ));
+
+        verify(ack, times(0)).acknowledge();
+    }
+
+    /**
+     * @return A purchase order for testing purposes
+     */
+    private PurchaseOrder getTestPurchaseOrder() {
+
+        List<PurchaseOrderLineCondensed> lines = new ArrayList<>();
+
+        return PurchaseOrder
+                .newBuilder()
+                .setKey("101")
+                .setCountry("102")
+                .setDate(103)
+                .setTotalAmount(104f)
+                .setTotalQuantity(105)
+                .setLines(lines)
+                .build();
+    }
+}

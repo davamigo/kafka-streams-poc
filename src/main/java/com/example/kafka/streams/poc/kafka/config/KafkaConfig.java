@@ -3,6 +3,7 @@ package com.example.kafka.streams.poc.kafka.config;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.product.Product;
+import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
@@ -139,6 +140,15 @@ public class KafkaConfig {
     }
 
     /**
+     * Creates a factory for consuming PurchaseOrder messages from Kafka
+     *
+     * @return the default kafka consumer factory.
+     */
+    ConsumerFactory<String, PurchaseOrder> purchaseOrderConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    }
+
+    /**
      * Kafka template bean for producing Member messages to Kafka
      *
      * @return a new Kafka template for producing messages
@@ -203,6 +213,19 @@ public class KafkaConfig {
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrder>> commercialOrderKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, CommercialOrder> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(commercialOrderConsumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
+
+    /**
+     * Kafka listener container factory bean for consuming PurchaseOrder messages from Kafka
+     *
+     * @return the kafka listener container factory for consumer.
+     */
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PurchaseOrder>> purchaseOrderKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PurchaseOrder> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(purchaseOrderConsumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }

@@ -3,6 +3,7 @@ package com.example.kafka.streams.poc.kafka.config;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.product.Product;
+import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.junit.Test;
@@ -151,6 +152,17 @@ public class TestKafkaConfig {
     }
 
     @Test
+    public void testPurchaseOrderConsumerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        ConsumerFactory<String, PurchaseOrder> factory = kafkaConfig.purchaseOrderConsumerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
     public void testMemberKafkaTemplate() {
 
         // Run the test
@@ -211,6 +223,17 @@ public class TestKafkaConfig {
         // Run the test
         KafkaConfig kafkaConfig = new KafkaConfig(environment);
         KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrder>> factory = kafkaConfig.commercialOrderKafkaListenerContainerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testPurchaseOrderKafkaListenerContainerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PurchaseOrder>> factory = kafkaConfig.purchaseOrderKafkaListenerContainerFactory();
 
         // Assertions
         assertNotNull(factory);
