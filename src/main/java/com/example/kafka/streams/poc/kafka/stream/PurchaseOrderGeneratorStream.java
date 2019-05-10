@@ -58,7 +58,21 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
     }
 
     /**
-     * Builds the topology of the Kafka Streams
+     * Builds the topology of the Kafka Streams.
+     *
+     * - The groupBy operation will group all the purchase order lines by a new key
+     *
+     *   The result is a KGrouped stream which will be used to agrregate the purchase order lines in a purchase order.
+     *
+     *   The new key will be composed by the country code and the date (one per day)
+     *
+     *   Key format: CC-YYYY-MM-DD-PPPPPP, where:
+     *   - CC - The country code.
+     *   - YYYY-MM-DD - The date.
+     *
+     * - The aggregate operation will add all the purchase order lines to an array in the purchase order.
+     *
+     *   So there will be a purchase order per country and day with all the lines.
      *
      * @param builder the streams builder
      * @return the result KStream
@@ -83,10 +97,10 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
 
         KGroupedStream<String, PurchaseOrderLine> purchaseOrderLinesGroupedStream = purchaseOrderLinesStream
                 .groupBy(
-                        (String key, PurchaseOrderLine line) -> {
+                        (String PurchaseOrderLineKey, PurchaseOrderLine purchaseOrderLine) -> {
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                            Date datetime = new Date(line.getDate());
-                            return line.getCountry() + "-" + df.format(datetime);
+                            Date datetime = new Date(purchaseOrderLine.getDate());
+                            return purchaseOrderLine.getCountry() + "-" + df.format(datetime);
                         },
                         Serialized.with(
                                 stringKeyAvroSerde,
@@ -97,15 +111,15 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
         KStream<String, PurchaseOrder> purchaseOrderStream = purchaseOrderLinesGroupedStream
                 .aggregate(
                         PurchaseOrder::new,
-                        (String key, PurchaseOrderLine newLine, PurchaseOrder purchaseOrder) -> {
+                        (String purchaseOrderKey, PurchaseOrderLine newPurchaseOrderLine, PurchaseOrder aggregatedPurchaseOrder) -> {
 
-                            float newAmount = purchaseOrder.getTotalAmount();
-                            int newQuantity = purchaseOrder.getTotalQuantity();
+                            float newAmount = aggregatedPurchaseOrder.getTotalAmount();
+                            int newQuantity = aggregatedPurchaseOrder.getTotalQuantity();
 
                             List<PurchaseOrderLineCondensed> newLines = new ArrayList<>();
-                            if (null != purchaseOrder.getLines()) {
-                                for (PurchaseOrderLineCondensed oldLine : purchaseOrder.getLines()) {
-                                    if (!oldLine.getProductUuid().equals(newLine.getProductUuid())) {
+                            if (null != aggregatedPurchaseOrder.getLines()) {
+                                for (PurchaseOrderLineCondensed oldLine : aggregatedPurchaseOrder.getLines()) {
+                                    if (!oldLine.getProductUuid().equals(newPurchaseOrderLine.getProductUuid())) {
                                         newLines.add(PurchaseOrderLineCondensed.newBuilder(oldLine).build());
                                     }
                                     else {
@@ -118,27 +132,27 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
                             newLines.add(
                                     PurchaseOrderLineCondensed
                                             .newBuilder()
-                                            .setPurchaseOrderLineKey(newLine.getKey())
-                                            .setProductUuid(newLine.getProductUuid())
-                                            .setPrice(newLine.getProductPrice())
-                                            .setQuantity(newLine.getQuantity())
+                                            .setPurchaseOrderLineKey(newPurchaseOrderLine.getKey())
+                                            .setProductUuid(newPurchaseOrderLine.getProductUuid())
+                                            .setPrice(newPurchaseOrderLine.getProductPrice())
+                                            .setQuantity(newPurchaseOrderLine.getQuantity())
                                             .build()
                             );
 
-                            newAmount += newLine.getProductPrice() * newLine.getQuantity();
-                            newQuantity += newLine.getQuantity();
+                            newAmount += newPurchaseOrderLine.getProductPrice() * newPurchaseOrderLine.getQuantity();
+                            newQuantity += newPurchaseOrderLine.getQuantity();
 
                             PurchaseOrder result = PurchaseOrder
-                                    .newBuilder(purchaseOrder)
-                                    .setKey(key)
-                                    .setCountry(newLine.getCountry())
-                                    .setDate(newLine.getDate())
+                                    .newBuilder(aggregatedPurchaseOrder)
+                                    .setKey(purchaseOrderKey)
+                                    .setCountry(newPurchaseOrderLine.getCountry())
+                                    .setDate(newPurchaseOrderLine.getDate())
                                     .setLines(newLines)
                                     .setTotalAmount(newAmount)
                                     .setTotalQuantity(newQuantity)
                                     .build();
 
-                            LOGGER.info(">>> Stream - Purchase order key={} - Aggregating purchase order line key={}...", key, newLine.getKey());
+                            LOGGER.info(">>> Stream - Purchase order key={} - Aggregating purchase order line key={}...", purchaseOrderKey, newPurchaseOrderLine.getKey());
 
                             return result;
                         },

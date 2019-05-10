@@ -57,7 +57,23 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
     }
 
     /**
-     * Builds the topology of the Kafka Streams
+     * Builds the topology of the Kafka Streams.
+     *
+     * - The map operation will convert the commercial order line to a purchase order line, with a new key.
+     *
+     *   The new key will be used for aggregate the order purchase order lines and it will be composed by the
+     *   country code, the date (one per day) and the product uuid.
+     *
+     *   Key format: CC-YYYY-MM-DD-PPPPPP, where:
+     *   - CC - The country code.
+     *   - YYYY-MM-DD - The date.
+     *   - PPPPPP - The product Uuid.
+     *
+     * - The groupByKey operation will group all the purchase order lines with the same key.
+     *
+     * - The reduce operation will sum the queatities for the aggregated purchase order lines.
+     *
+     *   So there will be a purchase order line per country, day and product.
      *
      * @param builder the streams builder
      * @return the result KStream
@@ -80,15 +96,16 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
                 Consumed.with(stringKeyAvroSerde, commercialOrderLineSplitValueAvroSerde)
         );
 
-        KStream<String, PurchaseOrderLine> purchaseOrderLinesUngrouppedStream = commercialOrderLinesStream
+        KStream<String, PurchaseOrderLine> purchaseOrderLinesUngroupedStream = commercialOrderLinesStream
                 .map(
-                        (String uuid, CommercialOrderLineSplit line) -> {
+                        (String commercialOrderLineUuid, CommercialOrderLineSplit commercialOrderLine) -> {
+
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                            Date datetime = new Date(line.getCommercialOrderDatetime());
-                            String newKey = line.getShippingCountry() + "-" + df.format(datetime) + "-" + line.getProductUuid();
+                            Date datetime = new Date(commercialOrderLine.getCommercialOrderDatetime());
+                            String newKey = commercialOrderLine.getShippingCountry() + "-" + df.format(datetime) + "-" + commercialOrderLine.getProductUuid();
 
                             Calendar cal = Calendar.getInstance();
-                            cal.setTimeInMillis(line.getCommercialOrderDatetime());
+                            cal.setTimeInMillis(commercialOrderLine.getCommercialOrderDatetime());
                             int year = cal.get(Calendar.YEAR);
                             int month = cal.get(Calendar.MONTH);
                             int day = cal.get(Calendar.DAY_OF_MONTH);
@@ -97,32 +114,35 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
                             PurchaseOrderLine purchaseOrderLine = PurchaseOrderLine
                                     .newBuilder()
                                     .setKey(newKey)
-                                    .setCountry(line.getShippingCountry())
+                                    .setCountry(commercialOrderLine.getShippingCountry())
                                     .setDate(cal.getTimeInMillis())
-                                    .setProductUuid(line.getProductUuid())
-                                    .setProductName(line.getProductName())
-                                    .setProductType(line.getProductType())
-                                    .setProductBarCode(line.getProductBarCode())
-                                    .setProductPrice(line.getProductPrice())
-                                    .setQuantity(line.getQuantity())
+                                    .setProductUuid(commercialOrderLine.getProductUuid())
+                                    .setProductName(commercialOrderLine.getProductName())
+                                    .setProductType(commercialOrderLine.getProductType())
+                                    .setProductBarCode(commercialOrderLine.getProductBarCode())
+                                    .setProductPrice(commercialOrderLine.getProductPrice())
+                                    .setQuantity(commercialOrderLine.getQuantity())
                                     .build();
 
-                            LOGGER.info(">>> Stream - Commercial order line uuid={} mapped to purchase order line key={}...", line.getUuid(), newKey);
+                            LOGGER.info(">>> Stream - Commercial order line uuid={} mapped to purchase order line key={}...", commercialOrderLine.getUuid(), newKey);
 
                             return KeyValue.pair(newKey, purchaseOrderLine);
                         }
                 );
 
-        KStream<String, PurchaseOrderLine> purchaseOrderLinesAggregatedStream = purchaseOrderLinesUngrouppedStream
-                .groupByKey(Serialized.with(stringKeyAvroSerde, purchaseOrderLineValueAvroSerde))
+        KStream<String, PurchaseOrderLine> purchaseOrderLinesAggregatedStream = purchaseOrderLinesUngroupedStream
+                .groupByKey(
+                        Serialized.with(stringKeyAvroSerde, purchaseOrderLineValueAvroSerde)
+                )
                 .reduce(
-                        (PurchaseOrderLine aggregatedLine, PurchaseOrderLine newLine) -> {
-                            int quantity = aggregatedLine.getQuantity() + newLine.getQuantity();
+                        (PurchaseOrderLine aggregatedPurchaseOrderLine, PurchaseOrderLine newPurchaseOrderLine) -> {
 
-                            LOGGER.info(">>> Stream - Purchase order line key={} aggregated quantity={}...", aggregatedLine.getKey(), quantity);
+                            int quantity = aggregatedPurchaseOrderLine.getQuantity() + newPurchaseOrderLine.getQuantity();
+
+                            LOGGER.info(">>> Stream - Purchase order line key={} aggregated quantity={}...", aggregatedPurchaseOrderLine.getKey(), quantity);
 
                             return PurchaseOrderLine
-                                    .newBuilder(aggregatedLine)
+                                    .newBuilder(aggregatedPurchaseOrderLine)
                                     .setQuantity(quantity)
                                     .build();
                         }
