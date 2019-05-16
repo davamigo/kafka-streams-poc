@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Kafka streams for generating the purchase order lines
@@ -102,7 +103,7 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
 
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                             Date datetime = new Date(commercialOrderLine.getCommercialOrderDatetime());
-                            String newKey = commercialOrderLine.getShippingCountry() + "-" + df.format(datetime) + "-" + commercialOrderLine.getProductUuid();
+                            String aggregationKey = commercialOrderLine.getShippingCountry() + "-" + df.format(datetime) + "-" + commercialOrderLine.getProductUuid();
 
                             Calendar cal = Calendar.getInstance();
                             cal.setTimeInMillis(commercialOrderLine.getCommercialOrderDatetime());
@@ -113,7 +114,8 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
 
                             PurchaseOrderLine purchaseOrderLine = PurchaseOrderLine
                                     .newBuilder()
-                                    .setKey(newKey)
+                                    .setUuid(UUID.randomUUID().toString())
+                                    .setAggregationKey(aggregationKey)
                                     .setCountry(commercialOrderLine.getShippingCountry())
                                     .setDate(cal.getTimeInMillis())
                                     .setProductUuid(commercialOrderLine.getProductUuid())
@@ -124,9 +126,9 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
                                     .setQuantity(commercialOrderLine.getQuantity())
                                     .build();
 
-                            LOGGER.info(">>> Stream - Commercial order line uuid={} mapped to purchase order line key={}...", commercialOrderLine.getUuid(), newKey);
+                            LOGGER.info(">>> Stream - Commercial order line uuid={} mapped to purchase order line aggregation-key={}...", commercialOrderLine.getUuid(), aggregationKey);
 
-                            return KeyValue.pair(newKey, purchaseOrderLine);
+                            return KeyValue.pair(aggregationKey, purchaseOrderLine);
                         }
                 );
 
@@ -139,7 +141,7 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
 
                             int quantity = aggregatedPurchaseOrderLine.getQuantity() + newPurchaseOrderLine.getQuantity();
 
-                            LOGGER.info(">>> Stream - Purchase order line key={} aggregated quantity={}...", aggregatedPurchaseOrderLine.getKey(), quantity);
+                            LOGGER.info(">>> Stream - Purchase order line key={} aggregated quantity={}...", aggregatedPurchaseOrderLine.getAggregationKey(), quantity);
 
                             return PurchaseOrderLine
                                     .newBuilder(aggregatedPurchaseOrderLine)

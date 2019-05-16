@@ -18,7 +18,8 @@
     <table border="1">
         <thead>
             <tr>
-                <th>Key</th>
+                <th>Uuid</th>
+                <th>Aggregation Key</th>
                 <th>Country</th>
                 <th>Date</th>
                 <th>Total Amount</th>
@@ -29,8 +30,9 @@
         <tbody>
             <tr th:each="purchaseOrder : ${purchaseOrders}">
                 <td>
-                    <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getKey()})}" th:text="${purchaseOrder.getKey()}"></a>
+                    <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getUuid()})}" th:text="${purchaseOrder.getUuid()}"></a>
                 </td>
+                <td th:text="${purchaseOrder.getAggregationKey()}"></td>
                 <td th:text="${purchaseOrder.getCountry()}"></td>
                 <td th:text="${purchaseOrder.getDate()}"></td>
                 <td th:text="${purchaseOrder.getTotalAmount()}"></td>

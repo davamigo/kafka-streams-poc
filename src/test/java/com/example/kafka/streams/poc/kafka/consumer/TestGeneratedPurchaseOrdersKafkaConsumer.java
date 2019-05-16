@@ -81,11 +81,12 @@ public class TestGeneratedPurchaseOrdersKafkaConsumer {
 
         return PurchaseOrder
                 .newBuilder()
-                .setKey("101")
-                .setCountry("102")
-                .setDate(103)
-                .setTotalAmount(104f)
-                .setTotalQuantity(105)
+                .setUuid("101")
+                .setAggregationKey("102")
+                .setCountry("103")
+                .setDate(104)
+                .setTotalAmount(105f)
+                .setTotalQuantity(106)
                 .setLines(lines)
                 .build();
     }

@@ -7,8 +7,11 @@ import java.util.Objects;
  */
 public class PurchaseOrderLine {
 
-    /** The key of purchase order line: country+date+product-uuid */
-    private String key;
+    /** The unique identifier of the purchase order line */
+    private String uuid;
+
+    /** The aggregation key of purchase order line: country+date+product-uuid */
+    private String aggregationKey;
 
     /** The unique identifier of the product in the purchase order line */
     private String productUuid;
@@ -23,7 +26,8 @@ public class PurchaseOrderLine {
      * Default constructor
      */
     public PurchaseOrderLine() {
-        this.key = null;
+        this.uuid = null;
+        this.aggregationKey = null;
         this.productUuid = null;
         this.price = 0.0f;
         this.quantity = 1;
@@ -32,23 +36,38 @@ public class PurchaseOrderLine {
     /**
      * Test constructor
      *
-     * @param key         the key of purchase order line: country+date+product-uuid
-     * @param productUuid the unique identifier of the product in the purchase order line
-     * @param price       the unit price for the product in the purchase order line
-     * @param quantity    the quantity of the product in the purchase order line
+     * @param uuid           the unique identifier of the purchase order line
+     * @param aggregationKey the aggregation key of purchase order line: country+date+product-uuid
+     * @param productUuid    the unique identifier of the product in the purchase order line
+     * @param price          the unit price for the product in the purchase order line
+     * @param quantity       the quantity of the product in the purchase order line
      */
-    public PurchaseOrderLine(String key, String productUuid, float price, int quantity) {
-        this.key = key;
+    public PurchaseOrderLine(
+            String uuid,
+            String aggregationKey,
+            String productUuid,
+            float price,
+            int quantity
+    ) {
+        this.uuid = uuid;
+        this.aggregationKey = aggregationKey;
         this.productUuid = productUuid;
         this.price = price;
         this.quantity = quantity;
     }
 
     /**
-     * @return the key of purchase order line: country+date+product-uuid
+     * @return the unique identifier of the purchase order line
      */
-    public String getKey() {
-        return key;
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * @return the aggregation key of purchase order line: country+date+product-uuid
+     */
+    public String getAggregationKey() {
+        return aggregationKey;
     }
 
     /**
@@ -73,7 +92,7 @@ public class PurchaseOrderLine {
     }
 
     /**
-     * Two purchase order lines are the same if they both have the same key
+     * Two purchase order lines are the same if they both have the same aggregationKey
      *
      * @param obj the reference object with which to compare.
      * @return {@code true} if this object is the same as the obj
@@ -81,11 +100,11 @@ public class PurchaseOrderLine {
     @Override
     public boolean equals(Object obj) {
 
-        if (!(obj instanceof PurchaseOrderLine) || this.key == null) {
+        if (!(obj instanceof PurchaseOrderLine) || this.uuid == null) {
             return false;
         }
 
-        return Objects.equals(this.key, ((PurchaseOrderLine) obj).key);
+        return Objects.equals(this.uuid, ((PurchaseOrderLine) obj).uuid);
     }
 
     /**
@@ -130,7 +149,8 @@ public class PurchaseOrderLine {
          */
         public Builder set(PurchaseOrderLine line) {
             return this
-                    .setKey(line.getKey())
+                    .setUuid(line.getUuid())
+                    .setAggregationKey(line.getAggregationKey())
                     .setProductUuid(line.getProductUuid())
                     .setPrice(line.getPrice())
                     .setQuantity(line.getQuantity());
@@ -144,18 +164,28 @@ public class PurchaseOrderLine {
          */
         public Builder set(com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed line) {
             return this
-                    .setKey(line.getPurchaseOrderLineKey())
+                    .setUuid(line.getUuid())
+                    .setAggregationKey(line.getAggregationKey())
                     .setProductUuid(line.getProductUuid())
                     .setPrice(line.getPrice())
                     .setQuantity(line.getQuantity());
         }
 
         /**
-         * @param key the key of purchase order line: country+date+product-uuid
+         * @param uuid the unique identifier of the purchase order line
          * @return this
          */
-        public Builder setKey(String key) {
-            this.line.key = key;
+        public Builder setUuid(String uuid) {
+            this.line.uuid = uuid;
+            return this;
+        }
+
+        /**
+         * @param aggregationKey the aggregation key of purchase order line: country+date+product-uuid
+         * @return this
+         */
+        public Builder setAggregationKey(String aggregationKey) {
+            this.line.aggregationKey = aggregationKey;
             return this;
         }
 

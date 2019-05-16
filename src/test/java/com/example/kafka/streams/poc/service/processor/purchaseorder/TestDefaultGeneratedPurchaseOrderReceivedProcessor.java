@@ -30,7 +30,7 @@ public class TestDefaultGeneratedPurchaseOrderReceivedProcessor {
     @Test
     public void testProcessCallsInsertWhenNew() {
 
-        PurchaseOrder purchaseOrder = PurchaseOrder.newBuilder().setKey("101").build();
+        PurchaseOrder purchaseOrder = PurchaseOrder.newBuilder().setUuid("101").build();
 
         when(repository.findById("101")).thenReturn(Optional.empty());
 
@@ -43,7 +43,7 @@ public class TestDefaultGeneratedPurchaseOrderReceivedProcessor {
     @Test
     public void testProcessCallsInsertWhenExist() {
 
-        PurchaseOrder purchaseOrder = PurchaseOrder.newBuilder().setKey("201").build();
+        PurchaseOrder purchaseOrder = PurchaseOrder.newBuilder().setUuid("201").build();
 
         when(repository.findById("201")).thenReturn(Optional.of(new PurchaseOrderEntity()));
 
@@ -56,7 +56,7 @@ public class TestDefaultGeneratedPurchaseOrderReceivedProcessor {
     @Test(expected = ProcessorException.class)
     public void testProcessWhenExceptionWritingToRepository() {
 
-        PurchaseOrder purchaseOrder = PurchaseOrder.newBuilder().setKey("301").build();
+        PurchaseOrder purchaseOrder = PurchaseOrder.newBuilder().setUuid("301").build();
 
         when(repository.insert(any(PurchaseOrderEntity.class))).thenThrow(new NullPointerException());
 

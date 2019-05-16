@@ -1,13 +1,11 @@
 package com.example.kafka.streams.poc.kafka.stream;
 
 import com.example.kafka.streams.poc.kafka.serde.GenericPrimitiveAvroSerde;
-import com.example.kafka.streams.poc.schemas.order.CommercialOrderLineSplit;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLine;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.slf4j.Logger;
@@ -19,10 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Kafka streams for generating the purchase order from the aggregated purchase order lines
@@ -97,10 +92,10 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
 
         KGroupedStream<String, PurchaseOrderLine> purchaseOrderLinesGroupedStream = purchaseOrderLinesStream
                 .groupBy(
-                        (String PurchaseOrderLineKey, PurchaseOrderLine purchaseOrderLine) -> {
+                        (String poLineAggregationKey, PurchaseOrderLine poLine) -> {
                             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                            Date datetime = new Date(purchaseOrderLine.getDate());
-                            return purchaseOrderLine.getCountry() + "-" + df.format(datetime);
+                            Date datetime = new Date(poLine.getDate());
+                            return poLine.getCountry() + "-" + df.format(datetime);
                         },
                         Serialized.with(
                                 stringKeyAvroSerde,
@@ -111,15 +106,20 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
         KStream<String, PurchaseOrder> purchaseOrderStream = purchaseOrderLinesGroupedStream
                 .aggregate(
                         PurchaseOrder::new,
-                        (String purchaseOrderKey, PurchaseOrderLine newPurchaseOrderLine, PurchaseOrder aggregatedPurchaseOrder) -> {
+                        (String aggregationKey, PurchaseOrderLine newPOLine, PurchaseOrder aggregatedPO) -> {
 
-                            float newAmount = aggregatedPurchaseOrder.getTotalAmount();
-                            int newQuantity = aggregatedPurchaseOrder.getTotalQuantity();
+                            String uuid = aggregatedPO.getUuid();
+                            if (null == uuid) {
+                                uuid = UUID.randomUUID().toString();
+                            }
+
+                            float newAmount = aggregatedPO.getTotalAmount() + (newPOLine.getProductPrice() * newPOLine.getQuantity());
+                            int newQuantity = aggregatedPO.getTotalQuantity() + newPOLine.getQuantity();
 
                             List<PurchaseOrderLineCondensed> newLines = new ArrayList<>();
-                            if (null != aggregatedPurchaseOrder.getLines()) {
-                                for (PurchaseOrderLineCondensed oldLine : aggregatedPurchaseOrder.getLines()) {
-                                    if (!oldLine.getProductUuid().equals(newPurchaseOrderLine.getProductUuid())) {
+                            if (null != aggregatedPO.getLines()) {
+                                for (PurchaseOrderLineCondensed oldLine : aggregatedPO.getLines()) {
+                                    if (!oldLine.getProductUuid().equals(newPOLine.getProductUuid())) {
                                         newLines.add(PurchaseOrderLineCondensed.newBuilder(oldLine).build());
                                     }
                                     else {
@@ -132,27 +132,26 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
                             newLines.add(
                                     PurchaseOrderLineCondensed
                                             .newBuilder()
-                                            .setPurchaseOrderLineKey(newPurchaseOrderLine.getKey())
-                                            .setProductUuid(newPurchaseOrderLine.getProductUuid())
-                                            .setPrice(newPurchaseOrderLine.getProductPrice())
-                                            .setQuantity(newPurchaseOrderLine.getQuantity())
+                                            .setUuid(newPOLine.getUuid())
+                                            .setAggregationKey(newPOLine.getAggregationKey())
+                                            .setProductUuid(newPOLine.getProductUuid())
+                                            .setPrice(newPOLine.getProductPrice())
+                                            .setQuantity(newPOLine.getQuantity())
                                             .build()
                             );
 
-                            newAmount += newPurchaseOrderLine.getProductPrice() * newPurchaseOrderLine.getQuantity();
-                            newQuantity += newPurchaseOrderLine.getQuantity();
-
                             PurchaseOrder result = PurchaseOrder
-                                    .newBuilder(aggregatedPurchaseOrder)
-                                    .setKey(purchaseOrderKey)
-                                    .setCountry(newPurchaseOrderLine.getCountry())
-                                    .setDate(newPurchaseOrderLine.getDate())
+                                    .newBuilder(aggregatedPO)
+                                    .setUuid(uuid)
+                                    .setAggregationKey(aggregationKey)
+                                    .setCountry(newPOLine.getCountry())
+                                    .setDate(newPOLine.getDate())
                                     .setLines(newLines)
                                     .setTotalAmount(newAmount)
                                     .setTotalQuantity(newQuantity)
                                     .build();
 
-                            LOGGER.info(">>> Stream - Purchase order key={} - Aggregating purchase order line key={}...", purchaseOrderKey, newPurchaseOrderLine.getKey());
+                            LOGGER.info(">>> Stream - Purchase order uuid={} aggregation-key={} - Aggregating purchase order line uuid={}...", uuid, aggregationKey, newPOLine.getUuid());
 
                             return result;
                         },

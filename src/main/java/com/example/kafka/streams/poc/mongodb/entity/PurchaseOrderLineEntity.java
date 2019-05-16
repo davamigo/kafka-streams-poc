@@ -7,8 +7,11 @@ import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLi
  */
 public class PurchaseOrderLineEntity {
 
-    /** The key of purchase order line: country+date+product-uuid */
-    private String key;
+    /** The unique identifier of the purchase order line */
+    private String uuid;
+
+    /** The aggregation key of purchase order line: country+date+product-uuid */
+    private String aggregationKey;
 
     /** The unique identifier of the product in the purchase order line */
     private String productUuid;
@@ -31,17 +34,25 @@ public class PurchaseOrderLineEntity {
      * @param source the source purchase order line object
      */
     public PurchaseOrderLineEntity(PurchaseOrderLine source) {
-        this.key = source.getKey();
+        this.uuid = source.getUuid();
+        this.aggregationKey = source.getAggregationKey();
         this.productUuid = source.getProductUuid();
         this.price = source.getPrice();
         this.quantity = source.getQuantity();
     }
 
     /**
-     * @return the key of purchase order line: country+date+product-uuid
+     * @return the unique identifier of the purchase order line
      */
-    public String getKey() {
-        return key;
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * @return the aggregation key of purchase order line: country+date+product-uuid
+     */
+    public String getAggregationKey() {
+        return aggregationKey;
     }
 
     /**

@@ -42,14 +42,14 @@ public class DefaultGeneratedPurchaseOrderReceivedProcessor implements Generated
     @Override
     public void process(PurchaseOrder purchaseOrder) throws ProcessorException {
         try {
-            Optional<PurchaseOrderEntity> queryResult = repository.findById(purchaseOrder.getKey());
+            Optional<PurchaseOrderEntity> queryResult = repository.findById(purchaseOrder.getUuid());
             if (queryResult.isPresent()) {
                 repository.save(new PurchaseOrderEntity(purchaseOrder));
-                LOGGER.info(">>> Purchase order key={} updated in mongoDB", purchaseOrder.getKey());
+                LOGGER.info(">>> Purchase order key={} updated in mongoDB", purchaseOrder.getUuid());
             }
             else {
                 repository.insert(new PurchaseOrderEntity(purchaseOrder));
-                LOGGER.info(">>> Purchase order key={} inserted in mongoDB", purchaseOrder.getKey());
+                LOGGER.info(">>> Purchase order key={} inserted in mongoDB", purchaseOrder.getUuid());
             }
         }
         catch (Exception exc) {

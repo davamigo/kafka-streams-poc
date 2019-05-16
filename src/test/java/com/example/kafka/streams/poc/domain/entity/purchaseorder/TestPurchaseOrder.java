@@ -21,7 +21,8 @@ public class TestPurchaseOrder {
     public void testDefaultConstructor() {
         PurchaseOrder purchaseOrder = new PurchaseOrder();
 
-        assertNull(purchaseOrder.getKey());
+        assertNull(purchaseOrder.getUuid());
+        assertNull(purchaseOrder.getAggregationKey());
         assertNull(purchaseOrder.getCountry());
         assertNotNull(purchaseOrder.getDate());
         assertEquals(0f, purchaseOrder.getTotalAmount(), 0.001);
@@ -33,9 +34,10 @@ public class TestPurchaseOrder {
     @Test
     public void testCompleteConstructorWithNullValues() {
 
-        PurchaseOrder purchaseOrder = new PurchaseOrder(null, null, null, 0f, 0, null);
+        PurchaseOrder purchaseOrder = new PurchaseOrder(null, null, null, null, 0f, 0, null);
 
-        assertNull(purchaseOrder.getKey());
+        assertNull(purchaseOrder.getUuid());
+        assertNull(purchaseOrder.getAggregationKey());
         assertNull(purchaseOrder.getCountry());
         assertNotNull(purchaseOrder.getDate());
         assertEquals(0f, purchaseOrder.getTotalAmount(), 0.001);
@@ -49,14 +51,15 @@ public class TestPurchaseOrder {
 
         Date date = new Date();
 
-        PurchaseOrderLine line = PurchaseOrderLine.newBuilder().setKey("111").build();
+        PurchaseOrderLine line = PurchaseOrderLine.newBuilder().setUuid("111").build();
         List<PurchaseOrderLine> lines = new ArrayList<>();
         lines.add(line);
 
-        PurchaseOrder purchaseOrder = new PurchaseOrder("101", "102", date, 104f, 105, lines);
+        PurchaseOrder purchaseOrder = new PurchaseOrder("101", "102", "103", date, 104f, 105, lines);
 
-        assertEquals("101", purchaseOrder.getKey());
-        assertEquals("102", purchaseOrder.getCountry());
+        assertEquals("101", purchaseOrder.getUuid());
+        assertEquals("102", purchaseOrder.getAggregationKey());
+        assertEquals("103", purchaseOrder.getCountry());
         assertEquals(date, purchaseOrder.getDate());
         assertEquals(104f, purchaseOrder.getTotalAmount(), 0.001);
         assertEquals(105, purchaseOrder.getTotalQuantity());
@@ -67,8 +70,8 @@ public class TestPurchaseOrder {
     @Test
     public void testTwoPurchaseOrdersAreEqualWhenTheyHaveTheSameKey() {
 
-        PurchaseOrder purchaseOrder1 = new PurchaseOrder("201", null, null, 0f, 0, null);
-        PurchaseOrder purchaseOrder2 = new PurchaseOrder("201", null, null, 0f, 0, null);
+        PurchaseOrder purchaseOrder1 = new PurchaseOrder("201", null, null, null, 0f, 0, null);
+        PurchaseOrder purchaseOrder2 = new PurchaseOrder("201", null, null, null, 0f, 0, null);
 
         assertEquals(purchaseOrder1, purchaseOrder2);
         assertNotSame(purchaseOrder1, purchaseOrder2);
@@ -76,8 +79,8 @@ public class TestPurchaseOrder {
 
     @Test
     public void testTwoPurchaseOrdersAreDifferentWhenTheyHaveDifferentKey() {
-        PurchaseOrder purchaseOrder1 = new PurchaseOrder("301", null, null, 0f, 0, null);
-        PurchaseOrder purchaseOrder2 = new PurchaseOrder("401", null, null, 0f, 0, null);
+        PurchaseOrder purchaseOrder1 = new PurchaseOrder("301", null, null, null, 0f, 0, null);
+        PurchaseOrder purchaseOrder2 = new PurchaseOrder("401", null, null, null, 0f, 0, null);
 
         assertNotEquals(purchaseOrder1, purchaseOrder2);
     }

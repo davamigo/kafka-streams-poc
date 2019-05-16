@@ -4,9 +4,14 @@
   "name": "PurchaseOrderLine",
   "fields": [
     {
-      "name": "key",
+      "name": "uuid",
       "type": "string",
-      "doc": "The key of purchase order line: country+date+product-key."
+      "doc": "The unique identifier of the purchase order line."
+    },
+    {
+      "name": "aggregationKey",
+      "type": "string",
+      "doc": "The aggregation key: country+date+product-key."
     },
     {
       "name": "country",

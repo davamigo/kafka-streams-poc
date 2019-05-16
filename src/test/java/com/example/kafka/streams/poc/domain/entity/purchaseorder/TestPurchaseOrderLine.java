@@ -18,7 +18,8 @@ public class TestPurchaseOrderLine {
     public void testDefaultConstructor() {
         PurchaseOrderLine line = new PurchaseOrderLine();
 
-        assertNull(line.getKey());
+        assertNull(line.getUuid());
+        assertNull(line.getAggregationKey());
         assertNull(line.getProductUuid());
         assertEquals(0f, line.getPrice(), 0.001);
         assertEquals(1, line.getQuantity());
@@ -26,18 +27,19 @@ public class TestPurchaseOrderLine {
 
     @Test
     public void testCompleteConstructor() {
-        PurchaseOrderLine line = new PurchaseOrderLine("101", "102", 103f, 104);
+        PurchaseOrderLine line = new PurchaseOrderLine("101", "102", "103", 104f, 105);
 
-        assertEquals("101", line.getKey());
-        assertEquals("102", line.getProductUuid());
-        assertEquals(103f, line.getPrice(), 0.001);
-        assertEquals(104, line.getQuantity());
+        assertEquals("101", line.getUuid());
+        assertEquals("102", line.getAggregationKey());
+        assertEquals("103", line.getProductUuid());
+        assertEquals(104f, line.getPrice(), 0.001);
+        assertEquals(105, line.getQuantity());
     }
 
     @Test
     public void testTwoLinesAreEqualWhenTheyHaveTheSameKey() {
-        PurchaseOrderLine line1 = new PurchaseOrderLine("201", "202", 203f, 204);
-        PurchaseOrderLine line2 = new PurchaseOrderLine("201", "212", 213f, 214);
+        PurchaseOrderLine line1 = new PurchaseOrderLine("201", "202", "203", 204f, 205);
+        PurchaseOrderLine line2 = new PurchaseOrderLine("201", "212", "203", 214f, 215);
 
         assertEquals(line1, line2);
         assertNotSame(line1, line2);
@@ -45,8 +47,8 @@ public class TestPurchaseOrderLine {
 
     @Test
     public void testTwoPurchaseOrderLinesAreDifferentWhenTheyHaveDifferentKey() {
-        PurchaseOrderLine line1 = new PurchaseOrderLine("301", "302", 303f, 304);
-        PurchaseOrderLine line2 = new PurchaseOrderLine("401", "302", 303f, 304);
+        PurchaseOrderLine line1 = new PurchaseOrderLine("301", "302", "303", 304f, 305);
+        PurchaseOrderLine line2 = new PurchaseOrderLine("401", "302", "303", 304f, 305);
 
         assertNotEquals(line1, line2);
     }

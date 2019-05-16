@@ -18,10 +18,13 @@
 
 <div th:if="${null != purchaseOrder}">
     <dl>
-        <dt>Key:</dt>
+        <dt>Uuid:</dt>
         <dd>
-            <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getKey()})}" th:text="${purchaseOrder.getKey()}"></a>
+            <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getUuid()})}" th:text="${purchaseOrder.getUuid()}"></a>
         </dd>
+
+        <dt>Aggregation Key:</dt>
+        <dd th:text="${purchaseOrder.getAggregationKey()}"></dd>
 
         <dt>Country:</dt>
         <dd th:text="${purchaseOrder.getCountry()}"></dd>
@@ -43,7 +46,8 @@
             <table border="1">
                 <thead>
                     <tr>
-                        <th>Key</th>
+                        <th>Uuid</th>
+                        <th>Aggregation Key</th>
                         <th>Product</th>
                         <th>Price</th>
                         <th>Quantity</th>
@@ -51,7 +55,8 @@
                 </thead>
                 <tbody>
                     <tr th:each="purchaseOrderLine : ${purchaseOrder.getLines()}">
-                        <td th:text="${purchaseOrderLine.getKey()}"></td>
+                        <td th:text="${purchaseOrderLine.getUuid()}"></td>
+                        <td th:text="${purchaseOrderLine.getAggregationKey()}"></td>
                         <td>
                             <a th:href="@{/product/{id}(id=${purchaseOrderLine.getProductUuid()})}" th:text="${purchaseOrderLine.getProductUuid()}"></a>
                         </td>

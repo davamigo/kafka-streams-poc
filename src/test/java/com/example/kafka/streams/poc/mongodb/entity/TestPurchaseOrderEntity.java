@@ -1,9 +1,7 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
-import com.example.kafka.streams.poc.domain.entity.address.Address;
 import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder;
 import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLine;
-import com.example.kafka.streams.poc.domain.entity.member.Member;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -27,7 +25,8 @@ public class TestPurchaseOrderEntity {
 
         PurchaseOrderEntity purchaseOrderEntity = new PurchaseOrderEntity();
 
-        assertNull(purchaseOrderEntity.getKey());
+        assertNull(purchaseOrderEntity.getUuid());
+        assertNull(purchaseOrderEntity.getAggregationKey());
         assertNull(purchaseOrderEntity.getCountry());
         assertNull(purchaseOrderEntity.getDate());
         assertEquals(0f, purchaseOrderEntity.getTotalAmount(), 0.001);
@@ -39,17 +38,18 @@ public class TestPurchaseOrderEntity {
     public void testCopyConstructor() {
 
         List<PurchaseOrderLine> lines = new ArrayList<>();
-        PurchaseOrderLine  line = PurchaseOrderLine.newBuilder().setKey("121").build();
+        PurchaseOrderLine  line = PurchaseOrderLine.newBuilder().setUuid("121").build();
         lines.add(line);
 
-        PurchaseOrder purchaseOrder = new PurchaseOrder("101", "102", new Date(103), 104f, 105, lines);
+        PurchaseOrder purchaseOrder = new PurchaseOrder("101", "102", "103", new Date(104), 105f, 106, lines);
         PurchaseOrderEntity purchaseOrderEntity = new PurchaseOrderEntity(purchaseOrder);
 
-        assertEquals("101", purchaseOrderEntity.getKey());
-        assertEquals("102", purchaseOrderEntity.getCountry());
-        assertEquals(103, purchaseOrderEntity.getDate().getTime());
-        assertEquals(104f, purchaseOrderEntity.getTotalAmount(), 0.001);
-        assertEquals(105, purchaseOrderEntity.getTotalQuantity());
-        assertEquals("121", purchaseOrderEntity.getLines().get(0).getKey());
+        assertEquals("101", purchaseOrderEntity.getUuid());
+        assertEquals("102", purchaseOrderEntity.getAggregationKey());
+        assertEquals("103", purchaseOrderEntity.getCountry());
+        assertEquals(104, purchaseOrderEntity.getDate().getTime());
+        assertEquals(105f, purchaseOrderEntity.getTotalAmount(), 0.001);
+        assertEquals(106, purchaseOrderEntity.getTotalQuantity());
+        assertEquals("121", purchaseOrderEntity.getLines().get(0).getUuid());
     }
 }

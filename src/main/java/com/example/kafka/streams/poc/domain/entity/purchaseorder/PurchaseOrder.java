@@ -10,8 +10,11 @@ import java.util.Objects;
  */
 public class PurchaseOrder {
 
-    /** The key of purchase order: country+date */
-    private String key;
+    /** The unique identifier of the purchase order */
+    private String uuid;
+
+    /** The aggregation key: country+date */
+    private String aggregationKey;
 
     /** The Alpha-2 ISO 3166 country code */
     private String country;
@@ -32,7 +35,8 @@ public class PurchaseOrder {
      * Default constructor
      */
     public PurchaseOrder() {
-        this.key = null;
+        this.uuid = null;
+        this.aggregationKey = null;
         this.country = null;
         this.date = new Date();
         this.totalAmount = 0f;
@@ -43,15 +47,25 @@ public class PurchaseOrder {
     /**
      * Test constructor
      *
-     * @param key           the key of purchase order: country+date
-     * @param country       the Alpha-2 ISO 3166 country code
-     * @param date          the date and time of the purchase order
-     * @param totalAmount   the total amount or the purchase order lines: SUM(price * quantity)
-     * @param totalQuantity the quantity of the products for this purchase order: SUM(quantity)
-     * @param lines         the purchase order lines
+     * @param uuid           the unique identifier of the purchase order
+     * @param aggregationKey the aggregation key: country+date
+     * @param country        the Alpha-2 ISO 3166 country code
+     * @param date           the date and time of the purchase order
+     * @param totalAmount    the total amount or the purchase order lines: SUM(price * quantity)
+     * @param totalQuantity  the quantity of the products for this purchase order: SUM(quantity)
+     * @param lines          the purchase order lines
      */
-    public PurchaseOrder(String key, String country, Date date, float totalAmount, int totalQuantity, List<PurchaseOrderLine> lines) {
-        this.key = key;
+    public PurchaseOrder(
+            String uuid,
+            String aggregationKey,
+            String country,
+            Date date,
+            float totalAmount,
+            int totalQuantity,
+            List<PurchaseOrderLine> lines
+    ) {
+        this.uuid = uuid;
+        this.aggregationKey = aggregationKey;
         this.country = country;
         this.date = date != null ? date : new Date();
         this.totalAmount = totalAmount;
@@ -60,10 +74,17 @@ public class PurchaseOrder {
     }
 
     /**
-     * @return the key of purchase order: country+date
+     * @return the unique identifier of the purchase order
      */
-    public String getKey() {
-        return key;
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * @return the aggregation key: country+date
+     */
+    public String getAggregationKey() {
+        return aggregationKey;
     }
 
     /**
@@ -102,7 +123,7 @@ public class PurchaseOrder {
     }
 
     /**
-     * Two purchase orders are the same if they both have the same key
+     * Two purchase orders are the same if they both have the same uuid
      *
      * @param obj the reference object with which to compare.
      * @return {@code true} if this object is the same as the obj
@@ -110,11 +131,11 @@ public class PurchaseOrder {
     @Override
     public boolean equals(Object obj) {
 
-        if (!(obj instanceof PurchaseOrder) || this.key == null) {
+        if (!(obj instanceof PurchaseOrder) || this.uuid == null) {
             return false;
         }
 
-        return Objects.equals(this.key, ((PurchaseOrder) obj).key);
+        return Objects.equals(this.uuid, ((PurchaseOrder) obj).uuid);
     }
 
     /**
@@ -160,7 +181,8 @@ public class PurchaseOrder {
          */
         public Builder set(PurchaseOrder order) {
             return this
-                    .setKey(order.getKey())
+                    .setUuid(order.getUuid())
+                    .setAggregationKey(order.getAggregationKey())
                     .setCountry(order.getCountry())
                     .setDate(order.getDate())
                     .setTotalAmount(order.getTotalAmount())
@@ -184,7 +206,8 @@ public class PurchaseOrder {
             }
 
             return this
-                    .setKey(order.getKey())
+                    .setUuid(order.getUuid())
+                    .setAggregationKey(order.getAggregationKey())
                     .setCountry(order.getCountry())
                     .setDate(date)
                     .setTotalAmount(order.getTotalAmount())
@@ -193,11 +216,20 @@ public class PurchaseOrder {
         }
 
         /**
-         * @param key the key of purchase order: country+date
+         * @param uuid the unique identifier of the purchase order
          * @return this
          */
-        public Builder setKey(String key) {
-            this.order.key = key;
+        public Builder setUuid(String uuid) {
+            this.order.uuid = uuid;
+            return this;
+        }
+
+        /**
+         * @param aggregationKey the aggregation key: country+date
+         * @return this
+         */
+        public Builder setAggregationKey(String aggregationKey) {
+            this.order.aggregationKey = aggregationKey;
             return this;
         }
 

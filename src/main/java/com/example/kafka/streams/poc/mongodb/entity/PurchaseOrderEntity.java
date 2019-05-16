@@ -15,9 +15,12 @@ import java.util.List;
 @Document(collection="purchaseOrder")
 public class PurchaseOrderEntity {
 
-    /** The key of purchase order: country+date */
+    /** The unique identifier of the purchase order */
     @Id
-    private String key;
+    private String uuid;
+
+    /** The aggregation key: country+date */
+    private String aggregationKey;
 
     /** The Alpha-2 ISO 3166 country code */
     private String country;
@@ -47,7 +50,8 @@ public class PurchaseOrderEntity {
      * @param source the source purchase order object
      */
     public PurchaseOrderEntity(PurchaseOrder source) {
-        this.key = source.getKey();
+        this.uuid = source.getUuid();
+        this.aggregationKey = source.getAggregationKey();
         this.country = source.getCountry();
         this.date = source.getDate();
         this.totalAmount = source.getTotalAmount();
@@ -59,10 +63,17 @@ public class PurchaseOrderEntity {
     }
 
     /**
-     * @return the key of purchase order: country+date
+     * @return the unique identifier of the purchase order
      */
-    public String getKey() {
-        return key;
+    public String getUuid() {
+        return uuid;
+    }
+
+    /**
+     * @return the aggregation key: country+date
+     */
+    public String getAggregationKey() {
+        return aggregationKey;
     }
 
     /**

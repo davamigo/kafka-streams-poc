@@ -21,7 +21,8 @@ public class TestPurchaseOrderLineEntity {
 
         PurchaseOrderLineEntity purchaseOrderLineEntity = new PurchaseOrderLineEntity();
 
-        assertNull(purchaseOrderLineEntity.getKey());
+        assertNull(purchaseOrderLineEntity.getUuid());
+        assertNull(purchaseOrderLineEntity.getAggregationKey());
         assertNull(purchaseOrderLineEntity.getProductUuid());
         assertEquals(0, purchaseOrderLineEntity.getPrice(), 0.001);
         assertEquals(0, purchaseOrderLineEntity.getQuantity());
@@ -30,12 +31,13 @@ public class TestPurchaseOrderLineEntity {
     @Test
     public void testCopyConstructor() {
 
-        PurchaseOrderLine purchaseOrderLine = new PurchaseOrderLine("101", "102", 103f, 104);
+        PurchaseOrderLine purchaseOrderLine = new PurchaseOrderLine("101", "102", "103", 104f, 105);
         PurchaseOrderLineEntity purchaseOrderLineEntity = new PurchaseOrderLineEntity(purchaseOrderLine);
 
-        assertEquals("101", purchaseOrderLineEntity.getKey());
-        assertEquals("102", purchaseOrderLineEntity.getProductUuid());
-        assertEquals(103f, purchaseOrderLineEntity.getPrice(), 0.001);
-        assertEquals(104, purchaseOrderLineEntity.getQuantity());
+        assertEquals("101", purchaseOrderLineEntity.getUuid());
+        assertEquals("102", purchaseOrderLineEntity.getAggregationKey());
+        assertEquals("103", purchaseOrderLineEntity.getProductUuid());
+        assertEquals(104f, purchaseOrderLineEntity.getPrice(), 0.001);
+        assertEquals(105, purchaseOrderLineEntity.getQuantity());
     }
 }

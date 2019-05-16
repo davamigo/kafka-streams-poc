@@ -23,39 +23,42 @@ public class TestPurchaseOrderBuilder {
 
         PurchaseOrder.Builder builder = PurchaseOrder.newBuilder();
         PurchaseOrder purchaseOrder = builder
-                .setKey("101")
-                .setCountry("102")
-                .setDate(new Date(103))
-                .setTotalAmount(104f)
-                .setTotalQuantity(105)
+                .setUuid("101")
+                .setAggregationKey("102")
+                .setCountry("103")
+                .setDate(new Date(104))
+                .setTotalAmount(105f)
+                .setTotalQuantity(106)
                 .build();
 
-        assertEquals("101", purchaseOrder.getKey());
-        assertEquals("102", purchaseOrder.getCountry());
-        assertEquals(103, purchaseOrder.getDate().getTime());
-        assertEquals(104f, purchaseOrder.getTotalAmount(), 0.001);
-        assertEquals(105, purchaseOrder.getTotalQuantity());
+        assertEquals("101", purchaseOrder.getUuid());
+        assertEquals("102", purchaseOrder.getAggregationKey());
+        assertEquals("103", purchaseOrder.getCountry());
+        assertEquals(104, purchaseOrder.getDate().getTime());
+        assertEquals(105f, purchaseOrder.getTotalAmount(), 0.001);
+        assertEquals(106, purchaseOrder.getTotalQuantity());
         assertTrue(purchaseOrder.getLines().isEmpty());
     }
 
     @Test
     public void testSetCopiesTheContentFromSourceObject() {
 
-        PurchaseOrderLine line = PurchaseOrderLine.newBuilder().setKey("211").build();
+        PurchaseOrderLine line = PurchaseOrderLine.newBuilder().setUuid("211").build();
         List<PurchaseOrderLine> lines = new ArrayList<>();
         lines.add(line);
 
-        PurchaseOrder source = new PurchaseOrder("201", "202", new Date(203), 204f, 205, lines);
+        PurchaseOrder source = new PurchaseOrder("201", "202", "203", new Date(204), 205f, 206, lines);
         PurchaseOrder.Builder builder = PurchaseOrder.newBuilder().set(source);
         PurchaseOrder purchaseOrder = builder.build();
 
         assertEquals(source, purchaseOrder);
         assertNotSame(source, purchaseOrder);
-        assertEquals("201", purchaseOrder.getKey());
-        assertEquals("202", purchaseOrder.getCountry());
-        assertEquals(203, purchaseOrder.getDate().getTime());
-        assertEquals(204f, purchaseOrder.getTotalAmount(), 0.001);
-        assertEquals(205, purchaseOrder.getTotalQuantity());
+        assertEquals("201", purchaseOrder.getUuid());
+        assertEquals("202", purchaseOrder.getAggregationKey());
+        assertEquals("203", purchaseOrder.getCountry());
+        assertEquals(204, purchaseOrder.getDate().getTime());
+        assertEquals(205f, purchaseOrder.getTotalAmount(), 0.001);
+        assertEquals(206, purchaseOrder.getTotalQuantity());
         assertEquals(1, purchaseOrder.getLines().size());
         assertEquals(line, purchaseOrder.getLines().get(0));
     }
@@ -65,18 +68,20 @@ public class TestPurchaseOrderBuilder {
 
         com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed sourceLine1
                 = com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed.newBuilder()
-                        .setPurchaseOrderLineKey("311")
-                        .setProductUuid("312")
-                        .setPrice(313f)
-                        .setQuantity(314)
+                        .setUuid("311")
+                        .setAggregationKey("312")
+                        .setProductUuid("313")
+                        .setPrice(314f)
+                        .setQuantity(315)
                         .build();
 
         com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed sourceLine2
                 = com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed.newBuilder()
-                        .setPurchaseOrderLineKey("321")
-                        .setProductUuid("322")
-                        .setPrice(343f)
-                        .setQuantity(344)
+                        .setUuid("321")
+                        .setAggregationKey("322")
+                        .setProductUuid("323")
+                        .setPrice(344f)
+                        .setQuantity(345)
                         .build();
 
         List<com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed> sourceLines = new ArrayList<>();
@@ -84,27 +89,28 @@ public class TestPurchaseOrderBuilder {
         sourceLines.add(sourceLine2);
 
         com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder sourcePurchaseOrder
-                = new com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder("301", "302", 303L, sourceLines, 304f, 305);
+                = new com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder("301", "302", "303", 304L, sourceLines, 305f, 306);
 
         PurchaseOrder.Builder builder = PurchaseOrder.newBuilder().set(sourcePurchaseOrder);
         PurchaseOrder purchaseOrder = builder.build();
 
-        assertEquals("301", purchaseOrder.getKey());
-        assertEquals("302", purchaseOrder.getCountry());
-        assertEquals(303, purchaseOrder.getDate().getTime());
-        assertEquals(304f, purchaseOrder.getTotalAmount(), 0.001);
-        assertEquals(305, purchaseOrder.getTotalQuantity());
+        assertEquals("301", purchaseOrder.getUuid());
+        assertEquals("302", purchaseOrder.getAggregationKey());
+        assertEquals("303", purchaseOrder.getCountry());
+        assertEquals(304, purchaseOrder.getDate().getTime());
+        assertEquals(305f, purchaseOrder.getTotalAmount(), 0.001);
+        assertEquals(306, purchaseOrder.getTotalQuantity());
 
         assertEquals(2, purchaseOrder.getLines().size());
-        assertEquals("311", purchaseOrder.getLines().get(0).getKey());
-        assertEquals("321", purchaseOrder.getLines().get(1).getKey());
+        assertEquals("311", purchaseOrder.getLines().get(0).getUuid());
+        assertEquals("321", purchaseOrder.getLines().get(1).getUuid());
     }
 
     @Test
     public void testSetLines() {
 
-        PurchaseOrderLine purchaseOrderLine1 = PurchaseOrderLine.newBuilder().setKey("411").build();
-        PurchaseOrderLine purchaseOrderLine2 = PurchaseOrderLine.newBuilder().setKey("421").build();
+        PurchaseOrderLine purchaseOrderLine1 = PurchaseOrderLine.newBuilder().setUuid("411").build();
+        PurchaseOrderLine purchaseOrderLine2 = PurchaseOrderLine.newBuilder().setUuid("421").build();
         List<PurchaseOrderLine> lines = new ArrayList<>();
         lines.add(purchaseOrderLine1);
         lines.add(purchaseOrderLine2);
@@ -122,8 +128,8 @@ public class TestPurchaseOrderBuilder {
     @Test
     public void testAddLines() {
 
-        PurchaseOrderLine purchaseOrderLine1 = PurchaseOrderLine.newBuilder().setKey("521").build();
-        PurchaseOrderLine purchaseOrderLine2 = PurchaseOrderLine.newBuilder().setKey("521").build();
+        PurchaseOrderLine purchaseOrderLine1 = PurchaseOrderLine.newBuilder().setUuid("521").build();
+        PurchaseOrderLine purchaseOrderLine2 = PurchaseOrderLine.newBuilder().setUuid("521").build();
 
         PurchaseOrder.Builder builder = PurchaseOrder.newBuilder();
         PurchaseOrder purchaseOrder = builder

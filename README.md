@@ -38,7 +38,10 @@ Produces a commercial order with random data.
 
 ### Convert the commercial orders
 
-Join each commercial order with the member data, compute some fields like the total amount. The target contracts doen't have the order lines.
+Joins each **commercial order** with the **member** data.
+Also computes some fields like the total amount of the order.
+The target stream won't have the billing address nor the order lines.
+The aggregationKey in the new stream will be the same (the `uuid` of the commercial order).
 
 ![](docs/images/stream-convert-commercial-orders.png)
 
@@ -48,7 +51,9 @@ Join each commercial order with the member data, compute some fields like the to
 
 ### Split the commercial order lines
 
-Extract all order lines from the commercial orders and join each commercial order line with the product data.
+Extracts all the **order lines** from the **commercial orders** and joins each commercial order line with the **product** data.
+Each order line will generate one or more message in the target stream.
+The aggregationKey of the new stream will be the same (the `uuid` of the commercial order) to allow grouping.
 
 ![](docs/images/stream-split-commercial-order-lines.png)
 
@@ -58,8 +63,10 @@ Extract all order lines from the commercial orders and join each commercial orde
 
 ### Aggregate the purchase order lines
 
-Reduce the commercial order lines adding the quantities for the same product to generate the purchase order lines:
-One purchase order line per product, country and day.
+Reduces the **commercial order lines** by adding the quantities for the same country, product and day to generate the **purchase order lines**.
+One purchase order line will be generated per per country, product and day.
+The aggregationKey of the new stream will be the concatenation of `contry-code`, `date(yyyy-mm-dd)` and `product-uuid`.
+
 
 ![](docs/images/stream-aggregate-purchase-order-lines.png)
 
@@ -68,8 +75,9 @@ One purchase order line per product, country and day.
 
 ### Generate the purchase orders
 
-Generates one purchase order per country and day from the aggregated purchase order lines.
-The purchase order has a list of all order lines.
+Generates one **purchase order** per country and day by aggregating the **purchase order lines**.
+The purchase order will havea list of all order lines.
+The aggregationKey of the new stream will be the concatenation of `contry-code` and `date(yyyy-mm-dd)`.
 
 ![](docs/images/stream-generate-purchase-orders.png)
 
@@ -94,14 +102,14 @@ _**TBD**_
 
 ## Topics
 
-- `t.commercial-orders.new`: All the commercial orders. No key.
-- `t.members.new`: All data of the member. The key is the member uuid.
-- `t.products.new`: All data of the product. The key is the product uuid.
-- `t.commercial-orders.converted`: Commercial orders with member data, but without order line. The key is the commercial order uuid.
-- `t.commercial-order-lines.split`: Commercial order lines. The key is the commercial order uuid.
-- `t.purchase-order.new`: Purchase order data. The key is the date (int, format YYYMMDD).
-- `t.warehouse-order.new`: The warehouse order data. The key is the commercial order uuid.
-- `t.bill.new`: The bill data. The key is the member uuid.
+- `t.commercial-orders.new`: All the commercial orders. No aggregationKey.
+- `t.members.new`: All data of the member. The aggregationKey is the member uuid.
+- `t.products.new`: All data of the product. The aggregationKey is the product uuid.
+- `t.commercial-orders.converted`: Commercial orders with member data, but without order line. The aggregationKey is the commercial order uuid.
+- `t.commercial-order-lines.split`: Commercial order lines. The aggregationKey is the commercial order uuid.
+- `t.purchase-order.new`: Purchase order data. The aggregationKey is the date (int, format YYYMMDD).
+- `t.warehouse-order.new`: The warehouse order data. The aggregationKey is the commercial order uuid.
+- `t.bill.new`: The bill data. The aggregationKey is the member uuid.
 
 ## Schemas
 
@@ -186,3 +194,7 @@ _**TBD**_
 - **`productPrice`**: `float`
 - **`orderLinePrice`**: `float`
 - **`quantity`**: `int`
+
+## Links
+
+- [Kafka Streams DSL developer guide](https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html)
