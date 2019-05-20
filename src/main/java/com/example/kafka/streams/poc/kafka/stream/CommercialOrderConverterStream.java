@@ -98,9 +98,9 @@ public class CommercialOrderConverterStream extends BaseStream {
                         (CommercialOrder commercialOrder, Member member) -> {
                             LOGGER.info(">>> Stream - Commercial order uuid={} joined with member uuid={}.", commercialOrder.getUuid(), commercialOrder.getMemberUuid());
 
-                        double amount = commercialOrder.getLines().stream().mapToDouble(line -> line.getPrice() * line.getQuantity()).sum();
+                            double amount = commercialOrder.getLines().stream().mapToDouble(line -> line.getPrice() * line.getQuantity()).sum();
 
-                        int quantity = commercialOrder.getLines().stream().mapToInt(CommercialOrderLine::getQuantity).sum();
+                            int quantity = commercialOrder.getLines().stream().mapToInt(CommercialOrderLine::getQuantity).sum();
 
                             return CommercialOrderConverted
                                     .newBuilder()

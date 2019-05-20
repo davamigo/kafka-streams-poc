@@ -31,8 +31,11 @@ spring:
     topics:
       members-new: "t.members.new"
       products-new: "t.products.new"
+      products-legacy-id: "t.products-legacy-id.cache"
       commercial-orders-new: "t.commercial-orders.new"
       commercial-orders-converted: "t.commercial-orders.converted"
       commercial-order-lines-split: "t.commercial-order-lines.split"
       purchase-order-lines-aggregated: "t.purchase-order-lines.aggregated"
       purchase-orders-generated: "t.purchase-order.generated"
+      warehouse-order-lines-matched: "t.warehouse-order-lines.matched"
+      warehouse-order-lines-unmatched: "t.warehouse-order-lines.unmatched"

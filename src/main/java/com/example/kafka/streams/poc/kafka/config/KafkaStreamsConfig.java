@@ -101,4 +101,16 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "purchaseOrderGeneratedStream");
         return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
     }
+
+    /**
+     * Creates a bean for a Kafka Streams process to TODO ????
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("warehouseOrderProductMatcherStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean warehouseOrderProductMatcherStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderProductMatcherStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
 }

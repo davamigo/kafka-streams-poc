@@ -1,0 +1,57 @@
+{
+  "type": "record",
+  "namespace": "com.example.kafka.streams.poc.schemas.warehouse",
+  "name": "WarehouseOrderLine",
+  "fields": [
+    {
+      "name": "uuid",
+      "type": "string",
+      "doc": "The uuid of warehouse order line."
+    },
+    {
+      "name": "country",
+      "type": "string",
+      "doc": "The Alpha-2 ISO 3166 country code."
+    },
+    {
+      "name": "date",
+      "type": "long",
+      "logicalType": "timestamp-millis",
+      "doc": "The date and time of the warehouse order line."
+    },
+    {
+      "name": "productUuid",
+      "type": "string",
+      "doc": "The unique identifier of the product."
+    },
+    {
+      "name": "productLegacyId",
+      "type": [
+        "null",
+        "int"
+      ],
+      "default": null,
+      "doc": "The legacy identifier of the product."
+    },
+    {
+      "name": "productName",
+      "type": "string",
+      "doc": "The name of the product."
+    },
+    {
+      "name": "productBarCode",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null,
+      "doc": "The optional bar code of the product."
+    },
+    {
+      "name": "quantity",
+      "type": "int",
+      "default": 1,
+      "doc": "The quantity of products for this warehouse order line."
+    }
+  ]
+}

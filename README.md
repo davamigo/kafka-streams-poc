@@ -4,6 +4,8 @@ Proof of Concept showing different use cases with Apache Kafka and Kafka Streams
 
 **GitHub**: https://github.com/davamigo/kafka-streams-poc
 
+---
+
 ## Architecture
 
 This PoC consist in a Producer to generate random data and send it to Kafka topics; and some Kafka Stream processes to convert the generated data into something else.
@@ -15,6 +17,8 @@ Also there are some consumers who write in a mongoDB database and a small front 
 ![](docs/images/architecture-consumers-and-mongo.png)
 
 The whole project is designed to have a separate microservice for each process, but it is programmed as a monolith because this is just a PoC.
+
+---
 
 ## Producers
 
@@ -33,6 +37,7 @@ Produces a commercial order with random data.
 - Publish new members in `t.members.new` topic.
 - Publish new products in `t.products.new` topic.
 
+---
 
 ## Kafka Streams
 
@@ -49,6 +54,8 @@ The aggregationKey in the new stream will be the same (the `uuid` of the commerc
 - Join with `t.members.new` (GlobalKTable).
 - To `t.commercial-orders.converted` (KStream).
 
+---
+
 ### Split the commercial order lines
 
 Extracts all the **order lines** from the **commercial orders** and joins each commercial order line with the **product** data.
@@ -60,6 +67,8 @@ The aggregationKey of the new stream will be the same (the `uuid` of the commerc
 - From `t.commercial-orders.new` (KStream).
 - Join with `t.products.new` (GlobalKTable).
 - To `t.commercial-order-lines.split` (KStream).
+
+---
 
 ### Aggregate the purchase order lines
 
@@ -73,6 +82,8 @@ The aggregationKey of the new stream will be the concatenation of `contry-code`,
 - From `t.commercial-order-lines.split`.
 - To `t.purchase-order-lines.aggregated`.
 
+---
+
 ### Generate the purchase orders
 
 Generates one **purchase order** per country and day by aggregating the **purchase order lines**.
@@ -84,6 +95,23 @@ The aggregationKey of the new stream will be the concatenation of `contry-code` 
 - From `t.purchase-order-lines.aggregated`.
 - To `t.purchase-orders.generated`.
 
+---
+
+### Generate Warehouse order lines
+
+Generates the **warehouse order lines** from the **purchase order lines**.
+In this case the WMS (_Warehouse Management System_) needs a ***legacy product id*** which is in another topic.
+The output are two topics (_matched_ or _unmatched_), depending on the legacy product id was found or not.
+
+![](docs/images/stream-generate-warehouse-order-lines.png)
+
+- From `t.purchase-order-lines.aggregated`.
+- Left join with `t.products-legacy-id.cache`. 
+- To `t.warehouse-order-lines.matched`.
+- To `t.warehouse-order-lines.unmatched`.
+
+---
+
 ### Send orders to warehouse
 
 _**TBD**_
@@ -92,6 +120,8 @@ _**TBD**_
 - Join `t.commercial-order-lines.split`
 - To `t.warehouse-order.new`
 
+---
+
 ### Generate the bill
 
 _**TBD**_
@@ -99,6 +129,8 @@ _**TBD**_
 - From `t.commercial-orders.new`
 - Join `t.members.new`
 - To `t.bill.new`
+
+---
 
 ## Topics
 
@@ -110,6 +142,8 @@ _**TBD**_
 - `t.purchase-order.new`: Purchase order data. The aggregationKey is the date (int, format YYYMMDD).
 - `t.warehouse-order.new`: The warehouse order data. The aggregationKey is the commercial order uuid.
 - `t.bill.new`: The bill data. The aggregationKey is the member uuid.
+
+---
 
 ## Schemas
 
