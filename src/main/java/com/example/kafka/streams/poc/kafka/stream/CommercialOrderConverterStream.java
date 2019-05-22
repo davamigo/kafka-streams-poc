@@ -82,6 +82,12 @@ public class CommercialOrderConverterStream extends BaseStream {
 
     /**
      * Test constructor
+     *
+     * @param schemaRegistryClient           the schema registry client (for testing)
+     * @param schemaRegistryUrl              the URL of the schema registry
+     * @param newMembersTopic                the name of the new members Kafka topic (input KTable)
+     * @param newCommercialOrdersTopic       the name of the new commercial orders Kafka topic (input KStream)
+     * @param convertedCommercialOrdersTopic the name of the converted commercial orders Kafka topic (output KStream)
      */
     public CommercialOrderConverterStream(
             SchemaRegistryClient schemaRegistryClient,
@@ -104,6 +110,9 @@ public class CommercialOrderConverterStream extends BaseStream {
         configureSerdes();
     }
 
+    /**
+     * Configures all the serdes for this Kafka Streams
+     */
     private void configureSerdes() {
         this.stringKeyAvroSerde.configure(serdeConfig, true);
         this.memberValueAvroSerde.configure(serdeConfig, false);
@@ -115,7 +124,7 @@ public class CommercialOrderConverterStream extends BaseStream {
      * Builds the topology of the Kafka Streams
      *
      * @param builder the streams builder
-     * @return the result KStream
+     * @return the builder configured with the topology
      */
     @Bean("commercialOrderConverterStreamTopology")
     public StreamsBuilder startProcessing(

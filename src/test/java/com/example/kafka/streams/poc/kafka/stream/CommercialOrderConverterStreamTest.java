@@ -6,12 +6,7 @@ import com.example.kafka.streams.poc.schemas.order.CommercialOrderAddress;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderLine;
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
-import io.confluent.kafka.serializers.KafkaAvroDeserializer;
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import io.confluent.kafka.serializers.KafkaAvroSerializerConfig;
-import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
@@ -31,23 +26,13 @@ import java.util.*;
 @SpringBootTest
 @DirtiesContext
 @RunWith(MockitoJUnitRunner.class)
-public class CommercialOrderConverterStreamTest {
-
-    /** Topology test driver - tool to test the topology of a Kafka stream */
-    private TopologyTestDriver testDriver = null;
+public class CommercialOrderConverterStreamTest extends StreamTestBase {
 
     /** Consumer recor factories to send input data for testing */
     private ConsumerRecordFactory<byte[], byte[]> commercialOrderConsumerRecordFactory = null;
     private ConsumerRecordFactory<byte[], byte[]> memberConsumerRecordFactory = null;
 
-    /** Avro serializers/deserializers */
-    private KafkaAvroSerializer keyAvroSerializer;
-    private KafkaAvroSerializer valueAvroSerializer;
-    private KafkaAvroDeserializer valueAvroDeserializer;
-
     /** Constants */
-    private final String DUMMY_SCHEMA_REGISTRY = "dummy:1234";
-    private final String DUMMY_SCHEMA_REGISTRY_URL = "http://" + DUMMY_SCHEMA_REGISTRY;
     private final String MEMBERS_TOPIC = "t.members";
     private final String COMMERCIAL_ORDERS_INPUT_TOPIC = "t.commercial-orders-input";
     private final String COMMERCIAL_ORDERS_OUTPUT_TOPIC = "t.commercial-orders-output";
@@ -73,20 +58,8 @@ public class CommercialOrderConverterStreamTest {
         final StreamsBuilder streamsBuilder = streamTopologyBuilder.startProcessing(new StreamsBuilder());
         final Topology topology = streamsBuilder.build();
 
-        // Configure the properties of the Kafka Streams process
-        final Properties config = new Properties();
-        config.setProperty(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, DUMMY_SCHEMA_REGISTRY);
-        config.setProperty(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, StreamsConfig.EXACTLY_ONCE);
-        config.setProperty(StreamsConfig.NUM_STREAM_THREADS_CONFIG, "1");
-        config.setProperty(StreamsConfig.REPLICATION_FACTOR_CONFIG, "1");
-        config.setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, GenericAvroSerde.class.getName());
-        config.setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, GenericAvroSerde.class.getName());
-        config.setProperty(StreamsConfig.APPLICATION_ID_CONFIG, "commercialOrderConverterStream");
-        config.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        config.setProperty(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, DUMMY_SCHEMA_REGISTRY_URL);
-
-        // Create the test driver
-        testDriver = new TopologyTestDriver(topology, config);
+        // Parent Setup to create the TopologyTestDriver
+        parentSetUp(schemaRegistryClient, topology);
 
         // Create the comercial order consumer record factory to send records to the Kafka stream consumer
         commercialOrderConsumerRecordFactory = new ConsumerRecordFactory<>(
@@ -101,19 +74,6 @@ public class CommercialOrderConverterStreamTest {
                 new ByteArraySerializer(),
                 new ByteArraySerializer()
         );
-
-        // Create de avro serializers/deserializers
-        final Map<String, String> serializerConfig = Collections
-                .singletonMap(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, DUMMY_SCHEMA_REGISTRY_URL);
-
-        keyAvroSerializer = new KafkaAvroSerializer(schemaRegistryClient);
-        keyAvroSerializer.configure(serializerConfig, true);
-
-        valueAvroSerializer = new KafkaAvroSerializer(schemaRegistryClient);
-        valueAvroSerializer.configure(serializerConfig, false);
-
-        valueAvroDeserializer = new KafkaAvroDeserializer(schemaRegistryClient);
-        valueAvroDeserializer.configure(serializerConfig, false);
     }
 
     /**
@@ -121,9 +81,7 @@ public class CommercialOrderConverterStreamTest {
      */
     @After
     public void tearDown() {
-        if (null != testDriver) {
-            testDriver.close();
-        }
+        parentTearDown();
     }
 
     /**

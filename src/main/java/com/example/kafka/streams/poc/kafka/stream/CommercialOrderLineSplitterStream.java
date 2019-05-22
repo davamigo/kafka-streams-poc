@@ -5,6 +5,7 @@ import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderLine;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderLineSplit;
 import com.example.kafka.streams.poc.schemas.product.Product;
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.KeyValue;
@@ -42,6 +43,18 @@ public class CommercialOrderLineSplitterStream extends BaseStream {
     /** The name of the split commercial order lines Kafka topic (output KStream) */
     private final String splitCommercialOrderLinesTopic;
 
+    /** Serde for the string avro key */
+    private final Serde<String> stringKeyAvroSerde;
+
+    /** Serde for the product avro value */
+    private final Serde<Product> productValueAvroSerde;
+
+    /** Serde for the input commercial order avro value */
+    private final Serde<CommercialOrder> commercialOrderValueAvroSerde;
+
+    /** Serde for the output commercial order lines avro value */
+    private final Serde<CommercialOrderLineSplit> commercialOrderLineValueAvroSerde;
+
     /**
      * Autowired constructor
      *
@@ -58,33 +71,69 @@ public class CommercialOrderLineSplitterStream extends BaseStream {
             @Value("${spring.kafka.topics.commercial-order-lines-split}") String splitCommercialOrderLinesTopic
     ) {
         super(schemaRegistryUrl);
+
         this.newProductsTopic = newProductsTopic;
         this.newCommercialOrdersTopic = newCommercialOrdersTopic;
         this.splitCommercialOrderLinesTopic = splitCommercialOrderLinesTopic;
+
+        this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
+        this.productValueAvroSerde = new SpecificAvroSerde<>();
+        this.commercialOrderValueAvroSerde = new SpecificAvroSerde<>();
+        this.commercialOrderLineValueAvroSerde = new SpecificAvroSerde<>();
+
+        configureSerdes();
+    }
+
+    /**
+     * Test constructor
+     *
+     * @param schemaRegistryClient           the schema registry client (for testing)
+     * @param schemaRegistryUrl              the URL of the schema registry
+     * @param newProductsTopic               the name of the new products Kafka topic (input KTable)
+     * @param newCommercialOrdersTopic       the name of the new commercial orders Kafka topic (input KStream)
+     * @param splitCommercialOrderLinesTopic the name of the split commercial order lines Kafka topic (output KStream)
+     */
+    public CommercialOrderLineSplitterStream(
+            SchemaRegistryClient schemaRegistryClient,
+            String schemaRegistryUrl,
+            String newProductsTopic,
+            String newCommercialOrdersTopic,
+            String splitCommercialOrderLinesTopic
+    ) {
+        super(schemaRegistryUrl);
+
+        this.newProductsTopic = newProductsTopic;
+        this.newCommercialOrdersTopic = newCommercialOrdersTopic;
+        this.splitCommercialOrderLinesTopic = splitCommercialOrderLinesTopic;
+
+        this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>(schemaRegistryClient);
+        this.productValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+        this.commercialOrderValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+        this.commercialOrderLineValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+
+        configureSerdes();
+    }
+
+    /**
+     * Configures all the serdes for this Kafka Streams
+     */
+    private void configureSerdes() {
+        this.stringKeyAvroSerde.configure(serdeConfig, true);
+        this.productValueAvroSerde.configure(serdeConfig, false);
+        this.commercialOrderValueAvroSerde.configure(serdeConfig, false);
+        this.commercialOrderLineValueAvroSerde.configure(serdeConfig, false);
     }
 
     /**
      * Builds the topology of the Kafka Streams
      *
      * @param builder the streams builder
-     * @return the result KStream
+     * @return the builder configured with the topology
      */
     @Bean("commercialOrderLineSplitStreamTopology")
-    public KStream<String, CommercialOrderLineSplit> startProcessing(
+    public StreamsBuilder startProcessing(
             @Qualifier("commercialOrderLineSplitStreamBuilderFactoryBean") StreamsBuilder builder
     ) {
-        final Serde<String> stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
-        stringKeyAvroSerde.configure(serdeConfig, true);
-
-        final Serde<Product> productValueAvroSerde = new SpecificAvroSerde<>();
-        productValueAvroSerde.configure(serdeConfig, false);
-
-        final Serde<CommercialOrder> commercialOrderValueAvroSerde = new SpecificAvroSerde<>();
-        commercialOrderValueAvroSerde.configure(serdeConfig, false);
-
-        final Serde<CommercialOrderLineSplit> commercialOrderLineValueAvroSerde = new SpecificAvroSerde<>();
-        commercialOrderLineValueAvroSerde.configure(serdeConfig, false);
-
         GlobalKTable<String, Product> productsGlobalTable = builder.globalTable(
                 newProductsTopic,
                 Consumed.with(stringKeyAvroSerde, productValueAvroSerde)
@@ -147,6 +196,6 @@ public class CommercialOrderLineSplitterStream extends BaseStream {
                 Produced.with(stringKeyAvroSerde, commercialOrderLineValueAvroSerde)
         );
 
-        return joinedCommercialOrderLinesStream;
+        return builder;
     }
 }
