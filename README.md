@@ -231,4 +231,5 @@ _**TBD**_
 
 ## Links
 
-- [Kafka Streams DSL developer guide](https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html)
+- [Kafka Streams DSL Developer Guide](https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html)
+- [Unit Testing Kafka Streams](https://kafka.apache.org/20/documentation/streams/developer-guide/testing.html)

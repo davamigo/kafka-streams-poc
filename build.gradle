@@ -37,6 +37,7 @@ sourceCompatibility = '1.8'
 
 ext {
     avroVersion = '1.8.2'
+    kafkaStreamsVersion = '2.0.0'
     kafkaAvroToolsVersion = '5.0.0'
 }
 
@@ -56,7 +57,7 @@ dependencies {
 
     // Kafka + Kafka streams
     implementation 'org.springframework.kafka:spring-kafka'
-    implementation 'org.apache.kafka:kafka-streams'
+    implementation "org.apache.kafka:kafka-streams:${kafkaStreamsVersion}"
 
     // Avro
     implementation "org.apache.avro:avro:${avroVersion}"
@@ -69,4 +70,5 @@ dependencies {
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
+    testImplementation "org.apache.kafka:kafka-streams-test-utils:${kafkaStreamsVersion}"
 }

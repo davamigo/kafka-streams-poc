@@ -5,6 +5,7 @@ import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderConverted;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderLine;
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -38,6 +39,18 @@ public class CommercialOrderConverterStream extends BaseStream {
     /** The name of the converted commercial orders Kafka topic (output KStream) */
     private final String convertedCommercialOrdersTopic;
 
+    /** Serde for the string avro key */
+    private final Serde<String> stringKeyAvroSerde;
+
+    /** Serde for the member avro value */
+    private final Serde<Member> memberValueAvroSerde;
+
+    /** Serde for the input commercial order avro value */
+    private final Serde<CommercialOrder> commercialOrderValueAvroSerde;
+
+    /** Serde for the output commercial order avro value */
+    private final Serde<CommercialOrderConverted> commercialOrderConvertedValueAvroSerde;
+
     /**
      * Autowired constructor
      *
@@ -54,9 +67,48 @@ public class CommercialOrderConverterStream extends BaseStream {
             @Value("${spring.kafka.topics.commercial-orders-converted}") String convertedCommercialOrdersTopic
     ) {
         super(schemaRegistryUrl);
+
         this.newMembersTopic = newMembersTopic;
         this.newCommercialOrdersTopic = newCommercialOrdersTopic;
         this.convertedCommercialOrdersTopic = convertedCommercialOrdersTopic;
+
+        this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
+        this.memberValueAvroSerde = new SpecificAvroSerde<>();
+        this.commercialOrderValueAvroSerde = new SpecificAvroSerde<>();
+        this.commercialOrderConvertedValueAvroSerde = new SpecificAvroSerde<>();
+
+        configureSerdes();
+    }
+
+    /**
+     * Test constructor
+     */
+    public CommercialOrderConverterStream(
+            SchemaRegistryClient schemaRegistryClient,
+            String schemaRegistryUrl,
+            String newMembersTopic,
+            String newCommercialOrdersTopic,
+            String convertedCommercialOrdersTopic
+    ) {
+        super(schemaRegistryUrl);
+
+        this.newMembersTopic = newMembersTopic;
+        this.newCommercialOrdersTopic = newCommercialOrdersTopic;
+        this.convertedCommercialOrdersTopic = convertedCommercialOrdersTopic;
+
+        this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>(schemaRegistryClient);
+        this.memberValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+        this.commercialOrderValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+        this.commercialOrderConvertedValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+
+        configureSerdes();
+    }
+
+    private void configureSerdes() {
+        this.stringKeyAvroSerde.configure(serdeConfig, true);
+        this.memberValueAvroSerde.configure(serdeConfig, false);
+        this.commercialOrderValueAvroSerde.configure(serdeConfig, false);
+        this.commercialOrderConvertedValueAvroSerde.configure(serdeConfig, false);
     }
 
     /**
@@ -66,21 +118,9 @@ public class CommercialOrderConverterStream extends BaseStream {
      * @return the result KStream
      */
     @Bean("commercialOrderConverterStreamTopology")
-    public KStream<String, CommercialOrderConverted> startProcessing(
+    public StreamsBuilder startProcessing(
             @Qualifier("commercialOrderConverterStreamBuilderFactoryBean") StreamsBuilder builder
     ) {
-        final Serde<String> stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
-        stringKeyAvroSerde.configure(serdeConfig, true);
-
-        final Serde<Member> memberValueAvroSerde = new SpecificAvroSerde<>();
-        memberValueAvroSerde.configure(serdeConfig, false);
-
-        final Serde<CommercialOrder> commercialOrderValueAvroSerde = new SpecificAvroSerde<>();
-        commercialOrderValueAvroSerde.configure(serdeConfig, false);
-
-        final Serde<CommercialOrderConverted> commercialOrderConvertedValueAvroSerde = new SpecificAvroSerde<>();
-        commercialOrderConvertedValueAvroSerde.configure(serdeConfig, false);
-
         GlobalKTable<String, Member> membersGlobalTable = builder.globalTable(
                 newMembersTopic,
                 Consumed.with(stringKeyAvroSerde, memberValueAvroSerde)
@@ -123,6 +163,6 @@ public class CommercialOrderConverterStream extends BaseStream {
                 Produced.with(stringKeyAvroSerde, commercialOrderConvertedValueAvroSerde)
         );
 
-        return commercialOrdersConvertedStream;
+        return builder;
     }
 }

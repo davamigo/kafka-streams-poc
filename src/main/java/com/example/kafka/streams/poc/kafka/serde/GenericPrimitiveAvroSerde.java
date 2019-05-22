@@ -32,6 +32,18 @@ public class GenericPrimitiveAvroSerde<T> implements Serde<T> {
     }
 
     /**
+     * Test constructor
+     *
+     * @param schemaRegistryClient the schema registry client (to allow testing)
+     */
+    public GenericPrimitiveAvroSerde(SchemaRegistryClient schemaRegistryClient) {
+        this.inner = Serdes.serdeFrom(
+                new KafkaAvroSerializer(schemaRegistryClient),
+                new KafkaAvroDeserializer(schemaRegistryClient)
+        );
+    }
+
+    /**
      * Configure this class, which will configure the underlying serializer and deserializer.
      *
      * @param configs configs in key/value pairs
