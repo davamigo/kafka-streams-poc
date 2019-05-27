@@ -4,6 +4,7 @@ import com.example.kafka.streams.poc.kafka.serde.GenericPrimitiveAvroSerde;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLine;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed;
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -34,6 +35,15 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
     /** The name of the generated purchase order Kafka topic (output KStream) */
     private final String generatedPurchaseOrdesTopic;
 
+    /** Serde for the string avro key */
+    private final Serde<String> stringKeyAvroSerde;
+
+    /** Serde for the product avro value */
+    private final Serde<PurchaseOrderLine> purchaseOrderLineValueAvroSerde;
+
+    /** Serde for the input commercial order avro value */
+    private final Serde<PurchaseOrder> purchaseOrderValueAvroSerde;
+
     /**
      * Autowired constructor
      *
@@ -48,8 +58,50 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
             @Value("${spring.kafka.topics.purchase-orders-generated}") String generatedPurchaseOrdesTopic
     ) {
         super(schemaRegistryUrl);
+
         this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
         this.generatedPurchaseOrdesTopic = generatedPurchaseOrdesTopic;
+
+        this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
+        this.purchaseOrderLineValueAvroSerde = new SpecificAvroSerde<>();
+        this.purchaseOrderValueAvroSerde = new SpecificAvroSerde<>();
+
+        configureSerdes();
+    }
+
+    /**
+     * Test constructor
+     *
+     * @param schemaRegistryClient           the schema registry client (for testing)
+     * @param schemaRegistryUrl                 the URL of the schema registry
+     * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
+     * @param generatedPurchaseOrdesTopic       the name of the generated purchase order Kafka topic (output KStream)
+     */
+    public PurchaseOrderGeneratorStream(
+            SchemaRegistryClient schemaRegistryClient,
+            @Value("${spring.kafka.schema-registry-url}") String schemaRegistryUrl,
+            @Value("${spring.kafka.topics.purchase-order-lines-aggregated}") String aggregatedPurchaseOrderLinesTopic,
+            @Value("${spring.kafka.topics.purchase-orders-generated}") String generatedPurchaseOrdesTopic
+    ) {
+        super(schemaRegistryUrl);
+
+        this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
+        this.generatedPurchaseOrdesTopic = generatedPurchaseOrdesTopic;
+
+        this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>(schemaRegistryClient);
+        this.purchaseOrderLineValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+        this.purchaseOrderValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
+
+        configureSerdes();
+    }
+
+    /**
+     * Configures all the serdes for this Kafka Streams
+     */
+    private void configureSerdes() {
+        this.stringKeyAvroSerde.configure(serdeConfig, true);
+        this.purchaseOrderLineValueAvroSerde.configure(serdeConfig, false);
+        this.purchaseOrderValueAvroSerde.configure(serdeConfig, false);
     }
 
     /**
@@ -70,21 +122,12 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
      *   So there will be a purchase order per country and day with all the lines.
      *
      * @param builder the streams builder
-     * @return the result KStream
+     * @return the builder configured with the topology
      */
     @Bean("purchaseOrderGeneratedStreamTopology")
-    public KStream<String, PurchaseOrder> startProcessing(
+    public StreamsBuilder startProcessing(
             @Qualifier("purchaseOrderGeneratedStreamBuilderFactoryBean") StreamsBuilder builder
     ) {
-        final Serde<String> stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
-        stringKeyAvroSerde.configure(serdeConfig, true);
-
-        final Serde<PurchaseOrderLine> purchaseOrderLineValueAvroSerde = new SpecificAvroSerde<>();
-        purchaseOrderLineValueAvroSerde.configure(serdeConfig, false);
-
-        final Serde<PurchaseOrder> purchaseOrderValueAvroSerde = new SpecificAvroSerde<>();
-        purchaseOrderValueAvroSerde.configure(serdeConfig, false);
-
         KStream<String, PurchaseOrderLine> purchaseOrderLinesStream = builder.stream(
                 aggregatedPurchaseOrderLinesTopic,
                 Consumed.with(stringKeyAvroSerde, purchaseOrderLineValueAvroSerde)
@@ -167,6 +210,6 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
                 Produced.with(stringKeyAvroSerde, purchaseOrderValueAvroSerde)
         );
 
-        return purchaseOrderStream;
+        return builder;
     }
 }

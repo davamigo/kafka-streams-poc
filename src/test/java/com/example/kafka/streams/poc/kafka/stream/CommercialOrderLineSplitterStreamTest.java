@@ -65,7 +65,7 @@ public class CommercialOrderLineSplitterStreamTest extends StreamTestBase {
         // Parent Setup to create the TopologyTestDriver
         parentSetUp(schemaRegistryClient, topology);
 
-        // Create the comercial order consumer record factory to send records to the Kafka stream consumer
+        // Create the commercial order consumer record factory to send records to the Kafka stream consumer
         commercialOrderConsumerRecordFactory = new ConsumerRecordFactory<>(
                 COMMERCIAL_ORDERS_INPUT_TOPIC,
                 new ByteArraySerializer(),
