@@ -4,6 +4,7 @@ import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLine;
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import org.apache.avro.generic.GenericRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
@@ -26,7 +27,7 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
 
-    /** Consumer recor factories to send input data for testing */
+    /** Consumer record factory to send input data for testing */
     private ConsumerRecordFactory<byte[], byte[]> purchaseOrderLinesConsumerRecordFactory = null;
 
     /** Constants */
@@ -79,7 +80,7 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
     public void testGenerateOnePurchaseOrderFromOnePurchaseOrderLine() {
 
         // Create a purchase order line
-        PurchaseOrderLine purchaseOrderLine = PurchaseOrderLine
+        PurchaseOrderLine inputValue = PurchaseOrderLine
                 .newBuilder()
                 .setUuid("101")
                 .setAggregationKey("102")
@@ -92,12 +93,13 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
                 .setProductPrice(109f)
                 .setQuantity(110)
                 .build();
-        String purchaseOrderLineUuid = purchaseOrderLine.getUuid();
+        String inputKey = inputValue.getUuid();
 
         // Send the purchase order to the topic
-        byte[] bytePurchaseOrderKey = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLineUuid);
-        byte[] bytePurchaseOrderValue = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLine);
-        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(bytePurchaseOrderKey, bytePurchaseOrderValue));
+        byte[] inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
+        byte[] inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
+        ConsumerRecord<byte[], byte[]> input = purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded);
+        testDriver.pipeInput(input);
 
         // Read the output
         ProducerRecord<byte[], byte[]> output = testDriver.readOutput(
@@ -110,25 +112,25 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
         Assert.assertNotNull(output);
 
         // Validate the output
-        GenericRecord poResult = (GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value());
-        Assert.assertNotNull(poResult);
+        GenericRecord outputValue = (GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value());
+        Assert.assertNotNull(outputValue);
 
-        Assert.assertNotNull(poResult.get("uuid"));
-        Assert.assertEquals("103-1970-01-01", poResult.get("aggregationKey"));
-        Assert.assertEquals("103", poResult.get("country"));
-        Assert.assertEquals(104L, poResult.get("date"));
-        Assert.assertEquals(11990f, (float) poResult.get("totalAmount"), 0.001);
-        Assert.assertEquals(110, (int) poResult.get("totalQuantity"));
+        Assert.assertNotNull(outputValue.get("uuid"));
+        Assert.assertEquals("103-1970-01-01", outputValue.get("aggregationKey"));
+        Assert.assertEquals("103", outputValue.get("country"));
+        Assert.assertEquals(104L, outputValue.get("date"));
+        Assert.assertEquals(11990f, (float) outputValue.get("totalAmount"), 0.001);
+        Assert.assertEquals(110, (int) outputValue.get("totalQuantity"));
 
-        List<GenericRecord> poResultLines = (List<GenericRecord>) poResult.get("lines");
-        Assert.assertEquals(1, poResultLines.size());
+        List<GenericRecord> outputValueLines = (List<GenericRecord>) outputValue.get("lines");
+        Assert.assertEquals(1, outputValueLines.size());
 
-        GenericRecord poLine = poResultLines.get(0);
-        Assert.assertNotNull(poLine.get("uuid"));
-        Assert.assertEquals("102", poLine.get("aggregationKey"));
-        Assert.assertEquals("105", poLine.get("productUuid"));
-        Assert.assertEquals(109f, poLine.get("price"));
-        Assert.assertEquals(110, poLine.get("quantity"));
+        GenericRecord outputValueLine0 = outputValueLines.get(0);
+        Assert.assertNotNull(outputValueLine0.get("uuid"));
+        Assert.assertEquals("102", outputValueLine0.get("aggregationKey"));
+        Assert.assertEquals("105", outputValueLine0.get("productUuid"));
+        Assert.assertEquals(109f, (float) outputValueLine0.get("price"), 0.001);
+        Assert.assertEquals(110, outputValueLine0.get("quantity"));
     }
 
     /**
@@ -138,7 +140,7 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
     public void testGenerateOnePurchaseOrderFromMultiplePurchaseOrderLines() {
 
         // Create a purchase order line #1
-        PurchaseOrderLine purchaseOrderLine = PurchaseOrderLine
+        PurchaseOrderLine inputValue = PurchaseOrderLine
                 .newBuilder()
                 .setUuid("uuid1")
                 .setAggregationKey("a-key")
@@ -151,16 +153,16 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
                 .setProductPrice(100f)
                 .setQuantity(5)
                 .build();
-        String purchaseOrderLineUuid = purchaseOrderLine.getUuid();
+        String inputKey = inputValue.getUuid();
 
         // Send the purchase order #1 to the topic
-        byte[] bytePurchaseOrderKey = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLineUuid);
-        byte[] bytePurchaseOrderValue = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLine);
-        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(bytePurchaseOrderKey, bytePurchaseOrderValue));
+        byte[] inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
+        byte[] inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
+        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded));
 
         // Create a purchase order line #2
-        purchaseOrderLine = PurchaseOrderLine
-                .newBuilder(purchaseOrderLine)
+        inputValue = PurchaseOrderLine
+                .newBuilder(inputValue)
                 .setUuid("uuid2")
                 .setProductUuid("prod2")
                 .setProductName("prod2")
@@ -169,16 +171,16 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
                 .setProductPrice(150f)
                 .setQuantity(3)
                 .build();
-        purchaseOrderLineUuid = purchaseOrderLine.getUuid();
+        inputKey = inputValue.getUuid();
 
         // Send the purchase order #2 to the topic
-        bytePurchaseOrderKey = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLineUuid);
-        bytePurchaseOrderValue = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLine);
-        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(bytePurchaseOrderKey, bytePurchaseOrderValue));
+        inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
+        inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
+        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded));
 
         // Create a purchase order line #3
-        purchaseOrderLine = PurchaseOrderLine
-                .newBuilder(purchaseOrderLine)
+        inputValue = PurchaseOrderLine
+                .newBuilder(inputValue)
                 .setUuid("uuid3")
                 .setProductUuid("prod3")
                 .setProductName("prod3")
@@ -187,25 +189,26 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
                 .setProductPrice(50f)
                 .setQuantity(2)
                 .build();
-        purchaseOrderLineUuid = purchaseOrderLine.getUuid();
+        inputKey = inputValue.getUuid();
 
         // Send the purchase order #3 to the topic
-        bytePurchaseOrderKey = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLineUuid);
-        bytePurchaseOrderValue = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLine);
-        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(bytePurchaseOrderKey, bytePurchaseOrderValue));
+        inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
+        inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
+        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded));
 
         // Read the last message of the output
+        int outputCount = 0;
         ProducerRecord<byte[], byte[]> output = null;
-        ProducerRecord<byte[], byte[]> newOutput = testDriver.readOutput(
+        ProducerRecord<byte[], byte[]> tempOutput = testDriver.readOutput(
                 PURCHASE_ORDERS_OUTPUT_TOPIC,
                 new ByteArrayDeserializer(),
                 new ByteArrayDeserializer()
         );
 
-        while (null != newOutput) {
-            output = newOutput;
-            System.out.println((GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value()));
-            newOutput = testDriver.readOutput(
+        while (null != tempOutput) {
+            outputCount++;
+            output = tempOutput;
+            tempOutput = testDriver.readOutput(
                     PURCHASE_ORDERS_OUTPUT_TOPIC,
                     new ByteArrayDeserializer(),
                     new ByteArrayDeserializer()
@@ -214,20 +217,21 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
 
         // Ensure there is an output
         Assert.assertNotNull(output);
+        Assert.assertEquals(3, outputCount);
 
         // Validate the output
-        GenericRecord poResult = (GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value());
-        Assert.assertNotNull(poResult);
+        GenericRecord outputValue = (GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value());
+        Assert.assertNotNull(outputValue);
 
-        Assert.assertNotNull(poResult.get("uuid"));
-        Assert.assertEquals("ES-2019-01-01", poResult.get("aggregationKey"));
-        Assert.assertEquals("ES", poResult.get("country"));
-        Assert.assertEquals(1546300800000L, poResult.get("date"));
-        Assert.assertEquals(1050f, (float) poResult.get("totalAmount"), 0.001);
-        Assert.assertEquals(10, (int) poResult.get("totalQuantity"));
+        Assert.assertNotNull(outputValue.get("uuid"));
+        Assert.assertEquals("ES-2019-01-01", outputValue.get("aggregationKey"));
+        Assert.assertEquals("ES", outputValue.get("country"));
+        Assert.assertEquals(1546300800000L, outputValue.get("date"));
+        Assert.assertEquals(1050f, (float) outputValue.get("totalAmount"), 0.001);
+        Assert.assertEquals(10, (int) outputValue.get("totalQuantity"));
 
-        List<GenericRecord> poResultLines = (List<GenericRecord>) poResult.get("lines");
-        Assert.assertEquals(3, poResultLines.size());
+        List<GenericRecord> outputValueLines = (List<GenericRecord>) outputValue.get("lines");
+        Assert.assertEquals(3, outputValueLines.size());
     }
 
     /**
@@ -237,7 +241,7 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
     public void testOrderLinesWithSameProductReplacesOldOrderLines() {
 
         // Create a purchase order line #1
-        PurchaseOrderLine purchaseOrderLine = PurchaseOrderLine
+        PurchaseOrderLine inputValue = PurchaseOrderLine
                 .newBuilder()
                 .setUuid("uuid1")
                 .setAggregationKey("a-key")
@@ -250,38 +254,39 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
                 .setProductPrice(100f)
                 .setQuantity(5)
                 .build();
-        String purchaseOrderLineUuid = purchaseOrderLine.getUuid();
+        String inputKey = inputValue.getUuid();
 
         // Send the purchase order #1 to the topic
-        byte[] bytePurchaseOrderKey = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLineUuid);
-        byte[] bytePurchaseOrderValue = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLine);
-        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(bytePurchaseOrderKey, bytePurchaseOrderValue));
+        byte[] inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
+        byte[] inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
+        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded));
 
         // Create a purchase order line #2
-        purchaseOrderLine = PurchaseOrderLine
-                .newBuilder(purchaseOrderLine)
+        inputValue = PurchaseOrderLine
+                .newBuilder(inputValue)
                 .setQuantity(7)
                 .build();
-        purchaseOrderLineUuid = purchaseOrderLine.getUuid();
+        inputKey = inputValue.getUuid();
 
         // Send the purchase order #2 to the topic
-        bytePurchaseOrderKey = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLineUuid);
-        bytePurchaseOrderValue = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLine);
-        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(bytePurchaseOrderKey, bytePurchaseOrderValue));
+        inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
+        inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
+        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded));
 
         // Create a purchase order line #3
-        purchaseOrderLine = PurchaseOrderLine
-                .newBuilder(purchaseOrderLine)
+        inputValue = PurchaseOrderLine
+                .newBuilder(inputValue)
                 .setQuantity(12)
                 .build();
-        purchaseOrderLineUuid = purchaseOrderLine.getUuid();
+        inputKey = inputValue.getUuid();
 
         // Send the purchase order #3 to the topic
-        bytePurchaseOrderKey = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLineUuid);
-        bytePurchaseOrderValue = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, purchaseOrderLine);
-        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(bytePurchaseOrderKey, bytePurchaseOrderValue));
+        inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
+        inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
+        testDriver.pipeInput(purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded));
 
         // Read the last message of the output
+        int outputCount = 0;
         ProducerRecord<byte[], byte[]> output = null;
         ProducerRecord<byte[], byte[]> newOutput = testDriver.readOutput(
                 PURCHASE_ORDERS_OUTPUT_TOPIC,
@@ -290,8 +295,8 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
         );
 
         while (null != newOutput) {
+            outputCount++;
             output = newOutput;
-            System.out.println((GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value()));
             newOutput = testDriver.readOutput(
                     PURCHASE_ORDERS_OUTPUT_TOPIC,
                     new ByteArrayDeserializer(),
@@ -301,19 +306,20 @@ public class PurchaseOrderGeneratorStreamTest extends StreamTestBase {
 
         // Ensure there is an output
         Assert.assertNotNull(output);
+        Assert.assertEquals(3, outputCount);
 
         // Validate the output
-        GenericRecord poResult = (GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value());
-        Assert.assertNotNull(poResult);
+        GenericRecord outputValue = (GenericRecord) valueAvroDeserializer.deserialize(output.topic(), output.value());
+        Assert.assertNotNull(outputValue);
 
-        Assert.assertNotNull(poResult.get("uuid"));
-        Assert.assertEquals("ES-2019-01-01", poResult.get("aggregationKey"));
-        Assert.assertEquals("ES", poResult.get("country"));
-        Assert.assertEquals(1546300800000L, poResult.get("date"));
-        Assert.assertEquals(1200f, (float) poResult.get("totalAmount"), 0.001);
-        Assert.assertEquals(12, (int) poResult.get("totalQuantity"));
+        Assert.assertNotNull(outputValue.get("uuid"));
+        Assert.assertEquals("ES-2019-01-01", outputValue.get("aggregationKey"));
+        Assert.assertEquals("ES", outputValue.get("country"));
+        Assert.assertEquals(1546300800000L, outputValue.get("date"));
+        Assert.assertEquals(1200f, (float) outputValue.get("totalAmount"), 0.001);
+        Assert.assertEquals(12, (int) outputValue.get("totalQuantity"));
 
-        List<GenericRecord> poResultLines = (List<GenericRecord>) poResult.get("lines");
-        Assert.assertEquals(1, poResultLines.size());
+        List<GenericRecord> outputValueLines = (List<GenericRecord>) outputValue.get("lines");
+        Assert.assertEquals(1, outputValueLines.size());
     }
 }

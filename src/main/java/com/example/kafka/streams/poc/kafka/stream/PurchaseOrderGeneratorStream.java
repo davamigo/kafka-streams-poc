@@ -38,10 +38,10 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
     /** Serde for the string avro key */
     private final Serde<String> stringKeyAvroSerde;
 
-    /** Serde for the product avro value */
+    /** Serde for the input purchase order line avro value */
     private final Serde<PurchaseOrderLine> purchaseOrderLineValueAvroSerde;
 
-    /** Serde for the input commercial order avro value */
+    /** Serde for the output purchase order avro value */
     private final Serde<PurchaseOrder> purchaseOrderValueAvroSerde;
 
     /**
@@ -72,16 +72,16 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
     /**
      * Test constructor
      *
-     * @param schemaRegistryClient           the schema registry client (for testing)
+     * @param schemaRegistryClient              the schema registry client (for testing)
      * @param schemaRegistryUrl                 the URL of the schema registry
      * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
      * @param generatedPurchaseOrdesTopic       the name of the generated purchase order Kafka topic (output KStream)
      */
     public PurchaseOrderGeneratorStream(
             SchemaRegistryClient schemaRegistryClient,
-            @Value("${spring.kafka.schema-registry-url}") String schemaRegistryUrl,
-            @Value("${spring.kafka.topics.purchase-order-lines-aggregated}") String aggregatedPurchaseOrderLinesTopic,
-            @Value("${spring.kafka.topics.purchase-orders-generated}") String generatedPurchaseOrdesTopic
+            String schemaRegistryUrl,
+            String aggregatedPurchaseOrderLinesTopic,
+            String generatedPurchaseOrdesTopic
     ) {
         super(schemaRegistryUrl);
 
