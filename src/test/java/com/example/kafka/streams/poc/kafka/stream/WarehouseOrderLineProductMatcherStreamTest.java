@@ -23,7 +23,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest
 @DirtiesContext
 @RunWith(MockitoJUnitRunner.class)
-public class WarehouseOrderProductMatcherStreamTest extends StreamTestBase {
+public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
 
     /** Consumer record factories to send input data for testing */
     private ConsumerRecordFactory<byte[], byte[]> purchaseOrderLinesConsumerRecordFactory = null;
@@ -45,7 +45,7 @@ public class WarehouseOrderProductMatcherStreamTest extends StreamTestBase {
         final SchemaRegistryClient schemaRegistryClient = new MockSchemaRegistryClient();
 
         // Create the topology builder to get the topology (what we are testing)
-        final WarehouseOrderProductMatcherStream streamTopologyBuilder = new WarehouseOrderProductMatcherStream(
+        final WarehouseOrderLineProductMatcherStream streamTopologyBuilder = new WarehouseOrderLineProductMatcherStream(
                 schemaRegistryClient,
                 DUMMY_SCHEMA_REGISTRY_URL,
                 PURCHASE_ORDER_LINES_INPUT_TOPIC,

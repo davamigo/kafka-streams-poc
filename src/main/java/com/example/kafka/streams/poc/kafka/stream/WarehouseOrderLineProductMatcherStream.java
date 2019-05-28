@@ -22,10 +22,10 @@ import java.util.UUID;
  * Kafka streams for matching each purchase order line with the product legacy id while generating the warehouse order lines
  */
 @Component
-public class WarehouseOrderProductMatcherStream extends BaseStream {
+public class WarehouseOrderLineProductMatcherStream extends BaseStream {
 
     /** Logger */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WarehouseOrderProductMatcherStream.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WarehouseOrderLineProductMatcherStream.class);
 
     /** The name of the aggregated purchase order lines Kafka topic (input KStream) */
     private final String aggregatedPurchaseOrderLinesTopic;
@@ -61,7 +61,7 @@ public class WarehouseOrderProductMatcherStream extends BaseStream {
      * @param unmatchedWarehouseOrderLinesTopic the name of the unmatched warehouse order lines Kafka topic (output KStream)
      */
     @Autowired
-    public WarehouseOrderProductMatcherStream(
+    public WarehouseOrderLineProductMatcherStream(
             @Value("${spring.kafka.schema-registry-url}") String schemaRegistryUrl,
             @Value("${spring.kafka.topics.purchase-order-lines-aggregated}") String aggregatedPurchaseOrderLinesTopic,
             @Value("${spring.kafka.topics.products-legacy-id}") String productsLegacyIdCacheTopic,
@@ -82,8 +82,8 @@ public class WarehouseOrderProductMatcherStream extends BaseStream {
 
         configureSerdes();
     }
-    /**
 
+    /**
      * Test constructor
      *
      * @param schemaRegistryClient              the schema registry client (for testing)
@@ -93,7 +93,7 @@ public class WarehouseOrderProductMatcherStream extends BaseStream {
      * @param matchedWarehouseOrderLinesTopic   the name of the generated purchase order Kafka topic (output KStream)
      * @param unmatchedWarehouseOrderLinesTopic the name of the unmatched warehouse order lines Kafka topic (output KStream)
      */
-    public WarehouseOrderProductMatcherStream(
+    public WarehouseOrderLineProductMatcherStream(
             SchemaRegistryClient schemaRegistryClient,
             String schemaRegistryUrl,
             String aggregatedPurchaseOrderLinesTopic,
@@ -136,14 +136,14 @@ public class WarehouseOrderProductMatcherStream extends BaseStream {
      *   If matched the product legacy-id is saved to the contract.
      *   If not, the legacy-id will be null.
      *
-     *  - branch operation will divide the kstrem depending if the product legacy-id was found.
+     * - The branch operation will divide the kstraem depending if the product legacy-id was found.
      *
      * @param builder the streams builder
      * @return the builder configured with the topology
      */
-    @Bean("warehouseOrderProductMatcherStreamTopology")
+    @Bean("warehouseOrderLineProductMatcherStreamTopology")
     public StreamsBuilder startProcessing(
-            @Qualifier("warehouseOrderProductMatcherStreamBuilderFactoryBean") StreamsBuilder builder
+            @Qualifier("warehouseOrderLineProductMatcherStreamBuilderFactoryBean") StreamsBuilder builder
     ) {
         KStream<String, PurchaseOrderLine> purchaseOrderLinesStream = builder.stream(
                 aggregatedPurchaseOrderLinesTopic,
@@ -162,11 +162,12 @@ public class WarehouseOrderProductMatcherStream extends BaseStream {
                 .leftJoin(
                         productLecgaryIdsTable,
                         (PurchaseOrderLine line, Integer productLegacyId) -> {
-                            LOGGER.info(">>> Stream - Commercial order line uuid={} left joined with product uuid={} - Matched legacy-id={}",
-                                    line.getUuid(),
-                                    line.getProductUuid(),
-                                    productLegacyId
-                            );
+                            if (null != productLegacyId) {
+                                LOGGER.info(">>> Stream - Warehouse order line matcher - Product legacy id. matched for product uuid={} - legacy-id={}", line.getProductUuid(), productLegacyId);
+                            }
+                            else {
+                                LOGGER.info(">>> Stream - Warehouse order line matcher - Product legacy id. not matched for product uuid={}!", line.getProductUuid());
+                            }
 
                             return WarehouseOrderLine
                                     .newBuilder()

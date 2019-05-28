@@ -103,14 +103,26 @@ public class KafkaStreamsConfig {
     }
 
     /**
-     * Creates a bean for a Kafka Streams process to TODO ????
+     * Creates a bean for a Kafka Streams process to match the purchase order lines with the product legacy id and generate the warehouse order line
      *
      * @return A factory to build the stream
      */
-    @Bean("warehouseOrderProductMatcherStreamBuilderFactoryBean")
-    public StreamsBuilderFactoryBean warehouseOrderProductMatcherStreamBuilderFactoryBean() {
+    @Bean("warehouseOrderLineProductMatcherStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean warehouseOrderLineProductMatcherStreamBuilderFactoryBean() {
         Map<String, Object> props = streamsConfigs();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderProductMatcherStream");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderLineProductMatcherStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
+
+    /**
+     * Creates a bean for a Kafka Streams process to recovery the unmatched warehouse order lines calling an external API to get the product legacy id.
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("warehouseOrderLineProductRecoveryStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean warehouseOrderLineProductRecoveryStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderLineProductRecoveryStream");
         return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
     }
 }
