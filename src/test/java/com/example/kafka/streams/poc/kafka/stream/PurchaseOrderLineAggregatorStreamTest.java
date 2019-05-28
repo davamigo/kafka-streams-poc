@@ -55,7 +55,7 @@ public class PurchaseOrderLineAggregatorStreamTest extends StreamTestBase {
         // Parent Setup to create the TopologyTestDriver
         parentSetUp(schemaRegistryClient, topology);
 
-        // Create the purchase line order consumer record factory to send records to the Kafka stream consumer
+        // Create the commercial order line consumer record factory to send records to the Kafka stream consumer
         commercialOrderLinesConsumerRecordFactory = new ConsumerRecordFactory<>(
                 COMMERCIAL_ORDER_LINES_INPUT_TOPIC,
                 new ByteArraySerializer(),

@@ -106,7 +106,7 @@ public class PurchaseOrderLineAggregatorStream extends BaseStream {
      */
     private void configureSerdes() {
         this.stringKeyAvroSerde.configure(serdeConfig, true);
-        commercialOrderLineSplitValueAvroSerde.configure(serdeConfig, false);
+        this.commercialOrderLineSplitValueAvroSerde.configure(serdeConfig, false);
         this.purchaseOrderLineValueAvroSerde.configure(serdeConfig, false);
     }
 
