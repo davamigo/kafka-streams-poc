@@ -10,12 +10,6 @@ Proof of Concept showing different use cases with Apache Kafka and Kafka Streams
 
 This PoC consist in a Producer to generate random data and send it to Kafka topics; and some Kafka Stream processes to convert the generated data into something else.
 
-![](docs/images/architecture-producers-and-streams.png)
-
-Also there are some consumers who write in a mongoDB database and a small front end to show the contents of the collections in mongoDB.
-
-![](docs/images/architecture-consumers-and-mongo.png)
-
 The whole project is designed to have a separate microservice for each process, but it is programmed as a monolith because this is just a PoC.
 
 ---
@@ -36,6 +30,14 @@ Produces a commercial order with random data.
 - Publish the new commercial order in a `t.commercial-orders.new` topic.
 - Publish new members in `t.members.new` topic.
 - Publish new products in `t.products.new` topic.
+
+---
+
+## Consumers
+
+There are some consumers who write in a mongoDB database and a small front end to show the contents of the collections in mongoDB.
+
+![](docs/images/architecture-consumers-and-mongo.png)
 
 ---
 
@@ -97,10 +99,13 @@ The aggregationKey of the new stream will be the concatenation of `contry-code` 
 
 ---
 
-### Generate Warehouse order lines
+### Generate warehouse order lines
 
 Generates the **warehouse order lines** from the **purchase order lines**.
-In this case the WMS (_Warehouse Management System_) needs a ***legacy product id*** which is in another topic.
+
+In this example we are assuming the WMS (_Warehouse Management System_) needs a ***legacy product id*** which is in another topic, but it's possible this legacy id is not there.
+So we are doing a `leftJoin` operation to not loose any product.
+
 The output are two topics (_matched_ or _unmatched_), depending on the legacy product id was found or not.
 
 ![](docs/images/stream-generate-warehouse-order-lines.png)
@@ -112,23 +117,29 @@ The output are two topics (_matched_ or _unmatched_), depending on the legacy pr
 
 ---
 
-### Send orders to warehouse
+### Recover Warehouse order lines
 
-_**TBD**_
+Takes the unmatched **warehouse order lines** and tries to recover the **product legacy id** from an external API.
 
-- From `t.commercial-orders.converted`
-- Join `t.commercial-order-lines.split`
-- To `t.warehouse-order.new`
+The output are two topics (_recovered_ or _failed_), depending on the legacy product id was found or not.
+
+![](docs/images/stream-recover-warehouse-order-lines.png)
+
+- From `t.warehouse-orders-lines.unmatched`
+- To `t.warehouse-orders-lines.recovered`
+- To `t.warehouse-orders-lines.failed`
 
 ---
 
-### Generate the bill
+### Merge matched and recovered warehouse order lines
 
-_**TBD**_
+Merges the **matched warehouse order lines** and the **recovered warehouse order lines** streams into one larger stream.
 
-- From `t.commercial-orders.new`
-- Join `t.members.new`
-- To `t.bill.new`
+![](docs/images/stream-merge-warehouse-order-lines.png)
+
+- From `t.warehouse-order-lines.matched`
+- Merge `t.warehouse-orders-lines.recovered`
+- To `t.warehouse-orders-lines.new`
 
 ---
 

@@ -91,7 +91,8 @@ public class KafkaStreamsConfig {
     }
 
     /**
-     * Creates a bean for a Kafka Streams process to generate the purchase order from the aggregated purchase order lines
+     * Creates a bean for a Kafka Streams process to generate the purchase order from the aggregated purchase order
+     * lines.
      *
      * @return A factory to build the stream
      */
@@ -103,7 +104,8 @@ public class KafkaStreamsConfig {
     }
 
     /**
-     * Creates a bean for a Kafka Streams process to match the purchase order lines with the product legacy id and generate the warehouse order line
+     * Creates a bean for a Kafka Streams process to match the purchase order lines with the product legacy id and
+     * generate the warehouse order line.
      *
      * @return A factory to build the stream
      */
@@ -115,7 +117,8 @@ public class KafkaStreamsConfig {
     }
 
     /**
-     * Creates a bean for a Kafka Streams process to recovery the unmatched warehouse order lines calling an external API to get the product legacy id.
+     * Creates a bean for a Kafka Streams process to recovery the unmatched warehouse order lines calling an external
+     * API to get the product legacy id.
      *
      * @return A factory to build the stream
      */
@@ -123,6 +126,19 @@ public class KafkaStreamsConfig {
     public StreamsBuilderFactoryBean warehouseOrderLineProductRecoveryStreamBuilderFactoryBean() {
         Map<String, Object> props = streamsConfigs();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderLineProductRecoveryStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
+
+    /**
+     * Creates a bean for a Kafka Streams process to merge the matched warehouse order lines and the recovered warehouse
+     * order lines streams into one larger stream.
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("warehouseOrderLineMergerStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean warehouseOrderLineMergerStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderLineMergerStream");
         return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
     }
 }
