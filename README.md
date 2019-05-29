@@ -10,6 +10,8 @@ Proof of Concept showing different use cases with Apache Kafka and Kafka Streams
 
 This PoC consist in a Producer to generate random data and send it to Kafka topics; and some Kafka Stream processes to convert the generated data into something else.
 
+![](docs/images/architecture-all-the-streams.png)
+
 The whole project is designed to have a separate microservice for each process, but it is programmed as a monolith because this is just a PoC.
 
 ---
