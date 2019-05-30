@@ -141,4 +141,17 @@ public class KafkaStreamsConfig {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderLineMergerStream");
         return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
     }
+
+    /**
+     * Creates a bean for a Kafka Streams process feeding the product-legacy-id topic from the recovered warehouse order
+     * lines stream.
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("productLegacyIdFeederStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean productLegacyIdFeederStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "productLegacyIdFeederStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
 }

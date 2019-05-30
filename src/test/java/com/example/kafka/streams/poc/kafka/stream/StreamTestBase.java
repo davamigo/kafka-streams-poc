@@ -26,6 +26,7 @@ class StreamTestBase {
     /** Avro serializers/deserializers */
     KafkaAvroSerializer keyAvroSerializer;
     KafkaAvroSerializer valueAvroSerializer;
+    KafkaAvroDeserializer keyAvroDeserializer;
     KafkaAvroDeserializer valueAvroDeserializer;
 
     /** Constants */
@@ -64,6 +65,9 @@ class StreamTestBase {
 
         valueAvroSerializer = new KafkaAvroSerializer(schemaRegistryClient);
         valueAvroSerializer.configure(serializerConfig, false);
+
+        keyAvroDeserializer = new KafkaAvroDeserializer(schemaRegistryClient);
+        keyAvroDeserializer.configure(serializerConfig, true);
 
         valueAvroDeserializer = new KafkaAvroDeserializer(schemaRegistryClient);
         valueAvroDeserializer.configure(serializerConfig, false);

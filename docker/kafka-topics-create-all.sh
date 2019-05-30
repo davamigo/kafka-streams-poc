@@ -35,8 +35,8 @@ done;
 
 COMPACTED_30DAYS_TOPICS="\
     t.purchase-order-lines.aggregated \
-    t.purchase-order.generated \
-    t.products-legacy-id.cache \
+    t.purchase-orders.generated \
+    t.product-legacy-ids.cache \
     ";
 
 for TOPIC in ${COMPACTED_30DAYS_TOPICS}; do

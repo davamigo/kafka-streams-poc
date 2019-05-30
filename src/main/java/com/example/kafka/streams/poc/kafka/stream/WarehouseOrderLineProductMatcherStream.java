@@ -31,7 +31,7 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
     private final String aggregatedPurchaseOrderLinesTopic;
 
     /** The name of the product legacy id cache Kafka topic (input KTable) */
-    private final String productsLegacyIdCacheTopic;
+    private final String productLegacyIdsCacheTopic;
 
     /** The name of the matched warehouse order lines Kafka topic (output KStream) */
     private final String matchedWarehouseOrderLinesTopic;
@@ -56,22 +56,22 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
      *
      * @param schemaRegistryUrl                 the URL of the schema registry
      * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
-     * @param productsLegacyIdCacheTopic        the name of the product legacy id cache Kafka topic (input KTable)
-     * @param matchedWarehouseOrderLinesTopic   the name of the generated purchase order Kafka topic (output KStream)
+     * @param productLegacyIdsCacheTopic        the name of the product legacy id cache Kafka topic (input KTable)
+     * @param matchedWarehouseOrderLinesTopic   the name of the matched warehouse order lines Kafka topic (output KStream)
      * @param unmatchedWarehouseOrderLinesTopic the name of the unmatched warehouse order lines Kafka topic (output KStream)
      */
     @Autowired
     public WarehouseOrderLineProductMatcherStream(
             @Value("${spring.kafka.schema-registry-url}") String schemaRegistryUrl,
             @Value("${spring.kafka.topics.purchase-order-lines-aggregated}") String aggregatedPurchaseOrderLinesTopic,
-            @Value("${spring.kafka.topics.products-legacy-id}") String productsLegacyIdCacheTopic,
+            @Value("${spring.kafka.topics.product-legacy-ids}") String productLegacyIdsCacheTopic,
             @Value("${spring.kafka.topics.warehouse-order-lines-matched}") String matchedWarehouseOrderLinesTopic,
             @Value("${spring.kafka.topics.warehouse-order-lines-unmatched}") String unmatchedWarehouseOrderLinesTopic
     ) {
         super(schemaRegistryUrl);
 
         this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
-        this.productsLegacyIdCacheTopic = productsLegacyIdCacheTopic;
+        this.productLegacyIdsCacheTopic = productLegacyIdsCacheTopic;
         this.matchedWarehouseOrderLinesTopic = matchedWarehouseOrderLinesTopic;
         this.unmatchedWarehouseOrderLinesTopic = unmatchedWarehouseOrderLinesTopic;
 
@@ -89,22 +89,22 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
      * @param schemaRegistryClient              the schema registry client (for testing)
      * @param schemaRegistryUrl                 the URL of the schema registry
      * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
-     * @param productsLegacyIdCacheTopic        the name of the product legacy id cache Kafka topic (input KTable)
-     * @param matchedWarehouseOrderLinesTopic   the name of the generated purchase order Kafka topic (output KStream)
+     * @param productLegacyIdsCacheTopic        the name of the product legacy id cache Kafka topic (input KTable)
+     * @param matchedWarehouseOrderLinesTopic   the name of the matched warehouse order lines Kafka topic (output KStream)
      * @param unmatchedWarehouseOrderLinesTopic the name of the unmatched warehouse order lines Kafka topic (output KStream)
      */
     public WarehouseOrderLineProductMatcherStream(
             SchemaRegistryClient schemaRegistryClient,
             String schemaRegistryUrl,
             String aggregatedPurchaseOrderLinesTopic,
-            String productsLegacyIdCacheTopic,
+            String productLegacyIdsCacheTopic,
             String matchedWarehouseOrderLinesTopic,
             String unmatchedWarehouseOrderLinesTopic
     ) {
         super(schemaRegistryUrl);
 
         this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
-        this.productsLegacyIdCacheTopic = productsLegacyIdCacheTopic;
+        this.productLegacyIdsCacheTopic = productLegacyIdsCacheTopic;
         this.matchedWarehouseOrderLinesTopic = matchedWarehouseOrderLinesTopic;
         this.unmatchedWarehouseOrderLinesTopic = unmatchedWarehouseOrderLinesTopic;
 
@@ -151,7 +151,7 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
         );
 
         KTable<String, Integer> productLecgaryIdsTable = builder.table(
-                productsLegacyIdCacheTopic,
+                productLegacyIdsCacheTopic,
                 Consumed.with(stringKeyAvroSerde, integerValueAvroSerde)
         );
 

@@ -20,9 +20,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SpringBootTest
 @DirtiesContext
 @RunWith(MockitoJUnitRunner.class)
@@ -69,7 +66,7 @@ public class WarehouseOrderLineMergerStreamTest extends StreamTestBase {
         );
 
         recoveredWarehouseOrderLinesConsumerRecordFactory = new ConsumerRecordFactory<>(
-                WAREHOUSE_ORDER_LINES_MATCHED_INPUT_TOPIC,
+                WAREHOUSE_ORDER_LINES_RECOVERED_INPUT_TOPIC,
                 new ByteArraySerializer(),
                 new ByteArraySerializer()
         );

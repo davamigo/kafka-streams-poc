@@ -31,7 +31,7 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
 
     /** Constants */
     private final String PURCHASE_ORDER_LINES_INPUT_TOPIC = "t.purchase-order-lines-input";
-    private final String PRODUCT_LEGACY_IDS_INPUT_TOPIC = "t.products-legacy-id-input";
+    private final String PRODUCT_LEGACY_IDS_INPUT_TOPIC = "t.product-legacy-ids-input";
     private final String WAREHOUSE_ORDER_LINES_MATCHED_OUTPUT_TOPIC = "t.warehouse-order-lines-matched-output";
     private final String WAREHOUSE_ORDER_LINES_UNMATCHED_OUTPUT_TOPIC = "t.warehouse-order-lines-unmatched-output";
 

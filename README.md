@@ -50,7 +50,7 @@ There are some consumers who write in a mongoDB database and a small front end t
 Joins each **commercial order** with the **member** data.
 Also computes some fields like the total amount of the order.
 The target stream won't have the billing address nor the order lines.
-The aggregationKey in the new stream will be the same (the `uuid` of the commercial order).
+The key in the new stream will be the same (the `uuid` of the commercial order).
 
 ![](docs/images/stream-convert-commercial-orders.png)
 
@@ -64,7 +64,7 @@ The aggregationKey in the new stream will be the same (the `uuid` of the commerc
 
 Extracts all the **order lines** from the **commercial orders** and joins each commercial order line with the **product** data.
 Each order line will generate one or more message in the target stream.
-The aggregationKey of the new stream will be the same (the `uuid` of the commercial order) to allow grouping.
+The key of the new stream will be the same (the `uuid` of the commercial order) to allow grouping.
 
 ![](docs/images/stream-split-commercial-order-lines.png)
 
@@ -78,7 +78,7 @@ The aggregationKey of the new stream will be the same (the `uuid` of the commerc
 
 Reduces the **commercial order lines** by adding the quantities for the same country, product and day to generate the **purchase order lines**.
 One purchase order line will be generated per per country, product and day.
-The aggregationKey of the new stream will be the concatenation of `contry-code`, `date(yyyy-mm-dd)` and `product-uuid`.
+The key of the new stream will be the concatenation of `contry-code`, `date(yyyy-mm-dd)` and `product-uuid`.
 
 
 ![](docs/images/stream-aggregate-purchase-order-lines.png)
@@ -92,7 +92,7 @@ The aggregationKey of the new stream will be the concatenation of `contry-code`,
 
 Generates one **purchase order** per country and day by aggregating the **purchase order lines**.
 The purchase order will havea list of all order lines.
-The aggregationKey of the new stream will be the concatenation of `contry-code` and `date(yyyy-mm-dd)`.
+The key of the new stream will be the concatenation of `contry-code` and `date(yyyy-mm-dd)`.
 
 ![](docs/images/stream-generate-purchase-orders.png)
 
@@ -113,7 +113,7 @@ The output are two topics (_matched_ or _unmatched_), depending on the legacy pr
 ![](docs/images/stream-generate-warehouse-order-lines.png)
 
 - From `t.purchase-order-lines.aggregated`.
-- Left join with `t.products-legacy-id.cache`. 
+- Left join with `t.product-legacy-ids.cache`. 
 - To `t.warehouse-order-lines.matched`.
 - To `t.warehouse-order-lines.unmatched`.
 
@@ -145,16 +145,33 @@ Merges the **matched warehouse order lines** and the **recovered warehouse order
 
 ---
 
+### Feed product legacy id topic
+
+This Kafka Stream process fills the **product legacy id topic** with the relation between the **product uuid** and the **product legacy id**. 
+This topic was used before in the **Generate warehouse order lines** Kafka Streams process.
+
+![](docs/images/stream-feed-product-legacy-id-cache.png)
+
+- From `t.product-legacy-ids.cache`
+- To `t.warehouse-orders-lines.recovered`
+
+---
+
 ## Topics
 
-- `t.commercial-orders.new`: All the commercial orders. No aggregationKey.
-- `t.members.new`: All data of the member. The aggregationKey is the member uuid.
-- `t.products.new`: All data of the product. The aggregationKey is the product uuid.
-- `t.commercial-orders.converted`: Commercial orders with member data, but without order line. The aggregationKey is the commercial order uuid.
-- `t.commercial-order-lines.split`: Commercial order lines. The aggregationKey is the commercial order uuid.
-- `t.purchase-order.new`: Purchase order data. The aggregationKey is the date (int, format YYYMMDD).
-- `t.warehouse-order.new`: The warehouse order data. The aggregationKey is the commercial order uuid.
-- `t.bill.new`: The bill data. The aggregationKey is the member uuid.
+- **`t.members.new`**: All data of the member. The key is the member uuid.
+- **`t.products.new`**: All data of the product. The key is the product uuid.
+- **`t.commercial-orders.new`**: All the commercial orders. No key.
+- **`t.commercial-orders.converted`**: Commercial orders with member data, but without order line. The key is the commercial order uuid.
+- **`t.commercial-order-lines.split`**: Commercial order lines. The key is the commercial order uuid.
+- **`t.purchase-order-lines.aggregated`**: Purchase order lines created from the aggregation of commercial order lines per country day and product. The key is the concatenation of `contry-code`, `date(yyyy-mm-dd)` and `product-uuid`.
+- **`t.purchase-orders.generated`**: Purchase orders with all the purchase order lines per country and day. The key is the concatenation of `contry-code` and `date(yyyy-mm-dd)`.
+- **`t.warehouse-order-lines.matched`**: Warehouse order lines generated from the purchase order line, matched with the `product-legacy-id`. The key is uuid of the warehouse order line.
+- **`t.warehouse-order-lines.unmatched`**: Warehouse order lines generated from the purchase order line, not matched with the `product-legacy-id`. The key is uuid of the warehouse order line.
+- **`t.warehouse-order-lines.recovered`**: Warehouse order lines not matched but recovered with the `product-legacy-id`. The key is uuid of the warehouse order line.
+- **`t.warehouse-order-lines.failed`**: Warehouse order lines not matched neither recovered. The key is uuid of the warehouse order line.
+- **`t.warehouse-order-lines.new`**: Merge result from warehouse order lines matched and recovered. The key is uuid of the warehouse order line.
+- **`t.product-legacy-ids.cache`**: Cache topic for product legacy ids. The key is the `product-uuid` and the value is the `product-legacy-id`.
 
 ---
 
