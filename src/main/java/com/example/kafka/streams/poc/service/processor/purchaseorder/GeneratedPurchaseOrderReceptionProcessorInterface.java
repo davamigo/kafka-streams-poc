@@ -4,7 +4,7 @@ import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder;
 import com.example.kafka.streams.poc.service.processor.exception.ProcessorException;
 
 /**
- * Interface to a service to process the reception of a generated PurchaseOrder
+ * Interface to a service to process the reception of a generated Purchase order
  */
 public interface GeneratedPurchaseOrderReceptionProcessorInterface {
 

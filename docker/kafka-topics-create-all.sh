@@ -9,8 +9,8 @@ REGULAR_30DAYS_TOPICS="\
     t.warehouse-order-lines.matched \
     t.warehouse-order-lines.unmatched \
     t.warehouse-order-lines.recovered \
-    t.warehouse-order-lines.failed
-     t.warehouse-order-lines.new \\
+    t.warehouse-order-lines.failed \
+    t.warehouse-order-lines.new \
     ";
 
 for TOPIC in ${REGULAR_30DAYS_TOPICS}; do

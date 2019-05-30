@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 public class TestGeneratedPurchaseOrdersKafkaConsumer {
 
     @Mock
-    GeneratedPurchaseOrderReceptionProcessorInterface generatedPurchaseOrderReceptionProcessorInterface;
+    GeneratedPurchaseOrderReceptionProcessorInterface generatedPurchaseOrderReceptionProcessorMock;
 
     @Mock
     Acknowledgment ack;
@@ -41,11 +41,11 @@ public class TestGeneratedPurchaseOrdersKafkaConsumer {
         PurchaseOrder purchaseOrder = getTestPurchaseOrder();
 
         // Run the test
-        GeneratedPurchaseOrdersKafkaConsumer generatedPurchaseOrdersKafkaConsumer = new GeneratedPurchaseOrdersKafkaConsumer(generatedPurchaseOrderReceptionProcessorInterface);
+        GeneratedPurchaseOrdersKafkaConsumer generatedPurchaseOrdersKafkaConsumer = new GeneratedPurchaseOrdersKafkaConsumer(generatedPurchaseOrderReceptionProcessorMock);
         generatedPurchaseOrdersKafkaConsumer.listen(purchaseOrder, ack, "101", "ttt");
 
         // Assertions
-        verify(generatedPurchaseOrderReceptionProcessorInterface, times(1)).process(any(
+        verify(generatedPurchaseOrderReceptionProcessorMock, times(1)).process(any(
                 com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder.class
         ));
 
@@ -58,14 +58,14 @@ public class TestGeneratedPurchaseOrdersKafkaConsumer {
         // Prepare test data
         PurchaseOrder purchaseOrder = getTestPurchaseOrder();
 
-        Mockito.doThrow(new ProcessorException("_msg_")).when(generatedPurchaseOrderReceptionProcessorInterface).process(any());
+        Mockito.doThrow(new ProcessorException("_msg_")).when(generatedPurchaseOrderReceptionProcessorMock).process(any());
 
         // Run the test
-        GeneratedPurchaseOrdersKafkaConsumer generatedPurchaseOrdersKafkaConsumer = new GeneratedPurchaseOrdersKafkaConsumer(generatedPurchaseOrderReceptionProcessorInterface);
+        GeneratedPurchaseOrdersKafkaConsumer generatedPurchaseOrdersKafkaConsumer = new GeneratedPurchaseOrdersKafkaConsumer(generatedPurchaseOrderReceptionProcessorMock);
         generatedPurchaseOrdersKafkaConsumer.listen(purchaseOrder, ack, "101", "ttt");
 
         // Assertions
-        verify(generatedPurchaseOrderReceptionProcessorInterface, times(1)).process(any(
+        verify(generatedPurchaseOrderReceptionProcessorMock, times(1)).process(any(
                 com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder.class
         ));
 

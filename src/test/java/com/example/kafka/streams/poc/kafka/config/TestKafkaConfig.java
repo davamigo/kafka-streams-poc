@@ -4,6 +4,7 @@ import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.product.Product;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
+import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.junit.Test;
@@ -234,6 +235,17 @@ public class TestKafkaConfig {
         // Run the test
         KafkaConfig kafkaConfig = new KafkaConfig(environment);
         KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PurchaseOrder>> factory = kafkaConfig.purchaseOrderKafkaListenerContainerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testWarehouseOrderLineKafkaListenerContainerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, WarehouseOrderLine>> factory = kafkaConfig.warehouseOrderLineKafkaListenerContainerFactory();
 
         // Assertions
         assertNotNull(factory);
