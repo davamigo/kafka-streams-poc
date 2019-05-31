@@ -62,22 +62,27 @@ public class FakeLegacyProductIdsApi implements LegacyProductIdsApiInterface {
             return previousValues.get(productUuid);
         }
 
-        // Sleep 250 milliseconds to simulate the call to the API
+        // Sleep a fixed number of milliseconds to simulate the call to the API
         try {
             Thread.sleep(watTimeMillis);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        Optional<Integer> result;
+
         // Introduce random failures depending the rate
         int percent = 100 - (new Random()).nextInt(100);
         if (failRate > percent) {
-            return Optional.empty();
+            result = Optional.empty();
+        }
+        else {
+            // Get random legacy id between 100000 and 999999
+            int legacyId = 100000 + (new Random()).nextInt(899999);
+            result = Optional.of(legacyId);
         }
 
-        // Get random legacy id between 100000 and 999999
-        int legacyId = 100000 + (new Random()).nextInt(899999);
-        Optional<Integer> result = Optional.of(legacyId);
+        // Store previous values
         previousValues.put(productUuid, result);
 
         return result;

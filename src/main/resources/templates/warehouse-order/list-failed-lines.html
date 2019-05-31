@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Failed Warehouse Order Lines - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Failed Warehouse Order Lines</h2>
+
+<div th:if="${orderLines.isEmpty()}">
+    <p>
+        No failed warehouse order lines found!
+    </p>
+</div>
+
+<div th:if="${!orderLines.isEmpty()}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Uuid</th>
+                <th>Country</th>
+                <th>Date</th>
+                <th>Product Uuid</th>
+                <th>Product Name</th>
+                <th>Product Bar Code</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="line : ${orderLines}">
+                <td th:text="${line.getUuid()}"></td>
+                <td th:text="${line.getCountry()}"></td>
+                <td th:text="${line.getDate()}"></td>
+                <td th:text="${line.getProductUuid()}"></td>
+                <td th:text="${line.getProductName()}"></td>
+                <td th:text="${line.getProductBarCode()}"></td>
+                <td th:text="${line.getQuantity()}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+        Showing failed warehouse order lines
+        <span th:text="${(page * size) + 1}"></span>
+        to
+        <span th:text="${(page * size) + orderLines.size()}"></span>
+        of
+        <span th:text="${count}"></span>
+    </p>
+</div>
+
+<div th:if="${prev < page || next > page}">
+    <p>
+        Pagination
+        <span th:if="${prev < page}">
+            &ndash;
+            <a th:href="@{/warehouse-order/line/failed(page=0,size=${size})}">First</a>
+            &ndash;
+            <a th:href="@{/warehouse-order/line/failed(page=${prev},size=${size})}">Prev</a>
+        </span>
+        <span th:if="${next > page}">
+            &ndash;
+            <a th:href="@{/warehouse-order/line/failed(page=${next},size=${size})}">Next</a>
+        </span>
+    </p>
+</div>
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
