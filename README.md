@@ -105,14 +105,23 @@ The key of the new stream will be the concatenation of `contry-code` and `date(y
 
 Generates the **warehouse order lines** from the **purchase order lines**.
 
+![](docs/images/stream-generate-warehouse-order-lines.png)
+
+- From `t.purchase-order-lines.aggregated`. 
+- To `t.warehouse-order-lines.generated`.
+
+---
+
+### Match warehouse order line with the produyct legacy id
+
 In this example we are assuming the WMS (_Warehouse Management System_) needs a ***legacy product id*** which is in another topic, but it's possible this legacy id is not there.
 So we are doing a `leftJoin` operation to not loose any product.
 
 The output are two topics (_matched_ or _unmatched_), depending on the legacy product id was found or not.
 
-![](docs/images/stream-generate-warehouse-order-lines.png)
+![](docs/images/stream-match-warehouse-order-lines.png)
 
-- From `t.purchase-order-lines.aggregated`.
+- From `t.warehouse-order-lines.generated`.
 - Left join with `t.product-legacy-ids.cache`. 
 - To `t.warehouse-order-lines.matched`.
 - To `t.warehouse-order-lines.unmatched`.
