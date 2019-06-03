@@ -1,7 +1,6 @@
 package com.example.kafka.streams.poc.kafka.stream;
 
 import com.example.kafka.streams.poc.kafka.serde.GenericPrimitiveAvroSerde;
-import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLine;
 import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
@@ -16,10 +15,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 /**
- * Kafka streams for matching each purchase order line with the product legacy id while generating the warehouse order lines
+ * Kafka streams for matching each warehouse order line with the product legacy id
  */
 @Component
 public class WarehouseOrderLineProductMatcherStream extends BaseStream {
@@ -27,8 +24,8 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(WarehouseOrderLineProductMatcherStream.class);
 
-    /** The name of the aggregated purchase order lines Kafka topic (input KStream) */
-    private final String aggregatedPurchaseOrderLinesTopic;
+    /** The name of the generated warehouse order lines Kafka topic (input KStream) */
+    private final String generatedWarehouseOrderLinesTopic;
 
     /** The name of the product legacy id cache Kafka topic (input KTable) */
     private final String productLegacyIdsCacheTopic;
@@ -42,9 +39,6 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
     /** Serde for the string avro key */
     private final Serde<String> stringKeyAvroSerde;
 
-    /** Serde for encoding/decoding a purchase order line to/from avro */
-    private final Serde<PurchaseOrderLine> purchaseOrderLineValueAvroSerde;
-
     /** Serde for encoding/decoding an integer to/from avro */
     private final Serde<Integer> integerValueAvroSerde;
 
@@ -55,7 +49,7 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
      * Autowired constructor
      *
      * @param schemaRegistryUrl                 the URL of the schema registry
-     * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
+     * @param generatedWarehouseOrderLinesTopic the name of the generated warehouse order lines Kafka topic (input KStream)
      * @param productLegacyIdsCacheTopic        the name of the product legacy id cache Kafka topic (input KTable)
      * @param matchedWarehouseOrderLinesTopic   the name of the matched warehouse order lines Kafka topic (output KStream)
      * @param unmatchedWarehouseOrderLinesTopic the name of the unmatched warehouse order lines Kafka topic (output KStream)
@@ -63,20 +57,19 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
     @Autowired
     public WarehouseOrderLineProductMatcherStream(
             @Value("${spring.kafka.schema-registry-url}") String schemaRegistryUrl,
-            @Value("${spring.kafka.topics.purchase-order-lines-aggregated}") String aggregatedPurchaseOrderLinesTopic,
+            @Value("${spring.kafka.topics.warehouse-order-lines-generated}") String generatedWarehouseOrderLinesTopic,
             @Value("${spring.kafka.topics.product-legacy-ids}") String productLegacyIdsCacheTopic,
             @Value("${spring.kafka.topics.warehouse-order-lines-matched}") String matchedWarehouseOrderLinesTopic,
             @Value("${spring.kafka.topics.warehouse-order-lines-unmatched}") String unmatchedWarehouseOrderLinesTopic
     ) {
         super(schemaRegistryUrl);
 
-        this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
+        this.generatedWarehouseOrderLinesTopic = generatedWarehouseOrderLinesTopic;
         this.productLegacyIdsCacheTopic = productLegacyIdsCacheTopic;
         this.matchedWarehouseOrderLinesTopic = matchedWarehouseOrderLinesTopic;
         this.unmatchedWarehouseOrderLinesTopic = unmatchedWarehouseOrderLinesTopic;
 
         this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
-        this.purchaseOrderLineValueAvroSerde = new SpecificAvroSerde<>();
         this.integerValueAvroSerde = new GenericPrimitiveAvroSerde<>();
         this.warehouseOrderLineValueAvroSerde = new SpecificAvroSerde<>();
 
@@ -88,7 +81,7 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
      *
      * @param schemaRegistryClient              the schema registry client (for testing)
      * @param schemaRegistryUrl                 the URL of the schema registry
-     * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
+     * @param generatedWarehouseOrderLinesTopic the name of the generated warehouse order lines Kafka topic (input KStream)
      * @param productLegacyIdsCacheTopic        the name of the product legacy id cache Kafka topic (input KTable)
      * @param matchedWarehouseOrderLinesTopic   the name of the matched warehouse order lines Kafka topic (output KStream)
      * @param unmatchedWarehouseOrderLinesTopic the name of the unmatched warehouse order lines Kafka topic (output KStream)
@@ -96,20 +89,19 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
     public WarehouseOrderLineProductMatcherStream(
             SchemaRegistryClient schemaRegistryClient,
             String schemaRegistryUrl,
-            String aggregatedPurchaseOrderLinesTopic,
+            String generatedWarehouseOrderLinesTopic,
             String productLegacyIdsCacheTopic,
             String matchedWarehouseOrderLinesTopic,
             String unmatchedWarehouseOrderLinesTopic
     ) {
         super(schemaRegistryUrl);
 
-        this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
+        this.generatedWarehouseOrderLinesTopic = generatedWarehouseOrderLinesTopic;
         this.productLegacyIdsCacheTopic = productLegacyIdsCacheTopic;
         this.matchedWarehouseOrderLinesTopic = matchedWarehouseOrderLinesTopic;
         this.unmatchedWarehouseOrderLinesTopic = unmatchedWarehouseOrderLinesTopic;
 
         this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>(schemaRegistryClient);
-        this.purchaseOrderLineValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
         this.integerValueAvroSerde = new GenericPrimitiveAvroSerde<>(schemaRegistryClient);
         this.warehouseOrderLineValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
 
@@ -121,7 +113,6 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
      */
     private void configureSerdes() {
         stringKeyAvroSerde.configure(serdeConfig, true);
-        purchaseOrderLineValueAvroSerde.configure(serdeConfig, false);
         integerValueAvroSerde.configure(serdeConfig, false);
         warehouseOrderLineValueAvroSerde.configure(serdeConfig, false);
     }
@@ -129,14 +120,16 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
     /**
      * Builds the topology of the Kafka Streams.
      *
-     * - The left join operation purchase order lines kstream with product legacy-id ktable by product-uuid
+     * - The left join operation will join the warehouse order lines kstream with product legacy-id ktable by product-uuid
      *
-     *   The result is a kstream with a Warehouse Order Line contract.
-     *
-     *   If matched the product legacy-id is saved to the contract.
+     *   If matched the product legacy-id is saved to the warehouse order line.
      *   If not, the legacy-id will be null.
      *
-     * - The branch operation will divide the kstraem depending if the product legacy-id was found.
+     *   A selectKey operation is required first to change the key of the stream to the product uuid.
+     *
+     *   The second selectKey operation is required to restore the warehous order line uuid as the key.
+     *
+     * - The branch operation will divide the kstream depending if the product legacy-id was found.
      *
      * @param builder the streams builder
      * @return the builder configured with the topology
@@ -145,9 +138,9 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
     public StreamsBuilder startProcessing(
             @Qualifier("warehouseOrderLineProductMatcherStreamBuilderFactoryBean") StreamsBuilder builder
     ) {
-        KStream<String, PurchaseOrderLine> purchaseOrderLinesStream = builder.stream(
-                aggregatedPurchaseOrderLinesTopic,
-                Consumed.with(stringKeyAvroSerde, purchaseOrderLineValueAvroSerde)
+        KStream<String, WarehouseOrderLine> generatedWarehouseOrderLinesStream = builder.stream(
+                generatedWarehouseOrderLinesTopic,
+                Consumed.with(stringKeyAvroSerde, warehouseOrderLineValueAvroSerde)
         );
 
         KTable<String, Integer> productLecgaryIdsTable = builder.table(
@@ -155,13 +148,13 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
                 Consumed.with(stringKeyAvroSerde, integerValueAvroSerde)
         );
 
-        KStream<String, WarehouseOrderLine> warehouseOrderLinesBase = purchaseOrderLinesStream
+        KStream<String, WarehouseOrderLine> warehouseOrderLinesBase = generatedWarehouseOrderLinesStream
                 .selectKey(
-                        (String lineUuid, PurchaseOrderLine line) -> line.getProductUuid()
+                        (String lineUuid, WarehouseOrderLine line) -> line.getProductUuid()
                 )
                 .leftJoin(
                         productLecgaryIdsTable,
-                        (PurchaseOrderLine line, Integer productLegacyId) -> {
+                        (WarehouseOrderLine line, Integer productLegacyId) -> {
                             if (null != productLegacyId) {
                                 LOGGER.info(">>> Stream - Warehouse order line matcher - Product legacy id. matched for product uuid={} - legacy-id={}", line.getProductUuid(), productLegacyId);
                             }
@@ -170,20 +163,13 @@ public class WarehouseOrderLineProductMatcherStream extends BaseStream {
                             }
 
                             return WarehouseOrderLine
-                                    .newBuilder()
-                                    .setUuid(UUID.randomUUID().toString())
-                                    .setCountry(line.getCountry())
-                                    .setDate(line.getDate())
-                                    .setProductUuid(line.getProductUuid())
+                                    .newBuilder(line)
                                     .setProductLegacyId(productLegacyId)
-                                    .setProductName(line.getProductName())
-                                    .setProductBarCode(line.getProductBarCode())
-                                    .setQuantity(line.getQuantity())
                                     .build();
                         },
                         Joined.with(
                                 stringKeyAvroSerde,
-                                purchaseOrderLineValueAvroSerde,
+                                warehouseOrderLineValueAvroSerde,
                                 integerValueAvroSerde
                         )
                 ).selectKey(

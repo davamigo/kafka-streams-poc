@@ -38,6 +38,7 @@ spring:
       commercial-order-lines-split: "t.commercial-order-lines.split"
       purchase-order-lines-aggregated: "t.purchase-order-lines.aggregated"
       purchase-orders-generated: "t.purchase-orders.generated"
+      warehouse-order-lines-generated: "t.warehouse-order-lines.generated"
       warehouse-order-lines-matched: "t.warehouse-order-lines.matched"
       warehouse-order-lines-unmatched: "t.warehouse-order-lines.unmatched"
       warehouse-order-lines-recovered: "t.warehouse-order-lines.recovered"

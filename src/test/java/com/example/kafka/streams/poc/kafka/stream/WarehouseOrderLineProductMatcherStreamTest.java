@@ -1,6 +1,6 @@
 package com.example.kafka.streams.poc.kafka.stream;
 
-import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLine;
+import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.SchemaRegistryClient;
 import org.apache.avro.generic.GenericRecord;
@@ -26,11 +26,11 @@ import org.springframework.test.annotation.DirtiesContext;
 public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
 
     /** Consumer record factories to send input data for testing */
-    private ConsumerRecordFactory<byte[], byte[]> purchaseOrderLinesConsumerRecordFactory = null;
+    private ConsumerRecordFactory<byte[], byte[]> warehouseOrderLinesConsumerRecordFactory = null;
     private ConsumerRecordFactory<byte[], byte[]> productsLegacyIdCacheConsumerRecordFactory = null;
 
     /** Constants */
-    private final String PURCHASE_ORDER_LINES_INPUT_TOPIC = "t.purchase-order-lines-input";
+    private final String WAREHOUSE_ORDER_LINES_GENERATED_INPUT_TOPIC = "t.warehouse-order-lines-generated-input";
     private final String PRODUCT_LEGACY_IDS_INPUT_TOPIC = "t.product-legacy-ids-input";
     private final String WAREHOUSE_ORDER_LINES_MATCHED_OUTPUT_TOPIC = "t.warehouse-order-lines-matched-output";
     private final String WAREHOUSE_ORDER_LINES_UNMATCHED_OUTPUT_TOPIC = "t.warehouse-order-lines-unmatched-output";
@@ -48,7 +48,7 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
         final WarehouseOrderLineProductMatcherStream streamTopologyBuilder = new WarehouseOrderLineProductMatcherStream(
                 schemaRegistryClient,
                 DUMMY_SCHEMA_REGISTRY_URL,
-                PURCHASE_ORDER_LINES_INPUT_TOPIC,
+                WAREHOUSE_ORDER_LINES_GENERATED_INPUT_TOPIC,
                 PRODUCT_LEGACY_IDS_INPUT_TOPIC,
                 WAREHOUSE_ORDER_LINES_MATCHED_OUTPUT_TOPIC,
                 WAREHOUSE_ORDER_LINES_UNMATCHED_OUTPUT_TOPIC
@@ -60,9 +60,9 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
         // Parent Setup to create the TopologyTestDriver
         parentSetUp(schemaRegistryClient, topology);
 
-        // Create the purchase order line consumer record factory to send records to the Kafka stream consumer
-        purchaseOrderLinesConsumerRecordFactory = new ConsumerRecordFactory<>(
-                PURCHASE_ORDER_LINES_INPUT_TOPIC,
+        // Create the warehouse order line consumer record factory to send records to the Kafka stream consumer
+        warehouseOrderLinesConsumerRecordFactory = new ConsumerRecordFactory<>(
+                WAREHOUSE_ORDER_LINES_GENERATED_INPUT_TOPIC,
                 new ByteArraySerializer(),
                 new ByteArraySerializer()
         );
@@ -84,31 +84,28 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
     }
 
     /**
-     * Unit test to check the purchase order line goes to unmatched when no product ids cache is empty
+     * Unit test to check the warehouse order line goes to unmatched when no product ids cache is empty
      */
     @Test
-    public void testPurchaseOrderLineGoestoUnmatchedWhenProductIdsCacheIsEmpty() {
+    public void testWarehouseOrderLineGoestoUnmatchedWhenProductIdsCacheIsEmpty() {
 
-        // Create a input commercial order line
-        PurchaseOrderLine inputValue = PurchaseOrderLine
+        // Create a input warehouse order line
+        WarehouseOrderLine inputValue = WarehouseOrderLine
                 .newBuilder()
                 .setUuid("pol1")
-                .setAggregationKey("aggr1")
                 .setCountry("ES")
                 .setDate(946681200015L)
                 .setProductUuid("prod1")
                 .setProductName("prod1n")
-                .setProductType("prod1t")
                 .setProductBarCode("prod1b")
-                .setProductPrice(100f)
                 .setQuantity(1)
                 .build();
         String inputKey = inputValue.getUuid();
 
-        // Send the input commercial order line
-        byte[] inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
-        byte[] inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
-        ConsumerRecord<byte[], byte[]> input = purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded);
+        // Send the input warehouse order line
+        byte[] inputKeyEncoded = keyAvroSerializer.serialize(WAREHOUSE_ORDER_LINES_GENERATED_INPUT_TOPIC, inputKey);
+        byte[] inputValueEncoded = valueAvroSerializer.serialize(WAREHOUSE_ORDER_LINES_GENERATED_INPUT_TOPIC, inputValue);
+        ConsumerRecord<byte[], byte[]> input = warehouseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded);
         testDriver.pipeInput(input);
 
         // Read the matched output topic
@@ -135,7 +132,7 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
         GenericRecord unmatchedOutputValue = (GenericRecord) valueAvroDeserializer.deserialize(unmatchedOutput.topic(), unmatchedOutput.value());
         Assert.assertNotNull(unmatchedOutputValue);
 
-        Assert.assertNotNull(unmatchedOutputValue.get("uuid"));
+        Assert.assertEquals("pol1", unmatchedOutputValue.get("uuid"));
         Assert.assertEquals("ES", unmatchedOutputValue.get("country"));
         Assert.assertEquals(946681200015L, unmatchedOutputValue.get("date"));
         Assert.assertEquals("prod1", unmatchedOutputValue.get("productUuid"));
@@ -146,10 +143,10 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
     }
 
     /**
-     * Unit test to check the purchase order line goes to matched when product id found in cache
+     * Unit test to check the warehouse order line goes to matched when product id found in cache
      */
     @Test
-    public void testPurchaseOrderLineGoestoMatchedWhenProductIdFoundInCache() {
+    public void testWarehouseOrderLineGoestoMatchedWhenProductIdFoundInCache() {
 
         // Create a product Id
         int productInputValue = 1234567890;
@@ -162,25 +159,22 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
         testDriver.pipeInput(productInput);
 
         // Create a input commercial order line
-        PurchaseOrderLine inputValue = PurchaseOrderLine
+        WarehouseOrderLine inputValue = WarehouseOrderLine
                 .newBuilder()
                 .setUuid("pol1")
-                .setAggregationKey("aggr1")
                 .setCountry("ES")
                 .setDate(946681200015L)
                 .setProductUuid("prod1")
                 .setProductName("prod1n")
-                .setProductType("prod1t")
                 .setProductBarCode("prod1b")
-                .setProductPrice(100f)
                 .setQuantity(1)
                 .build();
         String inputKey = inputValue.getUuid();
 
         // Send the input commercial order line
-        byte[] inputKeyEncoded = keyAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputKey);
-        byte[] inputValueEncoded = valueAvroSerializer.serialize(PURCHASE_ORDER_LINES_INPUT_TOPIC, inputValue);
-        ConsumerRecord<byte[], byte[]> input = purchaseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded);
+        byte[] inputKeyEncoded = keyAvroSerializer.serialize(WAREHOUSE_ORDER_LINES_GENERATED_INPUT_TOPIC, inputKey);
+        byte[] inputValueEncoded = valueAvroSerializer.serialize(WAREHOUSE_ORDER_LINES_GENERATED_INPUT_TOPIC, inputValue);
+        ConsumerRecord<byte[], byte[]> input = warehouseOrderLinesConsumerRecordFactory.create(inputKeyEncoded, inputValueEncoded);
         testDriver.pipeInput(input);
 
         // Read the matched output topic
@@ -207,7 +201,7 @@ public class WarehouseOrderLineProductMatcherStreamTest extends StreamTestBase {
         GenericRecord matchedOutputValue = (GenericRecord) valueAvroDeserializer.deserialize(matchedOutput.topic(), matchedOutput.value());
         Assert.assertNotNull(matchedOutputValue);
 
-        Assert.assertNotNull(matchedOutputValue.get("uuid"));
+        Assert.assertEquals("pol1", matchedOutputValue.get("uuid"));
         Assert.assertEquals("ES", matchedOutputValue.get("country"));
         Assert.assertEquals(946681200015L, matchedOutputValue.get("date"));
         Assert.assertEquals("prod1", matchedOutputValue.get("productUuid"));

@@ -124,7 +124,7 @@ public class ProductLegacyIdFeederStream extends BaseStream {
         );
 
         productLegacyIdsStream.foreach(
-                (String uuid, Integer legacyId) -> LOGGER.info(">>> Stream - Product legacy id stored in cache uuid={} legacy-id={}", uuid, legacyId)
+                (String productUuid, Integer productLegacyId) -> LOGGER.info(">>> Stream - Product legacy id stored in cache uuid={} legacy-id={}", productUuid, productLegacyId)
         );
 
         productLegacyIdsStream.to(

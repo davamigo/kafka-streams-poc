@@ -104,8 +104,19 @@ public class KafkaStreamsConfig {
     }
 
     /**
-     * Creates a bean for a Kafka Streams process to match the purchase order lines with the product legacy id and
-     * generate the warehouse order line.
+     * Creates a bean for a Kafka Streams process for generating the warehouse order lines from the purchase order lines
+     *
+     * @return A factory to build the stream
+     */
+    @Bean("warehouseOrderLineGeneratorStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean warehouseOrderLineGeneratorStreamBuilderFactoryBean() {
+        Map<String, Object> props = streamsConfigs();
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "warehouseOrderLineGeneratorStream");
+        return new StreamsBuilderFactoryBean(new KafkaStreamsConfiguration(props));
+    }
+
+    /**
+     * Creates a bean for a Kafka Streams process to match the warehouse order lines with the product legacy id.
      *
      * @return A factory to build the stream
      */

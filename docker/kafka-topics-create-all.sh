@@ -6,6 +6,7 @@ REGULAR_30DAYS_TOPICS="\
     t.commercial-orders.new \
     t.commercial-orders.converted \
     t.commercial-order-lines.split \
+    t.warehouse-order-lines.generated \
     t.warehouse-order-lines.matched \
     t.warehouse-order-lines.unmatched \
     t.warehouse-order-lines.recovered \
