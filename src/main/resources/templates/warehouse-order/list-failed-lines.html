@@ -29,7 +29,9 @@
         </thead>
         <tbody>
             <tr th:each="line : ${orderLines}">
-                <td th:text="${line.getUuid()}"></td>
+                <td>
+                    <a th:href="@{/warehouse-order/line/failed/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
+                </td>
                 <td th:text="${line.getCountry()}"></td>
                 <td th:text="${line.getDate()}"></td>
                 <td th:text="${line.getProductUuid()}"></td>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Failed Warehouse Order Lines - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Failed Warehouse Order Lines</h2>
+
+<div th:if="${null == warehouseOrderLine}">
+    <p>
+        The failed warehouse order line with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != warehouseOrderLine}">
+    <dl>
+        <dt>Uuid:</dt>
+        <dd>
+            <a th:href="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" th:text="${warehouseOrderLine.getUuid()}"></a>
+        </dd>
+
+        <dt>Country:</dt>
+        <dd th:text="${warehouseOrderLine.getCountry()}"></dd>
+
+        <dt>Date:</dt>
+        <dd th:text="${warehouseOrderLine.getDate()}"></dd>
+
+        <dt>Product Uuid:</dt>
+        <dd>
+            <a th:href="@{/product/{id}(id=${warehouseOrderLine.getProductUuid()})}" th:text="${warehouseOrderLine.getProductUuid()}"></a>
+        </dd>
+
+        <dt>Product Name:</dt>
+        <dd th:text="${warehouseOrderLine.getProductName()}"></dd>
+
+        <dt>Bar Code:</dt>
+        <dd th:text="${warehouseOrderLine.getProductBarCode()}"></dd>
+
+        <dt>Quantity:</dt>
+        <dd th:text="${warehouseOrderLine.getQuantity()}"></dd>
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/warehouse-order/line/failed}">Show failed warehouse order lines</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
