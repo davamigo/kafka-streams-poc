@@ -26,7 +26,7 @@ public class NewMembersKafkaProducer {
     /** Kafka template for producing messages when new members created */
     private final KafkaTemplate<String, Member> memberKafkaProducerTemplate;
 
-    /** The name of the Kafka topic to read messages */
+    /** The name of the Kafka topic to publish the messages */
     private final String newMembersTopic;
 
     /**

@@ -1,17 +1,21 @@
 package com.example.kafka.streams.poc.controller;
 
+import com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine;
 import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineEntity;
 import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineRepository;
+import com.example.kafka.streams.poc.service.producer.warehouseorder.ManuallyRecoveredWarehouseOrderLineProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,14 +31,22 @@ public class WarehouseOrderController {
     /** The mongoDB repository where to retrieve the warehouse order lines */
     private WarehouseOrderLineRepository warehouseOrderLineRepository;
 
+    /** The service to publish the recovered warehouse order line */
+    private ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer;
+
     /**
      * Autowired constructor
      *
      * @param warehouseOrderLineRepository the mongoDB warehouse order line repository
+     * @param warehouseOrderLineProducer   the service to publish the recovered warehouse order line
      */
     @Autowired
-    public WarehouseOrderController(WarehouseOrderLineRepository warehouseOrderLineRepository) {
+    public WarehouseOrderController(
+            WarehouseOrderLineRepository warehouseOrderLineRepository,
+            ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer
+    ) {
         this.warehouseOrderLineRepository = warehouseOrderLineRepository;
+        this.warehouseOrderLineProducer = warehouseOrderLineProducer;
     }
 
     /**
@@ -91,4 +103,37 @@ public class WarehouseOrderController {
         return mav;
     }
 
+    /**
+     * POST /warehouse-order/line/failed/{id}
+     *
+     * Updates the product legacy id of the failed warehouse order line
+     *
+     * @param uuid            the uuid of the warehouse order line
+     * @param productLegacyId the new product legacy id
+     * @return the model and view
+     */
+    @PostMapping("/line/failed/{id}")
+    public ModelAndView postCreateOrdersAction(
+            @PathVariable("id") String uuid,
+            @RequestParam Integer productLegacyId
+    ) {
+        // Read the warehouse order line from the MongoDB database
+        WarehouseOrderLineEntity entity = warehouseOrderLineRepository.findById(uuid).orElse(null);
+        if (entity == null) {
+            return new ModelAndView("redirect:/warehouse-order/line/failed/{id}", Collections.singletonMap("id", uuid));
+        }
+
+        // Publish the warehouse order line in the `recovered` topic
+        warehouseOrderLineProducer.publish(WarehouseOrderLine
+                .newBuilder()
+                .set(entity)
+                .setProductLegacyId(productLegacyId)
+                .build());
+
+        // Delete the warehouse order line from mongo
+        warehouseOrderLineRepository.delete(entity);
+
+        // Redirect to the failed warehouse order lines controller
+        return new ModelAndView("redirect:/warehouse-order/line/failed");
+    }
 }

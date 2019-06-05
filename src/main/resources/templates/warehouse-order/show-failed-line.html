@@ -40,6 +40,15 @@
         <dt>Bar Code:</dt>
         <dd th:text="${warehouseOrderLine.getProductBarCode()}"></dd>
 
+        <dt>Product Legacy Id.</dt>
+        <dd>
+            <form id="productLegacyIdForm" action="#" th:action="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" method="post">
+                <label for="productLegacyId">Set to:</label>
+                <input type="number" id="productLegacyId" name="productLegacyId" placeholder="Legacy id." required>
+                <button type="submit">Update</button>
+            </form>
+        </dd>
+
         <dt>Quantity:</dt>
         <dd th:text="${warehouseOrderLine.getQuantity()}"></dd>
     </dl>

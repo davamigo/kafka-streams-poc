@@ -26,7 +26,7 @@ public class NewCommercialOrdersKafkaProducer {
     /** Kafka template for producing messages when new commercial orders created */
     private final KafkaTemplate<String, CommercialOrder> commercialOrderKafkaProducerTemplate;
 
-    /** The name of the Kafka topic to read messages */
+    /** The name of the Kafka topic to publish the messages */
     private final String newCommercialOrdersTopic;
 
     /**

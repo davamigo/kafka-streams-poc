@@ -1,5 +1,6 @@
 package com.example.kafka.streams.poc.domain.entity.warehouse;
 
+import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineEntity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -87,5 +88,22 @@ public class TestWarehouseOrderLineBuilder {
         assertEquals("306", line.getProductName());
         assertEquals("307", line.getProductBarCode());
         assertEquals(308, line.getQuantity());
+    }
+
+    @Test
+    public void testSetCopiesTheContentFromMongoEntity() {
+
+        WarehouseOrderLine sourceLine = new WarehouseOrderLine("401", "402", new Date(403L), "404", 405, "406", "407", 408);
+        WarehouseOrderLineEntity sourceEntity = new WarehouseOrderLineEntity(sourceLine);
+        WarehouseOrderLine line = WarehouseOrderLine.newBuilder().set(sourceEntity).build();
+
+        assertEquals("401", line.getUuid());
+        assertEquals("402", line.getCountry());
+        assertEquals(403L, line.getDate().getTime());
+        assertEquals("404", line.getProductUuid());
+        assertEquals(405, (int) line.getProductLegacyId());
+        assertEquals("406", line.getProductName());
+        assertEquals("407", line.getProductBarCode());
+        assertEquals(408, line.getQuantity());
     }
 }

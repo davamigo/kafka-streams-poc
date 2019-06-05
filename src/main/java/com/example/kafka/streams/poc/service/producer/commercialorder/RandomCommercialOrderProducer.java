@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Use case to produce one or more commercial order with random data
+ * Service to produce one or more commercial order with random data
  */
 @Component
-public class CommercialOrderProducer {
+public class RandomCommercialOrderProducer {
 
     /** Service to generate a commercial order with random data */
     private CommercialOrderGeneratorInterface commercialOrderGenerator;
@@ -42,7 +42,7 @@ public class CommercialOrderProducer {
      * @param newProductsKafkaProducer         Kafka producer to publish the new products data
      */
     @Autowired
-    public CommercialOrderProducer(
+    public RandomCommercialOrderProducer(
             CommercialOrderGeneratorInterface commercialOrderGenerator,
             NewCommercialOrdersKafkaProducer newCommercialOrdersKafkaProducer,
             NewMembersKafkaProducer newMembersKafkaProducer,
@@ -55,7 +55,7 @@ public class CommercialOrderProducer {
     }
 
     /**
-     * Executes the use case
+     * Executes the service
      *
      * @param count the number of commercial orders to produce (1-500)
      * @return the list of the commercial orders produceed

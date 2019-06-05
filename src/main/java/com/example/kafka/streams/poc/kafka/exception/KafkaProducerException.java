@@ -3,6 +3,7 @@ package com.example.kafka.streams.poc.kafka.exception;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.product.Product;
+import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.kafka.KafkaException;
 
@@ -53,6 +54,19 @@ public class KafkaProducerException extends KafkaException {
     public KafkaProducerException(Throwable cause, CommercialOrder commercialOrder, String topic) {
         super(KafkaProducerException.buildErrorMessage("commercial order", commercialOrder.getUuid(), topic), cause);
         this.recordData = commercialOrder;
+        this.topic = topic;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param cause               the nested exception
+     * @param warehouseOrderLine  the warehouseOrderLine data
+     * @param topic               the topic name
+     */
+    public KafkaProducerException(Throwable cause, WarehouseOrderLine warehouseOrderLine, String topic) {
+        super(KafkaProducerException.buildErrorMessage("warehouse order line", warehouseOrderLine.getUuid(), topic), cause);
+        this.recordData = warehouseOrderLine;
         this.topic = topic;
     }
 

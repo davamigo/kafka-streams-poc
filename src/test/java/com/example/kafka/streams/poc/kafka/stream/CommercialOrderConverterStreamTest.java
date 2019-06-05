@@ -36,6 +36,7 @@ public class CommercialOrderConverterStreamTest extends StreamTestBase {
     private final String MEMBERS_TOPIC = "t.members";
     private final String COMMERCIAL_ORDERS_INPUT_TOPIC = "t.commercial-orders-input";
     private final String COMMERCIAL_ORDERS_OUTPUT_TOPIC = "t.commercial-orders-output";
+    private final String MEMBERS_STORE = "t.members-store";
 
     /**
      * Sets up the environment before testing the Kafka streams process
@@ -52,7 +53,8 @@ public class CommercialOrderConverterStreamTest extends StreamTestBase {
                 DUMMY_SCHEMA_REGISTRY_URL,
                 MEMBERS_TOPIC,
                 COMMERCIAL_ORDERS_INPUT_TOPIC,
-                COMMERCIAL_ORDERS_OUTPUT_TOPIC
+                COMMERCIAL_ORDERS_OUTPUT_TOPIC,
+                MEMBERS_STORE
         );
 
         final StreamsBuilder streamsBuilder = streamTopologyBuilder.startProcessing(new StreamsBuilder());

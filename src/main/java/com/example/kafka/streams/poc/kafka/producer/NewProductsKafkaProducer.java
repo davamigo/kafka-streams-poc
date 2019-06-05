@@ -26,7 +26,7 @@ public class NewProductsKafkaProducer {
     /** Kafka template for producing messages when new products created */
     private final KafkaTemplate<String, Product> productKafkaProducerTemplate;
 
-    /** The name of the Kafka topic to read messages */
+    /** The name of the Kafka topic to publish the messages */
     private final String newProductsTopic;
 
     /**

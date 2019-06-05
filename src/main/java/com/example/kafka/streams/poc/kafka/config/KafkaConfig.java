@@ -114,6 +114,16 @@ public class KafkaConfig {
     }
 
     /**
+     * Creates a factory for producing WarehouseOrderLine messages to Kafka
+     *
+     * @param props the configuration for the Kafka producer
+     * @return the default kafka producer factory
+     */
+    ProducerFactory<String, WarehouseOrderLine> warehouseOrderLineProducerFactory(Map<String, Object> props) {
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+
+    /**
      * Creates a factory for consuming Member messages from Kafka
      *
      * @return the default kafka consumer factory.
@@ -186,6 +196,16 @@ public class KafkaConfig {
     @Bean
     public KafkaTemplate<String, CommercialOrder> commercialOrderKafkaProducerTemplate() {
         return new KafkaTemplate<>(commercialOrderProducerFactory(producerConfigs()));
+    }
+
+    /**
+     * Kafka template bean for producing WarehouseOrderLine messages to Kafka
+     *
+     * @return a new Kafka template for producing messages
+     */
+    @Bean
+    public KafkaTemplate<String, WarehouseOrderLine> warehouseOrderLineKafkaProducerTemplate() {
+        return new KafkaTemplate<>(warehouseOrderLineProducerFactory(producerConfigs()));
     }
 
     /**

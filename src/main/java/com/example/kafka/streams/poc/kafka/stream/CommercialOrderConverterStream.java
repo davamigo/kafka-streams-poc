@@ -12,6 +12,7 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,9 @@ public class CommercialOrderConverterStream extends BaseStream {
     /** The name of the converted commercial orders Kafka topic (output KStream) */
     private final String convertedCommercialOrdersTopic;
 
+    /** The name of the members materialized view (store) */
+    private final String membersMaterializedStore;
+
     /** Serde for the string avro key */
     private final Serde<String> stringKeyAvroSerde;
 
@@ -58,19 +62,22 @@ public class CommercialOrderConverterStream extends BaseStream {
      * @param newMembersTopic                the name of the new members Kafka topic (input KTable)
      * @param newCommercialOrdersTopic       the name of the new commercial orders Kafka topic (input KStream)
      * @param convertedCommercialOrdersTopic the name of the converted commercial orders Kafka topic (output KStream)
+     * @param membersMaterializedStore        the name of the members materialized table (store)
      */
     @Autowired
     public CommercialOrderConverterStream(
             @Value("${spring.kafka.schema-registry-url}") String schemaRegistryUrl,
             @Value("${spring.kafka.topics.members-new}") String newMembersTopic,
             @Value("${spring.kafka.topics.commercial-orders-new}") String newCommercialOrdersTopic,
-            @Value("${spring.kafka.topics.commercial-orders-converted}") String convertedCommercialOrdersTopic
+            @Value("${spring.kafka.topics.commercial-orders-converted}") String convertedCommercialOrdersTopic,
+            @Value("${spring.kafka.stores.members}") String membersMaterializedStore
     ) {
         super(schemaRegistryUrl);
 
         this.newMembersTopic = newMembersTopic;
         this.newCommercialOrdersTopic = newCommercialOrdersTopic;
         this.convertedCommercialOrdersTopic = convertedCommercialOrdersTopic;
+        this.membersMaterializedStore = membersMaterializedStore;
 
         this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
         this.memberValueAvroSerde = new SpecificAvroSerde<>();
@@ -88,19 +95,22 @@ public class CommercialOrderConverterStream extends BaseStream {
      * @param newMembersTopic                the name of the new members Kafka topic (input KTable)
      * @param newCommercialOrdersTopic       the name of the new commercial orders Kafka topic (input KStream)
      * @param convertedCommercialOrdersTopic the name of the converted commercial orders Kafka topic (output KStream)
+     * @param membersMaterializedStore        the name of the members materialized table (store)
      */
     public CommercialOrderConverterStream(
             SchemaRegistryClient schemaRegistryClient,
             String schemaRegistryUrl,
             String newMembersTopic,
             String newCommercialOrdersTopic,
-            String convertedCommercialOrdersTopic
+            String convertedCommercialOrdersTopic,
+            String membersMaterializedStore
     ) {
         super(schemaRegistryUrl);
 
         this.newMembersTopic = newMembersTopic;
         this.newCommercialOrdersTopic = newCommercialOrdersTopic;
         this.convertedCommercialOrdersTopic = convertedCommercialOrdersTopic;
+        this.membersMaterializedStore = membersMaterializedStore;
 
         this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>(schemaRegistryClient);
         this.memberValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
@@ -132,7 +142,8 @@ public class CommercialOrderConverterStream extends BaseStream {
     ) {
         GlobalKTable<String, Member> membersGlobalTable = builder.globalTable(
                 newMembersTopic,
-                Consumed.with(stringKeyAvroSerde, memberValueAvroSerde)
+                Consumed.with(stringKeyAvroSerde, memberValueAvroSerde),
+                Materialized.as(membersMaterializedStore)
         );
 
         KStream<String, CommercialOrder> commercialOrdersStream = builder.stream(

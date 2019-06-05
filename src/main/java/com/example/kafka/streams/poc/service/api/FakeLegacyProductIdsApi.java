@@ -57,11 +57,6 @@ public class FakeLegacyProductIdsApi implements LegacyProductIdsApiInterface {
     @Override
     public synchronized Optional<Integer> getLegacyId(String productUuid) {
 
-        // Get from previous values if exist
-        if (previousValues.containsKey(productUuid)) {
-            return previousValues.get(productUuid);
-        }
-
         // Sleep a fixed number of milliseconds to simulate the call to the API
         try {
             Thread.sleep(watTimeMillis);
@@ -69,11 +64,16 @@ public class FakeLegacyProductIdsApi implements LegacyProductIdsApiInterface {
             e.printStackTrace();
         }
 
+        // Get from previous values if exist
+        if (previousValues.containsKey(productUuid)) {
+            return previousValues.get(productUuid);
+        }
+
         Optional<Integer> result;
 
         // Introduce random failures depending the rate
         int percent = 100 - (new Random()).nextInt(100);
-        if (failRate > percent) {
+        if (failRate >= percent) {
             result = Optional.empty();
         }
         else {

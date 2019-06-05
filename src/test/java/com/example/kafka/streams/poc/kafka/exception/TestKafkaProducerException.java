@@ -3,6 +3,7 @@ package com.example.kafka.streams.poc.kafka.exception;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.product.Product;
+import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -58,7 +59,7 @@ public class TestKafkaProducerException {
     @Test
     public void testCreateCommercialOrderExceptionWhenSuccess() {
 
-        CommercialOrder commercialOrder = new CommercialOrder("301", 202L, "303", null, null, null);
+        CommercialOrder commercialOrder = new CommercialOrder("301", 302L, "303", null, null, null);
         String topic = "311";
         Exception cause = new Exception();
 
@@ -72,5 +73,24 @@ public class TestKafkaProducerException {
         assertTrue(msg.contains("301"));
         assertTrue(msg.contains("311"));
         assertTrue(msg.contains("commercial order"));
+    }
+
+    @Test
+    public void testCreateWarehouseOrderLineExceptionWhenSuccess() {
+
+        WarehouseOrderLine warehouseOrderLine = new WarehouseOrderLine("401", "402", 403L, "404", 405, "406", "407", 408);
+        String topic = "411";
+        Exception cause = new Exception();
+
+        KafkaProducerException exc = new KafkaProducerException(cause, warehouseOrderLine, topic);
+
+        assertEquals(warehouseOrderLine, exc.getRecordData());
+        assertEquals(topic, exc.getTopic());
+
+        String msg = exc.getMessage();
+        assertNotNull(msg);
+        assertTrue(msg.contains("401"));
+        assertTrue(msg.contains("411"));
+        assertTrue(msg.contains("warehouse order line"));
     }
 }

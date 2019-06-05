@@ -112,7 +112,7 @@ Generates the **warehouse order lines** from the **purchase order lines**.
 
 ---
 
-### Match warehouse order line with the produyct legacy id
+### Match warehouse order line with the product legacy id
 
 In this example we are assuming the WMS (_Warehouse Management System_) needs a ***legacy product id*** which is in another topic, but it's possible this legacy id is not there.
 So we are doing a `leftJoin` operation to not loose any product.
@@ -175,8 +175,9 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 - **`t.commercial-order-lines.split`**: Commercial order lines. The key is the commercial order uuid.
 - **`t.purchase-order-lines.aggregated`**: Purchase order lines created from the aggregation of commercial order lines per country day and product. The key is the concatenation of `contry-code`, `date(yyyy-mm-dd)` and `product-uuid`.
 - **`t.purchase-orders.generated`**: Purchase orders with all the purchase order lines per country and day. The key is the concatenation of `contry-code` and `date(yyyy-mm-dd)`.
-- **`t.warehouse-order-lines.matched`**: Warehouse order lines generated from the purchase order line, matched with the `product-legacy-id`. The key is uuid of the warehouse order line.
-- **`t.warehouse-order-lines.unmatched`**: Warehouse order lines generated from the purchase order line, not matched with the `product-legacy-id`. The key is uuid of the warehouse order line.
+- **`t.warehouse-order-lines.generated`**: Warehouse order lines generated from the purchase order line. The key is uuid of the warehouse order line.
+- **`t.warehouse-order-lines.matched`**: Warehouse order lines matched with the `product-legacy-id`. The key is uuid of the warehouse order line.
+- **`t.warehouse-order-lines.unmatched`**: Warehouse order lines not matched with the `product-legacy-id`. The key is uuid of the warehouse order line.
 - **`t.warehouse-order-lines.recovered`**: Warehouse order lines not matched but recovered with the `product-legacy-id`. The key is uuid of the warehouse order line.
 - **`t.warehouse-order-lines.failed`**: Warehouse order lines not matched neither recovered. The key is uuid of the warehouse order line.
 - **`t.warehouse-order-lines.new`**: Merge result from warehouse order lines matched and recovered. The key is uuid of the warehouse order line.

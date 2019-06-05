@@ -1,4 +1,4 @@
-package com.example.kafka.streams.poc.service.producer;
+package com.example.kafka.streams.poc.service.producer.commercialorder;
 
 import com.example.kafka.streams.poc.domain.entity.address.Address;
 import com.example.kafka.streams.poc.domain.entity.member.Member;
@@ -9,7 +9,6 @@ import com.example.kafka.streams.poc.kafka.producer.NewCommercialOrdersKafkaProd
 import com.example.kafka.streams.poc.kafka.producer.NewMembersKafkaProducer;
 import com.example.kafka.streams.poc.kafka.producer.NewProductsKafkaProducer;
 import com.example.kafka.streams.poc.service.generator.commercialorder.CommercialOrderGeneratorInterface;
-import com.example.kafka.streams.poc.service.producer.commercialorder.CommercialOrderProducer;
 import com.example.kafka.streams.poc.service.producer.exception.InvalidArgumentException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +29,7 @@ import static org.mockito.Mockito.*;
  */
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class TestCommercialOrderProducer {
+public class TestRandomCommercialOrderProducer {
 
     @Mock
     private CommercialOrderGeneratorInterface commercialOrderGenerator;
@@ -64,7 +63,7 @@ public class TestCommercialOrderProducer {
 
         when(commercialOrderGenerator.getCommercialOrder()).thenReturn(commercialOrder);
 
-        CommercialOrderProducer service = new CommercialOrderProducer(
+        RandomCommercialOrderProducer service = new RandomCommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,
@@ -101,7 +100,7 @@ public class TestCommercialOrderProducer {
 
         when(commercialOrderGenerator.getCommercialOrder()).thenReturn(commercialOrder);
 
-        CommercialOrderProducer service = new CommercialOrderProducer(
+        RandomCommercialOrderProducer service = new RandomCommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,
@@ -120,7 +119,7 @@ public class TestCommercialOrderProducer {
     @Test(expected = InvalidArgumentException.class)
     public void testRunWhenInvalidArgument() {
 
-        CommercialOrderProducer service = new CommercialOrderProducer(
+        RandomCommercialOrderProducer service = new RandomCommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,
@@ -135,7 +134,7 @@ public class TestCommercialOrderProducer {
 
         when(commercialOrderGenerator.getCommercialOrder()).thenThrow(new Exception());
 
-        CommercialOrderProducer service = new CommercialOrderProducer(
+        RandomCommercialOrderProducer service = new RandomCommercialOrderProducer(
                 commercialOrderGenerator,
                 newCommercialOrdersKafkaProducer,
                 newMembersKafkaProducer,

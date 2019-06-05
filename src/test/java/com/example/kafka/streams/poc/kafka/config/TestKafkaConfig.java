@@ -120,6 +120,17 @@ public class TestKafkaConfig {
     }
 
     @Test
+    public void testWarehouseOrderLineProducerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        ProducerFactory<String, WarehouseOrderLine> factory = kafkaConfig.warehouseOrderLineProducerFactory(new HashMap<>());
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
     public void testMemberConsumerFactory() {
 
         // Run the test
@@ -147,6 +158,17 @@ public class TestKafkaConfig {
         // Run the test
         KafkaConfig kafkaConfig = new KafkaConfig(environment);
         ConsumerFactory<String, CommercialOrder> factory = kafkaConfig.commercialOrderConsumerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testWarehouseOrderLineConsumerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        ConsumerFactory<String, WarehouseOrderLine> factory = kafkaConfig.warehouseOrderLineConsumerFactory();
 
         // Assertions
         assertNotNull(factory);
@@ -191,6 +213,17 @@ public class TestKafkaConfig {
         // Run the test
         KafkaConfig kafkaConfig = new KafkaConfig(environment);
         KafkaTemplate<String, CommercialOrder> template = kafkaConfig.commercialOrderKafkaProducerTemplate();
+
+        // Assertions
+        assertNotNull(template);
+    }
+
+    @Test
+    public void testWarehouseOrderLineKafkaTemplate() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        KafkaTemplate<String, WarehouseOrderLine> template = kafkaConfig.warehouseOrderLineKafkaProducerTemplate();
 
         // Assertions
         assertNotNull(template);

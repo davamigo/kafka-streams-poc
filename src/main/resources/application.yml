@@ -44,3 +44,8 @@ spring:
       warehouse-order-lines-recovered: "t.warehouse-order-lines.recovered"
       warehouse-order-lines-failed: "t.warehouse-order-lines.failed"
       warehouse-order-lines-new: "t.warehouse-order-lines.new"
+    stores:
+      members: "members.materialized"
+      products: "products.materialized"
+      warehouse-order-lines-failed: "warehouse-order-lines-failed.materialized"
+

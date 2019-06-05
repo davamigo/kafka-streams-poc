@@ -1,5 +1,7 @@
 package com.example.kafka.streams.poc.domain.entity.warehouse;
 
+import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineEntity;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -227,6 +229,24 @@ public class WarehouseOrderLine {
                     .setProductName(line.getProductName())
                     .setProductBarCode(line.getProductBarCode())
                     .setQuantity(line.getQuantity());
+        }
+
+        /**
+         * Copy data from a WarehouseOrderLineEntity object
+         *
+         * @param entity the source WarehouseOrderLine entity
+         * @return this
+         */
+        public Builder set(WarehouseOrderLineEntity entity) {
+            return this
+                    .setUuid(entity.getUuid())
+                    .setCountry(entity.getCountry())
+                    .setDate(entity.getDate())
+                    .setProductUuid(entity.getProductUuid())
+                    .setProductLegacyId(entity.getProductLegacyId())
+                    .setProductName(entity.getProductName())
+                    .setProductBarCode(entity.getProductBarCode())
+                    .setQuantity(entity.getQuantity());
         }
 
         /**

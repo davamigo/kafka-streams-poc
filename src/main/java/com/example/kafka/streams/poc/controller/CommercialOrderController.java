@@ -3,7 +3,7 @@ package com.example.kafka.streams.poc.controller;
 import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
 import com.example.kafka.streams.poc.mongodb.entity.CommercialOrderEntity;
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderRepository;
-import com.example.kafka.streams.poc.service.producer.commercialorder.CommercialOrderProducer;
+import com.example.kafka.streams.poc.service.producer.commercialorder.RandomCommercialOrderProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,7 +23,7 @@ import java.util.Optional;
 public class CommercialOrderController {
 
     /** Use case to produce one or more commercial order with random data */
-    private CommercialOrderProducer commercialOrderProducer;
+    private RandomCommercialOrderProducer randomCommercialOrderProducer;
 
     /** The mongoDB repository where to retrieve the commercial orders */
     private CommercialOrderRepository commercialOrderRepository;
@@ -31,15 +31,15 @@ public class CommercialOrderController {
     /**
      * Autowired constructor
      *
-     * @param commercialOrderProducer use case
+     * @param randomCommercialOrderProducer use case
      * @param commercialOrderRepository the mongoDB commercial order repository
      */
     @Autowired
     public CommercialOrderController(
-            CommercialOrderProducer commercialOrderProducer,
+            RandomCommercialOrderProducer randomCommercialOrderProducer,
             CommercialOrderRepository commercialOrderRepository
     ) {
-        this.commercialOrderProducer = commercialOrderProducer;
+        this.randomCommercialOrderProducer = randomCommercialOrderProducer;
         this.commercialOrderRepository = commercialOrderRepository;
     }
 
@@ -57,7 +57,7 @@ public class CommercialOrderController {
         mav.addObject("orderCount", orderCount);
 
         try {
-            List<CommercialOrder> commercialOrders = commercialOrderProducer.produce(orderCount);
+            List<CommercialOrder> commercialOrders = randomCommercialOrderProducer.produce(orderCount);
             mav.addObject("commercialOrders", commercialOrders);
         }
         catch (Exception exc) {
