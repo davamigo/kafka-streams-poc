@@ -49,3 +49,8 @@ spring:
       products: "products.materialized"
       warehouse-order-lines-failed: "warehouse-order-lines-failed.materialized"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
