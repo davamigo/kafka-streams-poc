@@ -2,7 +2,13 @@ package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.mongodb.entity.MemberEntity;
 import com.example.kafka.streams.poc.mongodb.repository.MemberRepository;
+import com.example.kafka.streams.poc.schemas.member.Member;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.state.QueryableStoreTypes;
+import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -22,15 +28,27 @@ public class MemberController {
     /** The mongoDB repository where to retrieve the members */
     private MemberRepository memberRepository;
 
+    /** Kafka streams configuration bean */
+    private Properties streamsDefaultProperties;
+
+    private ApplicationContext context;
+
     /**
      * Autowired constructor
      *
      * @param memberRepository the mongoDB member repository
      */
     @Autowired
-    public MemberController(MemberRepository memberRepository) {
+    public MemberController(
+            MemberRepository memberRepository,
+            Properties streamsDefaultProperties,
+            ApplicationContext context
+    ) {
         this.memberRepository = memberRepository;
+        this.streamsDefaultProperties = streamsDefaultProperties;
+        this.context = context;
     }
+
 
     /**
      * GET /member
@@ -77,6 +95,19 @@ public class MemberController {
     @GetMapping("/{id}")
     public ModelAndView getMembersAction(@PathVariable("id") String uuid) {
         ModelAndView mav  = new ModelAndView("member/show");
+
+        try {
+            StreamsBuilder builder = new StreamsBuilder();
+            KafkaStreams streams = new KafkaStreams(builder.build(), streamsDefaultProperties);
+            streams.start();
+
+            ReadOnlyKeyValueStore<String, Member> keyValueStore = streams.store("members.materialized", QueryableStoreTypes.keyValueStore());
+            Object value = keyValueStore.get(uuid);
+            System.out.println(value);
+        }
+        catch (Exception exc) {
+            exc.printStackTrace();
+        }
 
         Optional<MemberEntity> member = memberRepository.findById(uuid);
 

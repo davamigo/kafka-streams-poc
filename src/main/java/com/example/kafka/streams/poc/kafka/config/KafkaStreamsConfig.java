@@ -13,6 +13,7 @@ import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Configuration class for all Kafka Streams classes
@@ -52,6 +53,15 @@ public class KafkaStreamsConfig {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, environment.getProperty("spring.kafka.schema-registry-url"));
         return props;
+    }
+
+    /**
+     * @return the default properties of a Kafka Streams project
+     */
+    @Bean
+    public Properties streamsDefaultProperties() {
+        KafkaStreamsConfiguration config = new KafkaStreamsConfiguration(streamsConfigs());
+        return config.asProperties();
     }
 
     /**
