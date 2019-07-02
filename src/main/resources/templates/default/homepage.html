@@ -7,15 +7,19 @@
 <body>
 <h1>Kafka Streams PoC</h1>
 <h2>Homepage</h2>
+<h3>Generators</h3>
 <ul>
     <li>
-        <form id="orderCountForm" action="#" th:action="@{/commercial-order/create}" method="post">
+        <form id="orderCountForm" action="#" method="post" th:action="@{/commercial-order/create}">
             <label for="orderCount">Create random orders (1-500):</label>
             <input type="number" id="orderCount" name="orderCount" placeholder="count" value="1" min="1" max="500">
             <button type="submit">Create</button>
         </form>
     </li>
-    <br/>
+</ul>
+
+<h3>Data lists</h3>
+<ul>
     <li>
         <a th:href="@{/commercial-order}">Show commercial orders</a>
         (<span th:text="${commercialOrderCount}"></span>)
@@ -35,6 +39,33 @@
     <br/>
     <li>
         <a th:href="@{/warehouse-order/line/failed}">Show failed warehouse order lines</a>
+    </li>
+</ul>
+
+<h3>Process statuses</h3>
+<ul>
+    <li th:each="process : ${processesStatuses}">
+        <form action="#" method="post" th:if="${process.value}" th:action="@{/process/{procid}/stop(procid=${process.key})}">
+            <span th:text="${process.key}"></span> is <strong>Running</strong>
+            <button type="submit">Stop</button>
+        </form>
+        <form action="#" method="post" th:if="${!process.value}" th:action="@{/process/{procid}/start(procid=${process.key})}">
+            <span th:text="${process.key}"></span> is <strong>Stopped</strong>
+            <button type="submit">Start</button>
+        </form>
+    </li>
+    <br>
+    <li>
+        <form action="#" method="post" th:action="@{/process/stop}">
+            All processes
+            <button type="submit">Stop</button>
+        </form>
+    </li>
+    <li>
+        <form action="#" method="post" th:action="@{/process//start}">
+            All processes
+            <button type="submit">Start</button>
+        </form>
     </li>
 </ul>
 </body>
