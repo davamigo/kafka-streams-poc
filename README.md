@@ -273,3 +273,6 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 
 - [Kafka Streams DSL Developer Guide](https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html)
 - [Unit Testing Kafka Streams](https://kafka.apache.org/20/documentation/streams/developer-guide/testing.html)
+- [Spring for Apache Kafka](https://spring.io/projects/spring-kafka)
+    - [Reference Documentation](https://docs.spring.io/spring-kafka/docs/current/reference/html/)
+    - [API Documentation](https://docs.spring.io/spring-kafka/docs/current/api/)

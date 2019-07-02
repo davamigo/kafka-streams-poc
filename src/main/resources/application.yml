@@ -50,7 +50,16 @@ spring:
       warehouse-order-lines-failed: "warehouse-order-lines-failed.materialized"
 
 management:
+  endpoint:
+    health:
+      show-details: "always"
+
   endpoints:
     web:
       exposure:
         include: "*"
+
+  health:
+    diskspace:
+      enabled:  "false"
+
