@@ -23,10 +23,10 @@ import java.util.Optional;
 public class CommercialOrderController {
 
     /** Use case to produce one or more commercial order with random data */
-    private RandomCommercialOrderProducer randomCommercialOrderProducer;
+    private final RandomCommercialOrderProducer randomCommercialOrderProducer;
 
     /** The mongoDB repository where to retrieve the commercial orders */
-    private CommercialOrderRepository commercialOrderRepository;
+    private final CommercialOrderRepository commercialOrderRepository;
 
     /**
      * Autowired constructor
@@ -53,7 +53,7 @@ public class CommercialOrderController {
      */
     @PostMapping("/create")
     public ModelAndView postCreateOrdersAction(@RequestParam Integer orderCount) {
-        ModelAndView mav  = new ModelAndView("commercial-order/created");
+        final ModelAndView mav  = new ModelAndView("commercial-order/created");
         mav.addObject("orderCount", orderCount);
 
         try {
@@ -82,23 +82,21 @@ public class CommercialOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
-        ModelAndView mav  = new ModelAndView("commercial-order/list");
-
-        List<CommercialOrderEntity> commercialOrders = commercialOrderRepository
+        final List<CommercialOrderEntity> commercialOrders = commercialOrderRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "datetime")))
                 .getContent();
 
-        long count = commercialOrderRepository.count();
-        long prev = (page > 0) ? page - 1 : 0;
-        long next = (size * (page + 1) < count) ? page + 1 : page;
+        final long count = commercialOrderRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
 
+        final ModelAndView mav  = new ModelAndView("commercial-order/list");
         mav.addObject("commercialOrders", commercialOrders);
         mav.addObject("count", count);
         mav.addObject("size", size);
         mav.addObject("page", page);
         mav.addObject("prev", prev);
         mav.addObject("next", next);
-
         return mav;
     }
 
@@ -112,13 +110,12 @@ public class CommercialOrderController {
      */
     @GetMapping("/{id}")
     public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
-        ModelAndView mav  = new ModelAndView("commercial-order/show");
 
-        Optional<CommercialOrderEntity> commercialOrder = commercialOrderRepository.findById(uuid);
+        final Optional<CommercialOrderEntity> commercialOrder = commercialOrderRepository.findById(uuid);
 
+        final ModelAndView mav  = new ModelAndView("commercial-order/show");
         mav.addObject("uuid", uuid);
         mav.addObject("commercialOrder", commercialOrder.orElse(null));
-
         return mav;
     }
 }

@@ -25,7 +25,7 @@ import java.util.Optional;
 public class ProductController {
 
     /** The mongoDB repository where to retrieve the products */
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     /**
      * Autowired constructor
@@ -51,23 +51,21 @@ public class ProductController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
-        ModelAndView mav  = new ModelAndView("product/list");
-
-        List<ProductEntity> products = productRepository
+        final List<ProductEntity> products = productRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, Arrays.asList("firstName", "lastName"))))
                 .getContent();
 
-        long count = productRepository.count();
-        long prev = (page > 0) ? page - 1 : 0;
-        long next = (size * (page + 1) < count) ? page + 1 : page;
+        final long count = productRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
 
+        final ModelAndView mav  = new ModelAndView("product/list");
         mav.addObject("products", products);
         mav.addObject("count", count);
         mav.addObject("size", size);
         mav.addObject("page", page);
         mav.addObject("prev", prev);
         mav.addObject("next", next);
-
         return mav;
     }
 
@@ -81,13 +79,12 @@ public class ProductController {
      */
     @GetMapping("/{id}")
     public ModelAndView getProductsAction(@PathVariable("id") String uuid) {
-        ModelAndView mav  = new ModelAndView("product/show");
 
-        Optional<ProductEntity> product = productRepository.findById(uuid);
+        final Optional<ProductEntity> product = productRepository.findById(uuid);
 
+        final ModelAndView mav  = new ModelAndView("product/show");
         mav.addObject("uuid", uuid);
         mav.addObject("product", product.orElse(null));
-
         return mav;
     }
 }

@@ -27,12 +27,11 @@ import java.util.Optional;
 @RequestMapping("/warehouse-order")
 public class WarehouseOrderController {
 
-
     /** The mongoDB repository where to retrieve the warehouse order lines */
-    private WarehouseOrderLineRepository warehouseOrderLineRepository;
+    private final WarehouseOrderLineRepository warehouseOrderLineRepository;
 
     /** The service to publish the recovered warehouse order line */
-    private ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer;
+    private final ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer;
 
     /**
      * Autowired constructor
@@ -63,23 +62,21 @@ public class WarehouseOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
-        ModelAndView mav  = new ModelAndView("warehouse-order/list-failed-lines");
-
-        List<WarehouseOrderLineEntity> orderLines = warehouseOrderLineRepository
+        final List<WarehouseOrderLineEntity> orderLines = warehouseOrderLineRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "date")))
                 .getContent();
 
-        long count = warehouseOrderLineRepository.count();
-        long prev = (page > 0) ? page - 1 : 0;
-        long next = (size * (page + 1) < count) ? page + 1 : page;
+        final long count = warehouseOrderLineRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
 
+        final ModelAndView mav  = new ModelAndView("warehouse-order/list-failed-lines");
         mav.addObject("orderLines", orderLines);
         mav.addObject("count", count);
         mav.addObject("size", size);
         mav.addObject("page", page);
         mav.addObject("prev", prev);
         mav.addObject("next", next);
-
         return mav;
     }
 
@@ -93,13 +90,12 @@ public class WarehouseOrderController {
      */
     @GetMapping("/line/failed/{id}")
     public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
-        ModelAndView mav  = new ModelAndView("warehouse-order/show-failed-line");
 
-        Optional<WarehouseOrderLineEntity> warehouseOrderLine = warehouseOrderLineRepository.findById(uuid);
+        final Optional<WarehouseOrderLineEntity> warehouseOrderLine = warehouseOrderLineRepository.findById(uuid);
 
+        final ModelAndView mav  = new ModelAndView("warehouse-order/show-failed-line");
         mav.addObject("uuid", uuid);
         mav.addObject("warehouseOrderLine", warehouseOrderLine.orElse(null));
-
         return mav;
     }
 
@@ -124,11 +120,7 @@ public class WarehouseOrderController {
         }
 
         // Publish the warehouse order line in the `recovered` topic
-        warehouseOrderLineProducer.publish(WarehouseOrderLine
-                .newBuilder()
-                .set(entity)
-                .setProductLegacyId(productLegacyId)
-                .build());
+        warehouseOrderLineProducer.publish(WarehouseOrderLine.newBuilder().set(entity).setProductLegacyId(productLegacyId).build());
 
         // Delete the warehouse order line from mongo
         warehouseOrderLineRepository.delete(entity);

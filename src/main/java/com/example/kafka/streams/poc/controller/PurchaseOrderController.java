@@ -21,7 +21,7 @@ import java.util.Optional;
 public class PurchaseOrderController {
 
     /** The mongoDB repository where to retrieve the purchase orders */
-    private PurchaseOrderRepository purchaseOrderRepository;
+    private final PurchaseOrderRepository purchaseOrderRepository;
 
     /**
      * Autowired constructor
@@ -47,23 +47,21 @@ public class PurchaseOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
-        ModelAndView mav  = new ModelAndView("purchase-order/list");
-
-        List<PurchaseOrderEntity> purchaseOrders = purchaseOrderRepository
+        final List<PurchaseOrderEntity> purchaseOrders = purchaseOrderRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "datetime")))
                 .getContent();
 
-        long count = purchaseOrderRepository.count();
-        long prev = (page > 0) ? page - 1 : 0;
-        long next = (size * (page + 1) < count) ? page + 1 : page;
+        final long count = purchaseOrderRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
 
+        final ModelAndView mav  = new ModelAndView("purchase-order/list");
         mav.addObject("purchaseOrders", purchaseOrders);
         mav.addObject("count", count);
         mav.addObject("size", size);
         mav.addObject("page", page);
         mav.addObject("prev", prev);
         mav.addObject("next", next);
-
         return mav;
     }
 
@@ -77,13 +75,12 @@ public class PurchaseOrderController {
      */
     @GetMapping("/{id}")
     public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
-        ModelAndView mav  = new ModelAndView("purchase-order/show");
 
-        Optional<PurchaseOrderEntity> purchaseOrder = purchaseOrderRepository.findById(uuid);
+        final Optional<PurchaseOrderEntity> purchaseOrder = purchaseOrderRepository.findById(uuid);
 
+        final ModelAndView mav  = new ModelAndView("purchase-order/show");
         mav.addObject("uuid", uuid);
         mav.addObject("purchaseOrder", purchaseOrder.orElse(null));
-
         return mav;
     }
 }

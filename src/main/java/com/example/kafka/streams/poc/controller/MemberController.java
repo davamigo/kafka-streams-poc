@@ -20,7 +20,7 @@ import java.util.*;
 public class MemberController {
 
     /** The mongoDB repository where to retrieve the members */
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     /**
      * Autowired constructor
@@ -46,23 +46,21 @@ public class MemberController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
-        ModelAndView mav  = new ModelAndView("member/list");
-
-        List<MemberEntity> members = memberRepository
+        final List<MemberEntity> members = memberRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, Arrays.asList("firstName", "lastName"))))
                 .getContent();
 
-        long count = memberRepository.count();
-        long prev = (page > 0) ? page - 1 : 0;
-        long next = (size * (page + 1) < count) ? page + 1 : page;
+        final long count = memberRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
 
+        final ModelAndView mav  = new ModelAndView("member/list");
         mav.addObject("members", members);
         mav.addObject("count", count);
         mav.addObject("size", size);
         mav.addObject("page", page);
         mav.addObject("prev", prev);
         mav.addObject("next", next);
-
         return mav;
     }
 
