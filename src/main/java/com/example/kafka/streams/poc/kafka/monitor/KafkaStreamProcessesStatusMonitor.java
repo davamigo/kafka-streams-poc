@@ -28,14 +28,16 @@ public class KafkaStreamProcessesStatusMonitor {
     }
 
     /**
-     * @return the names of the beans
+     * @return the qualifier of the beans (names)
      */
     public List<String> getBeanQualifiers() {
         return new ArrayList<>(beanMap.keySet());
     }
 
     /**
-     * @param qualifier the name of the bean
+     * Method to get the bean by it's qualifier (name)
+     *
+     * @param qualifier the qualifier of the bean (name)
      * @return a bean in the map or null
      */
     public StreamsBuilderFactoryBean get(String qualifier) {
@@ -43,9 +45,9 @@ public class KafkaStreamProcessesStatusMonitor {
     }
 
     /**
-     * Safe method to get the bean
+     * Safe method to get the bean by it's qualifier (name)
      *
-     * @param qualifier the name of the bean
+     * @param qualifier the qualifier of the bean (name)
      * @return the bean
      * @throws BeanNotFoundException when bean not found
      */
@@ -58,8 +60,10 @@ public class KafkaStreamProcessesStatusMonitor {
     }
 
     /**
-     * @param qualifier the name of the bean
-     * @return whether the component is currently running
+     * Checks whether a component is running by it's qualifier (name)
+     *
+     * @param qualifier the qualifier of the bean (name)
+     * @return whether a component is currently running
      * @throws BeanNotFoundException when bean not found
      */
     public boolean isRunning(String qualifier) throws BeanNotFoundException {
@@ -67,7 +71,7 @@ public class KafkaStreamProcessesStatusMonitor {
     }
 
     /**
-     * Start this component
+     * Starts a component by it's qualifier (name)
      *
      * @param qualifier the name of the bean
      * @throws BeanNotFoundException when bean not found
@@ -90,9 +94,9 @@ public class KafkaStreamProcessesStatusMonitor {
     }
 
     /**
-     * Stop this component
+     * Stops a component by it's qualifier (name)
      *
-     * @param qualifier the name of the bean
+     * @param qualifier  the qualifier of the bean (name)
      * @throws BeanNotFoundException when bean not found
      */
     public void stop(String qualifier) throws BeanNotFoundException {
