@@ -23,6 +23,7 @@ spring:
       enable-auto-commit: "false"
     streams:
       threads: 1
+      auto-startup: false
     group-ids:
       members-new: "${spring.application.name}.members.new"
       products-new: "${spring.application.name}.products.new"
