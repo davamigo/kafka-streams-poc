@@ -2,10 +2,7 @@ package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.kafka.monitor.BeanNotFoundException;
 import com.example.kafka.streams.poc.kafka.monitor.KafkaStreamProcessesStatusMonitor;
-import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderRepository;
-import com.example.kafka.streams.poc.mongodb.repository.MemberRepository;
-import com.example.kafka.streams.poc.mongodb.repository.ProductRepository;
-import com.example.kafka.streams.poc.mongodb.repository.PurchaseOrderRepository;
+import com.example.kafka.streams.poc.mongodb.repository.RecordCountRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,22 +24,11 @@ import java.util.Map;
 @RequestMapping("/")
 public class DefaultController {
 
-    /**
-     * Logger object
-     */
+    /** Logger object */
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultController.class);
 
-    /** The mongoDB repository where to retrieve the commercial orders */
-    private final CommercialOrderRepository commercialOrderRepository;
-
     /** The mongoDB repository where to retrieve the products */
-    private final ProductRepository productRepository;
-
-    /** The mongoDB repository where to retrieve the members */
-    private final MemberRepository memberRepository;
-
-    /** The mongoDB repository where to retrieve the purchase orders */
-    private final PurchaseOrderRepository purchaseOrderRepository;
+    private final RecordCountRepository recordCountRepository;
 
     /** The status monitor for the Kafka Stream processes */
     private final KafkaStreamProcessesStatusMonitor kafkaStreamProcessesStatusMonitor;
@@ -50,24 +36,15 @@ public class DefaultController {
     /**
      * Autowired constructor
      *
-     * @param commercialOrderRepository the mongoDB commercial order repository
-     * @param productRepository the mongoDB product repository
-     * @param memberRepository the mongoDB member repository
-     * @param purchaseOrderRepository the mongoDB purchase order repository
+     * @param recordCountRepository the mongoDB product repository
      * @param kafkaStreamProcessesStatusMonitor the status monitor for the Kafka Stream processes
      */
     @Autowired
     public DefaultController(
-            CommercialOrderRepository commercialOrderRepository,
-            ProductRepository productRepository,
-            MemberRepository memberRepository,
-            PurchaseOrderRepository purchaseOrderRepository,
+            RecordCountRepository recordCountRepository,
             KafkaStreamProcessesStatusMonitor kafkaStreamProcessesStatusMonitor
     ) {
-        this.commercialOrderRepository = commercialOrderRepository;
-        this.productRepository= productRepository;
-        this.memberRepository = memberRepository;
-        this.purchaseOrderRepository = purchaseOrderRepository;
+        this.recordCountRepository = recordCountRepository;
         this.kafkaStreamProcessesStatusMonitor = kafkaStreamProcessesStatusMonitor;
     }
 
@@ -80,6 +57,7 @@ public class DefaultController {
      */
     @GetMapping("/")
     public ModelAndView homepage() {
+        LOGGER.info("DefaultController.homepage()");
 
         Map<String, Boolean> processesStatuses = new HashMap<>();
         for (String qualifier : kafkaStreamProcessesStatusMonitor.getBeanQualifiers()) {
@@ -92,11 +70,13 @@ public class DefaultController {
             processesStatuses.put(qualifier, status);
         }
 
+        Map<String, Long> counters = recordCountRepository.countRecords();
+
         final ModelAndView mav  = new ModelAndView("default/homepage");
-        mav.addObject("commercialOrderCount", commercialOrderRepository.count());
-        mav.addObject("productCount", productRepository.count());
-        mav.addObject("memberCount", memberRepository.count());
-        mav.addObject("purchaseOrderCount", purchaseOrderRepository.count());
+        mav.addObject("productCount", counters.get("products"));
+        mav.addObject("memberCount", counters.get("members"));
+        mav.addObject("commercialOrderCount", counters.get("commercial-orders"));
+        mav.addObject("purchaseOrderCount", counters.get("purchase-orders"));
         mav.addObject("processesStatuses", processesStatuses);
         return mav;
     }
@@ -105,6 +85,7 @@ public class DefaultController {
     public ModelAndView startStopKafkaStreamsAction(
             @PathVariable("action") String action
     ) throws Exception {
+        LOGGER.info("DefaultController.startStopKafkaStreamsAction(action=" + action + ")");
 
         switch (action) {
             case "start":
@@ -127,6 +108,7 @@ public class DefaultController {
             @PathVariable("procid") String procid,
             @PathVariable("action") String action
     ) throws Exception {
+        LOGGER.info("DefaultController.startStopKafkaStreamsAction(prodid=" + procid + ", action=" + action + ")");
 
         switch (action) {
             case "start":

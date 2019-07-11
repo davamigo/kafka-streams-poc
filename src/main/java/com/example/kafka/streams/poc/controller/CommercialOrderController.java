@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequestMapping("/commercial-order")
 public class CommercialOrderController {
 
-    /** Use case to produce one or more commercial order with random data */
+    /** Service to produce one or more commercial order with random data */
     private final RandomCommercialOrderProducer randomCommercialOrderProducer;
 
     /** The mongoDB repository where to retrieve the commercial orders */
@@ -31,7 +31,7 @@ public class CommercialOrderController {
     /**
      * Autowired constructor
      *
-     * @param randomCommercialOrderProducer use case
+     * @param randomCommercialOrderProducer service to produce commercial orders
      * @param commercialOrderRepository the mongoDB commercial order repository
      */
     @Autowired

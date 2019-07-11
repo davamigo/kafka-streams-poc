@@ -1,0 +1,75 @@
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 2800 1655">
+    <defs>
+        <style>
+            svg {
+                background-image: url("./global-architecture.png");
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+            }
+            path,
+            rect {
+                fill: transparent;
+                cursor: pointer;
+                transition: fill 0.2s;
+            }
+            svg a:focus,
+            svg a:hover {
+                outline: none;
+            }
+            svg a:focus path,
+            svg a:hover path,
+            svg a:focus rect,
+            svg a:hover rect {
+                fill: rgba(80, 80, 80, 0.25);
+                cursor: pointer;
+            }
+            circle.topic {
+                fill: rgba(80, 80, 80, 0.50);
+            }
+            text.topic {
+                font-family: sans-serif;
+                font-style: normal;
+                font-size: 2.0em;
+            }
+        </style>
+    </defs>
+    <g>
+        <title>Random Data Producer</title>
+        <a id="svg-producer-box">
+            <path d="M10 300 H230 V520 H10 V300"/>
+        </a>
+    </g>
+    <g>
+        <title>Split Commercial Order Lines</title>
+        <a id="svg-split-orders-stream-box">
+            <rect x="570" y="140" width="220" height="220"/>
+        </a>
+    </g>
+    <g>
+        <title>products topic</title>
+        <a id="svg-products-topic-box">
+            <rect x="250" y="25" width="300" height="170"/>
+        </a>
+        <circle class="topic" cx="400" cy="145" r="40"/>
+        <text id="svg-products-topic-count" class="topic"  x="400" y="145" text-anchor="middle" alignment-baseline="central">--</text>
+    </g>
+    <g>
+        <title>commercial-orders topic</title>
+        <a id="svg-commercial-orders-topic-box">
+            <rect x="250" y="335" width="300" height="170"/>
+        </a>
+        <circle class="topic" cx="400" cy="455" r="40"/>
+        <text id="svg-commercial-orders-topic-count" class="topic"  x="400" y="455" text-anchor="middle" alignment-baseline="central">--</text>
+    </g>
+    <g>
+        <title>members topic</title>
+        <a id="svg-members-topic-box">
+            <rect x="250" y="645" width="300" height="170"/>
+        </a>
+        <circle class="topic" cx="400" cy="765" r="40"/>
+        <text id="svg-members-topic-count" class="topic"  x="400" y="765" text-anchor="middle" alignment-baseline="central">--</text>
+    </g>
+</svg>
