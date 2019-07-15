@@ -5,33 +5,36 @@
     <title>Commercial Orders - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Commercial Orders</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Commercial Orders</h2>
+</div>
 
 <div th:if="${commercialOrders.isEmpty()}">
-    <p>
+    <p id="js-modal-topics-content-error">
         No commercial orders found!
     </p>
 </div>
 
 <div th:if="${!commercialOrders.isEmpty()}">
-    <table border="1">
-        <thead>
+    <table id="js-modal-topics-content-table" class="table table-striped table-sm">
+        <thead class="thead-light">
             <tr>
-                <th>Uuid</th>
-                <th>Date</th>
-                <th>Member</th>
-                <th>Address</th>
-                <th>Lines</th>
+                <th scope="col">Uuid</th>
+                <th scope="col">Date</th>
+                <th scope="col">Member</th>
+                <th scope="col">Address</th>
+                <th scope="col" class="text-right">Lines</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="commercialOrder : ${commercialOrders}">
-                <td>
+                <td class="text-monospace">
                     <a th:href="@{/commercial-order/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
                 </td>
-                <td th:text="${commercialOrder.getDatetime()}"></td>
-                <td>
+                <td class="text-monospace" th:text="${commercialOrder.getDatetime()}"></td>
+                <td class="text-monospace">
                     <a th:href="@{/member/{id}(id=${commercialOrder.getMemberUUid()})}" th:text="${commercialOrder.getMemberUUid()}"></a>
                 </td>
                 <td>
@@ -43,11 +46,11 @@
                     <span th:text="${commercialOrder.getShippingAddress().getState()}"></span>
                     <span th:text="${commercialOrder.getShippingAddress().getCountry()}"></span>
                 </td>
-                <td th:text="${commercialOrder.getLines().size()}"></td>
+                <td class="text-monospace text-right" th:text="${commercialOrder.getLines().size()}"></td>
             </tr>
         </tbody>
     </table>
-    <p>
+    <p id="js-modal-topics-content-total">
         Showing commercial orders
         <span th:text="${(page * size) + 1}"></span>
         to
@@ -62,13 +65,13 @@
         Pagination
         <span th:if="${prev < page}">
             &ndash;
-            <a th:href="@{/commercial-order(page=0,size=${size})}">First</a>
+            <a id="js-modal-topics-content-first" th:href="@{/commercial-order(page=0,size=${size})}">First</a>
             &ndash;
-            <a th:href="@{/commercial-order(page=${prev},size=${size})}">Prev</a>
+            <a id="js-modal-topics-content-prev" th:href="@{/commercial-order(page=${prev},size=${size})}">Prev</a>
         </span>
         <span th:if="${next > page}">
             &ndash;
-            <a th:href="@{/commercial-order(page=${next},size=${size})}">Next</a>
+            <a id="js-modal-topics-content-next" th:href="@{/commercial-order(page=${next},size=${size})}">Next</a>
         </span>
     </p>
 </div>

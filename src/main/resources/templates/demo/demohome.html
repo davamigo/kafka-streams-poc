@@ -14,14 +14,14 @@
 <div class="container-fluid">
 
     <object
-            id="svg-object"
+            id="js-svg-object"
             type="image/svg+xml"
             th:data="@{/images/global-architecture.svg}"
             th:data-topics-count-url="@{/api/topic/count}">
         Your browser does not support SVG!
     </object>
 
-    <div id="svg-alert-modal"
+    <div id="js-modal-alert"
          class="modal fade"
          tabindex="-1"
          role="dialog"
@@ -30,7 +30,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="svg-alert-title">
+                    <h5 class="modal-title" id="js-modal-alert-title">
                         Alert
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -38,7 +38,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="svg-alert-text" class="alert alert-primary">
+                    <div id="js-modal-alert-message" class="alert alert-primary">
                         This is an alert!
                     </div>
                 </div>
@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <div id="svg-producer-modal"
+    <div id="js-modal-producer"
          class="modal fade"
          tabindex="-1"
          role="dialog"
@@ -69,7 +69,7 @@
                     You can create 1 to 500 commercial orders at a time.
                 </div>
                 <div class="modal-footer">
-                    <form id="svg-producer-form" action="#" method="post" th:action="@{/api/commercial-order/create}" style="width: 100%">
+                    <form id="js-modal-producer-form" action="#" method="post" th:action="@{/api/commercial-order/create}" style="width: 100%">
                         <div class="form-row">
                             <label class="col-form-label" for="orderCount">Create random orders (1-500):</label>
                             <div class="col">
@@ -84,6 +84,77 @@
             </div>
         </div>
     </div>
+
+    <div id="js-modal-topics-content"
+         class="modal fade bd-example-modal-xl"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="Topic content"
+         aria-hidden="true"
+         th:data-get-products-url="@{/product}"
+         th:data-get-commercial-orders-url="@{/commercial-order}"
+         th:data-get-members-url="@{/member}">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="js-modal-topics-content-title" class="modal-title">
+                        Topic content
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="js-modal-topics-content-table" class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Second</th>
+                            <th scope="col">Last</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Val#1</td>
+                            <td>Val#2</td>
+                            <td>Val#3</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Val#4</td>
+                            <td>Val#5</td>
+                            <td>Val#6</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>Val#7</td>
+                            <td>Val#8</td>
+                            <td>Val#9</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p id="js-modal-topics-content-total">
+                                    Showing items 0 to 0 of 0
+                                </p>
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <button id="js-modal-topics-content-first" class="btn btn-secondary">First</button>
+                                <button id="js-modal-topics-content-prev" class="btn btn-secondary">Prev</button>
+                                <button id="js-modal-topics-content-next" class="btn btn-primary">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"

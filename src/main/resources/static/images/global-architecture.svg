@@ -67,7 +67,7 @@
     <g>
         <title>members topic</title>
         <a id="svg-members-topic-box">
-            <rect x="250" y="645" width="300" height="170"/>
+            <rect x="250" y="645" width="300" height="170 "/>
         </a>
         <circle class="topic" cx="400" cy="765" r="40"/>
         <text id="svg-members-topic-count" class="topic"  x="400" y="765" text-anchor="middle" alignment-baseline="central">--</text>
