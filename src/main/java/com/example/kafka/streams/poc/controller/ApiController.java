@@ -1,6 +1,8 @@
 package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
+import com.example.kafka.streams.poc.kafka.monitor.BeanNotFoundException;
+import com.example.kafka.streams.poc.kafka.monitor.KafkaStreamProcessesStatusMonitor;
 import com.example.kafka.streams.poc.mongodb.repository.RecordCountRepository;
 import com.example.kafka.streams.poc.service.producer.commercialorder.RandomCommercialOrderProducer;
 import org.slf4j.Logger;
@@ -31,19 +33,25 @@ public class ApiController {
     /** The mongoDB repository where to retrieve the products */
     private final RecordCountRepository recordCountRepository;
 
+    /** The status monitor for the Kafka Stream processes */
+    private final KafkaStreamProcessesStatusMonitor kafkaStreamProcessesStatusMonitor;
+
     /**
      * Autowired constructor
      *
      * @param randomCommercialOrderProducer service to produce commercial orders
      * @param recordCountRepository the mongoDB product repository
+     * @param kafkaStreamProcessesStatusMonitor the status monitor for the Kafka Stream processes
      */
     @Autowired
     public ApiController(
             RandomCommercialOrderProducer randomCommercialOrderProducer,
-            RecordCountRepository recordCountRepository
+            RecordCountRepository recordCountRepository,
+            KafkaStreamProcessesStatusMonitor kafkaStreamProcessesStatusMonitor
     ) {
         this.randomCommercialOrderProducer = randomCommercialOrderProducer;
         this.recordCountRepository = recordCountRepository;
+        this.kafkaStreamProcessesStatusMonitor = kafkaStreamProcessesStatusMonitor;
     }
 
     /**
@@ -74,7 +82,7 @@ public class ApiController {
     /**
      * GET /topic/count
      *
-     * @return the count records for al consumed topics
+     * @return the count of records for al consumed topics
      */
     @GetMapping("/topic/count")
     public Map<String, String> getTopicCount() {
@@ -87,5 +95,45 @@ public class ApiController {
         });
 
         return result;
+    }
+
+    /**
+     * GET /processes/status
+     *
+     * @return the status of all Kafka Streams processes
+     */
+    @GetMapping("/processes/status")
+    public Map<String, Boolean> getProcessesStatus() {
+        LOGGER.info("ApiController.getProcessesStatus()");
+
+        boolean status;
+        Map<String, Boolean> processesStatus = new HashMap<>();
+        for (String qualifier : kafkaStreamProcessesStatusMonitor.getBeanQualifiers()) {
+            try {
+                status = kafkaStreamProcessesStatusMonitor.isRunning(qualifier);
+            } catch (BeanNotFoundException exc) {
+                exc.printStackTrace();
+                status = false;
+            }
+            processesStatus.put(qualifier, status);
+        }
+
+        return processesStatus;
+    }
+
+    @PostMapping("/processes/{procid}/toggle")
+    public void toggleProcessStatus(@PathVariable("procid") String procid) throws ResponseStatusException {
+        LOGGER.info("ApiController.toggleProcessStatus(prodid=" + procid + ")");
+
+        try {
+            if (kafkaStreamProcessesStatusMonitor.isRunning(procid)) {
+                kafkaStreamProcessesStatusMonitor.stop(procid);
+            } else {
+                kafkaStreamProcessesStatusMonitor.start(procid);
+            }
+        } catch (BeanNotFoundException exc) {
+            exc.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, exc.getMessage(), exc);
+        }
     }
 }

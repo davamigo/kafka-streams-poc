@@ -17,7 +17,9 @@
             id="js-svg-object"
             type="image/svg+xml"
             th:data="@{/images/global-architecture.svg}"
-            th:data-topics-count-url="@{/api/topic/count}">
+            th:data-topics-count-url="@{/api/topic/count}"
+            th:data-processes-status-url="@{/api/processes/status}"
+            th:data-process-toggle-url="@{/api/processes/{procid}/toggle}">
         Your browser does not support SVG!
     </object>
 

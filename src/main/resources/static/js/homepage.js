@@ -25,6 +25,8 @@ window.onload = function() {
     var $topicContentButtonPrev = $('#js-modal-topics-content-prev');
     var $topicContentButtonNext = $('#js-modal-topics-content-next');
 
+    var $streamToggler = $('a[id^="svg-"][id$="-toggle"]', $svgDocument);
+
     $producerBox.click(function (ev) {
         ev.preventDefault();
         $producerModal.modal('show');
@@ -69,6 +71,22 @@ window.onload = function() {
         loadTopicContent(url);
     });
 
+    $streamToggler.click(function (ev) {
+        ev.preventDefault();
+        var id = $(this).attr('id');
+        var prodid = '&' + id.slice(4, -7);
+        var url = $svgObject.data('processToggleUrl').replace("{procid}", prodid);
+        $.post(url)
+            .done(function () {
+                checkProcessesStatuses();
+            })
+            .fail(function (xhr) {
+                var defaultMsg = 'An error occurred changing the status of a process!';
+                var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
+                console.error(msg);
+            });
+    });
+
     var showMessage = function (text) {
         $alertTitle.addClass('text-primary').removeClass('text-danger');
         $alertTitle.html('Message');
@@ -96,6 +114,25 @@ window.onload = function() {
             })
             .fail(function (xhr) {
                 var defaultMsg = 'An error occurred retrieving the records count for the topics!';
+                var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
+                console.error(msg);
+            });
+    };
+
+    var checkProcessesStatuses = function() {
+        $.get($svgObject.data('processesStatusUrl'))
+            .done(function (response) {
+                if (typeof response !== 'undefined' && response != null) {
+                    for (var process in response) {
+                        // Remove the initial "&" from the process bean name
+                        var selector = '#svg-' + process.substr(1) + '-text';
+                        var status = response[process];
+                        $(selector, $svgDocument).html(status ? '&#9658;' : '&#9726;');
+                    }
+                }
+            })
+            .fail(function (xhr) {
+                var defaultMsg = 'An error occurred retrieving the status of the Kafka Streams processes!';
                 var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
                 console.error(msg);
             });
@@ -156,4 +193,5 @@ window.onload = function() {
     };
 
     countTopics();
+    checkProcessesStatuses();
 };

@@ -9,67 +9,103 @@
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
             }
-            path,
-            rect {
-                fill: transparent;
-                cursor: pointer;
-                transition: fill 0.2s;
+            svg circle {
+                fill: rgba(80, 180, 80, 0.50);
+            }
+            svg text {
+                font-family: sans-serif;
+                font-style: normal;
+                font-size: 2.0em;
+                text-anchor: middle;
+                alignment-baseline: central;
             }
             svg a:focus,
             svg a:hover {
                 outline: none;
             }
-            svg a:focus path,
-            svg a:hover path,
+            svg a rect {
+                fill: transparent;
+                cursor: pointer;
+                transition: fill 0.2s;
+            }
             svg a:focus rect,
             svg a:hover rect {
                 fill: rgba(80, 80, 80, 0.25);
                 cursor: pointer;
             }
-            circle.topic {
-                fill: rgba(80, 80, 80, 0.50);
+            svg a text {
+                font-size: 5.0em;
+                cursor: pointer;
             }
-            text.topic {
-                font-family: sans-serif;
-                font-style: normal;
-                font-size: 2.0em;
+            svg a:focus text,
+            svg a:hover text {
+                cursor: pointer;
+                fill-opacity: 0.5;
             }
         </style>
     </defs>
+
     <g>
         <title>Random Data Producer</title>
         <a id="svg-producer-box">
-            <path d="M10 300 H230 V520 H10 V300"/>
+            <rect x="10" y="300" width="220" height="220" />
         </a>
     </g>
+
     <g>
         <title>Split Commercial Order Lines</title>
-        <a id="svg-split-orders-stream-box">
-            <rect x="570" y="140" width="220" height="220"/>
+        <a id="svg-stream-commercial-order-lines-split-box">
+            <rect x="570" y="145" width="220" height="220" />
+        </a>
+        <a id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-toggle">
+            <text id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-text" x="770" y="340">?</text>
         </a>
     </g>
+
+    <g>
+        <title>Convert Commercial Orders</title>
+        <a id="svg-stream-commercial-orders-converter-box">
+            <rect x="570" y="465" width="220" height="220" />
+        </a>
+        <a id="svg-commercialOrderConverterStreamBuilderFactoryBean-toggle">
+            <text id="svg-commercialOrderConverterStreamBuilderFactoryBean-text" x="770" y="660">?</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Generate Warehouse Order Lines</title>
+        <a id="svg-stream-warehouse-order-line-generator-box">
+            <rect x="570" y="785" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineGeneratorStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineGeneratorStreamBuilderFactoryBean-text" x="770" y="980">?</text>
+        </a>
+    </g>
+
     <g>
         <title>products topic</title>
         <a id="svg-products-topic-box">
-            <rect x="250" y="25" width="300" height="170"/>
+            <rect x="250" y="25" width="300" height="170" />
         </a>
-        <circle class="topic" cx="400" cy="145" r="40"/>
-        <text id="svg-products-topic-count" class="topic"  x="400" y="145" text-anchor="middle" alignment-baseline="central">--</text>
+        <circle cx="400" cy="145" r="40" />
+        <text id="svg-products-topic-count" x="400" y="145">--</text>
     </g>
+
     <g>
         <title>commercial-orders topic</title>
         <a id="svg-commercial-orders-topic-box">
-            <rect x="250" y="335" width="300" height="170"/>
+            <rect x="250" y="335" width="300" height="170" />
         </a>
-        <circle class="topic" cx="400" cy="455" r="40"/>
-        <text id="svg-commercial-orders-topic-count" class="topic"  x="400" y="455" text-anchor="middle" alignment-baseline="central">--</text>
+        <circle cx="400" cy="455" r="40" />
+        <text id="svg-commercial-orders-topic-count" x="400" y="455">--</text>
     </g>
+
     <g>
         <title>members topic</title>
         <a id="svg-members-topic-box">
-            <rect x="250" y="645" width="300" height="170 "/>
+            <rect x="250" y="655" width="300" height="170" />
         </a>
-        <circle class="topic" cx="400" cy="765" r="40"/>
-        <text id="svg-members-topic-count" class="topic"  x="400" y="765" text-anchor="middle" alignment-baseline="central">--</text>
+        <circle cx="400" cy="775" r="40" />
+        <text id="svg-members-topic-count" x="400" y="775">--</text>
     </g>
 </svg>
