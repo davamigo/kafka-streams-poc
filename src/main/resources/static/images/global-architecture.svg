@@ -73,6 +73,26 @@
     </g>
 
     <g>
+        <title>Generate Purchase Order Lines</title>
+        <a id="svg-stream-purchase-order-lines-generate-box">
+            <rect x="1130" y="145" width="220" height="220" />
+        </a>
+        <a id="svg-purchaseOrderLineAggregatedStreamBuilderFactoryBean-toggle">
+            <text id="svg-purchaseOrderLineAggregatedStreamBuilderFactoryBean-text" x="1330" y="340">?</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Generate Purchase Orders</title>
+        <a id="svg-stream-purchase-order-generate-box">
+            <rect x="1690" y="145" width="220" height="220" />
+        </a>
+        <a id="svg-purchaseOrderGeneratedStreamBuilderFactoryBean-toggle">
+            <text id="svg-purchaseOrderGeneratedStreamBuilderFactoryBean-text" x="1890" y="340">?</text>
+        </a>
+    </g>
+
+    <g>
         <title>Generate Warehouse Order Lines</title>
         <a id="svg-stream-warehouse-order-line-generator-box">
             <rect x="570" y="785" width="220" height="220" />
@@ -107,5 +127,14 @@
         </a>
         <circle cx="400" cy="775" r="40" />
         <text id="svg-members-topic-count" x="400" y="775">--</text>
+    </g>
+
+    <g>
+        <title>purchase-orders topic</title>
+        <a id="svg-purchase-orders-topic-box">
+            <rect x="1925" y="175" width="300" height="170" />
+        </a>
+        <circle cx="2075" cy="295" r="40" />
+        <text id="svg-purchase-orders-topic-count" x="2075" y="295">--</text>
     </g>
 </svg>

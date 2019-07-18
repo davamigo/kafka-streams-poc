@@ -122,7 +122,9 @@ public class ApiController {
     }
 
     @PostMapping("/processes/{procid}/toggle")
-    public void toggleProcessStatus(@PathVariable("procid") String procid) throws ResponseStatusException {
+    public void toggleProcessStatus(
+            @PathVariable("procid") String procid
+    ) throws ResponseStatusException {
         LOGGER.info("ApiController.toggleProcessStatus(prodid=" + procid + ")");
 
         try {
