@@ -11,6 +11,6 @@ public class BeanNotFoundException extends Exception {
      * @param qualifier the bean's name
      */
     public BeanNotFoundException(String qualifier) {
-        super("KafkaStreamProcessesStatusMonitor: The bean " + qualifier + " was not fount!");
+        super("KafkaStreamProcessesStatusMonitor: The bean " + qualifier + " was not found!");
     }
 }

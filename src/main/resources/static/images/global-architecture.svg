@@ -45,20 +45,12 @@
         </style>
     </defs>
 
+    <!-- *********************************************************************************************** -->
+
     <g>
         <title>Random Data Producer</title>
         <a id="svg-producer-box">
             <rect x="10" y="300" width="220" height="220" />
-        </a>
-    </g>
-
-    <g>
-        <title>Split Commercial Order Lines</title>
-        <a id="svg-stream-commercial-order-lines-split-box">
-            <rect x="570" y="145" width="220" height="220" />
-        </a>
-        <a id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-toggle">
-            <text id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-text" x="770" y="340">?</text>
         </a>
     </g>
 
@@ -68,7 +60,17 @@
             <rect x="570" y="465" width="220" height="220" />
         </a>
         <a id="svg-commercialOrderConverterStreamBuilderFactoryBean-toggle">
-            <text id="svg-commercialOrderConverterStreamBuilderFactoryBean-text" x="770" y="660">?</text>
+            <text id="svg-commercialOrderConverterStreamBuilderFactoryBean-text" x="770" y="660">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Split Commercial Order Lines</title>
+        <a id="svg-stream-commercial-order-lines-split-box">
+            <rect x="570" y="145" width="220" height="220" />
+        </a>
+        <a id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-toggle">
+            <text id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-text" x="770" y="340">&#8634;</text>
         </a>
     </g>
 
@@ -78,7 +80,7 @@
             <rect x="1130" y="145" width="220" height="220" />
         </a>
         <a id="svg-purchaseOrderLineAggregatedStreamBuilderFactoryBean-toggle">
-            <text id="svg-purchaseOrderLineAggregatedStreamBuilderFactoryBean-text" x="1330" y="340">?</text>
+            <text id="svg-purchaseOrderLineAggregatedStreamBuilderFactoryBean-text" x="1330" y="340">&#8634;</text>
         </a>
     </g>
 
@@ -88,7 +90,7 @@
             <rect x="1690" y="145" width="220" height="220" />
         </a>
         <a id="svg-purchaseOrderGeneratedStreamBuilderFactoryBean-toggle">
-            <text id="svg-purchaseOrderGeneratedStreamBuilderFactoryBean-text" x="1890" y="340">?</text>
+            <text id="svg-purchaseOrderGeneratedStreamBuilderFactoryBean-text" x="1890" y="340">&#8634;</text>
         </a>
     </g>
 
@@ -98,9 +100,61 @@
             <rect x="570" y="785" width="220" height="220" />
         </a>
         <a id="svg-warehouseOrderLineGeneratorStreamBuilderFactoryBean-toggle">
-            <text id="svg-warehouseOrderLineGeneratorStreamBuilderFactoryBean-text" x="770" y="980">?</text>
+            <text id="svg-warehouseOrderLineGeneratorStreamBuilderFactoryBean-text" x="770" y="980">&#8634;</text>
         </a>
     </g>
+
+    <g>
+        <title>Match Warehouse Order Lines With Legacy Product Id.</title>
+        <a id="svg-match-with-legacy-product-id-box">
+            <rect x="1130" y="945" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineProductMatcherStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineProductMatcherStreamBuilderFactoryBean-text" x="1330" y="1140">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Recover Warehouse Order Lines</title>
+        <a id="svg-recover-warehouse-order-lines-box">
+            <rect x="1690" y="1105" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineProductRecoveryStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineProductRecoveryStreamBuilderFactoryBean-text" x="1890" y="1300">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Product Legacy Id. Feeder</title>
+        <a id="svg-product-legacy-id-feeder-box">
+            <rect x="1130" y="1425" width="220" height="220" />
+        </a>
+        <a id="svg-productLegacyIdFeederStreamBuilderFactoryBean-toggle">
+            <text id="svg-productLegacyIdFeederStreamBuilderFactoryBean-text" x="1330" y="1620">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Merge Warehouse Order Lines</title>
+        <a id="svg-merge-warehouse-order-lines-box">
+            <rect x="1690" y="465" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineMergerStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineMergerStreamBuilderFactoryBean-text" x="1890" y="660">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Generate Warehouse Orders</title>
+        <a id="svg-generate-warehouse-orders-box">
+            <rect x="2250" y="465" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrdersGeneratorStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrdersGeneratorStreamBuilderFactoryBean-text" x="2450" y="660">&#8634;</text>
+        </a>
+    </g>
+
+    <!-- *********************************************************************************************** -->
 
     <g>
         <title>products topic</title>
