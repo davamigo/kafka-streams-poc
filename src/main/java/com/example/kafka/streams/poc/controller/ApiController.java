@@ -91,7 +91,7 @@ public class ApiController {
         Map<String, String> result = new HashMap<>();
         Map<String, Long> counters = recordCountRepository.countRecords();
         counters.forEach((String key, Long value) -> {
-            result.put(key, (value < 0) ? "--" : Long.toString(value));
+            result.put(key, (value < 0) ? "&#9888;" : Long.toString(value));
         });
 
         return result;

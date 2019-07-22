@@ -31,16 +31,30 @@ public class RecordCountRepositoryTest {
     @Mock
     private PurchaseOrderRepository purchaseOrderRepository;
 
+    @Mock
+    private WarehouseOrderLineRepository warehouseOrderLineRepository;
+
     @Test
     public void testCountRecords() {
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         Map<String, Long> result = repo.countRecords();
 
         Assert.assertTrue(result.containsKey("products"));
         Assert.assertTrue(result.containsKey("members"));
         Assert.assertTrue(result.containsKey("commercial-orders"));
+        Assert.assertTrue(result.containsKey("full-commercial-orders"));
+        Assert.assertTrue(result.containsKey("commercial-order-lines"));
+        Assert.assertTrue(result.containsKey("purchase-order-lines"));
         Assert.assertTrue(result.containsKey("purchase-orders"));
+        Assert.assertTrue(result.containsKey("warehouse-order-lines"));
+        Assert.assertTrue(result.containsKey("matched-warehouse-order-lines"));
+        Assert.assertTrue(result.containsKey("unmatched-warehouse-order-lines"));
+        Assert.assertTrue(result.containsKey("recovered-warehouse-order-lines"));
+        Assert.assertTrue(result.containsKey("failed-warehouse-order-lines"));
+        Assert.assertTrue(result.containsKey("full-warehouse-order-lines"));
+        Assert.assertTrue(result.containsKey("warehouse-orders"));
+        Assert.assertTrue(result.containsKey("products-cache"));
     }
 
     @Test
@@ -48,18 +62,18 @@ public class RecordCountRepositoryTest {
 
         when(productRepository.count()).thenReturn(new Long(3));
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countProducts();
 
         Assert.assertEquals(result, 3);
     }
 
     @Test
-    public void testCountProductsWhenEWrror() {
+    public void testCountProductsWhenError() {
 
         when(productRepository.count()).thenThrow(new IllegalArgumentException());
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countProducts();
 
         Assert.assertEquals(result, -1);
@@ -70,18 +84,18 @@ public class RecordCountRepositoryTest {
 
         when(memberRepository.count()).thenReturn(new Long(3));
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countMembers();
 
         Assert.assertEquals(result, 3);
     }
 
     @Test
-    public void testCountMembersWhenEWrror() {
+    public void testCountMembersWhenError() {
 
         when(memberRepository.count()).thenThrow(new IllegalArgumentException());
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countMembers();
 
         Assert.assertEquals(result, -1);
@@ -92,18 +106,18 @@ public class RecordCountRepositoryTest {
 
         when(commercialOrderRepository.count()).thenReturn(new Long(3));
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countCommercialOrders();
 
         Assert.assertEquals(result, 3);
     }
 
     @Test
-    public void testCountCommercialOrdersWhenEWrror() {
+    public void testCountCommercialOrdersWhenError() {
 
         when(commercialOrderRepository.count()).thenThrow(new IllegalArgumentException());
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countCommercialOrders();
 
         Assert.assertEquals(result, -1);
@@ -114,20 +128,31 @@ public class RecordCountRepositoryTest {
 
         when(purchaseOrderRepository.count()).thenReturn(new Long(3));
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countPurchaseOrders();
 
         Assert.assertEquals(result, 3);
     }
 
     @Test
-    public void testCountPurchaseOrdersWhenEWrror() {
+    public void testCountPurchaseOrdersWhenError() {
 
         when(purchaseOrderRepository.count()).thenThrow(new IllegalArgumentException());
 
-        RecordCountRepository repo = new RecordCountRepository(productRepository, memberRepository, commercialOrderRepository, purchaseOrderRepository);
+        RecordCountRepository repo = createTestRepo();
         long result = repo.countPurchaseOrders();
 
         Assert.assertEquals(result, -1);
+    }
+
+    private RecordCountRepository createTestRepo() {
+        return new RecordCountRepository(
+                productRepository,
+                memberRepository,
+                commercialOrderRepository,
+                purchaseOrderRepository,
+                warehouseOrderLineRepository
+        );
+
     }
 }

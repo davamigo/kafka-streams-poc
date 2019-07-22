@@ -23,25 +23,32 @@ public class RecordCountRepository {
 
     /** The mongoDB repository where to retrieve the purchase orders */
     private final PurchaseOrderRepository purchaseOrderRepository;
+
+    /** The mongoDB repository where to retrieve the warehouse order lines */
+    private final WarehouseOrderLineRepository warehouseOrderLineRepository;
+
     /**
      * Autowired constructor
      *
      * @param productRepository the mongoDB product repository
      * @param memberRepository the mongoDB member repository
      * @param commercialOrderRepository the mongoDB commercial order repository
-     * @param purchaseOrderRepository the mongoDB purchase order repository
+     * @param purchaseOrderRepository the mongoDB warehouse order lines repository
+     * @param warehouseOrderLineRepository the mongoDB purchase order repository
      */
     @Autowired
     public RecordCountRepository(
             ProductRepository productRepository,
             MemberRepository memberRepository,
             CommercialOrderRepository commercialOrderRepository,
-            PurchaseOrderRepository purchaseOrderRepository
+            PurchaseOrderRepository purchaseOrderRepository,
+            WarehouseOrderLineRepository warehouseOrderLineRepository
     ) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
         this.commercialOrderRepository = commercialOrderRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
+        this.warehouseOrderLineRepository = warehouseOrderLineRepository;
     }
     /**
      * Count the records in all the collections
@@ -53,7 +60,18 @@ public class RecordCountRepository {
         result.put("products", countProducts());
         result.put("members", countMembers());
         result.put("commercial-orders", countCommercialOrders());
+        result.put("full-commercial-orders", countFullCommercialOrders());
+        result.put("commercial-order-lines", countCommercialOrderLines());
+        result.put("purchase-order-lines", countPurchaseOrderLines());
         result.put("purchase-orders", countPurchaseOrders());
+        result.put("warehouse-order-lines", countWarehouseOrderLines());
+        result.put("matched-warehouse-order-lines", countMatchedWarehouseOrderLines());
+        result.put("unmatched-warehouse-order-lines", countUnmatchedWarehouseOrderLines());
+        result.put("recovered-warehouse-order-lines", countRecoveredWarehouseOrderLines());
+        result.put("failed-warehouse-order-lines", countFailedWarehouseOrderLines());
+        result.put("full-warehouse-order-lines", countFullWarehouseOrderLines());
+        result.put("warehouse-orders", countWarehouseOrders());
+        result.put("products-cache", countProductsCache());
         return result;
     }
 
@@ -94,6 +112,30 @@ public class RecordCountRepository {
     }
 
     /**
+     * @return the number of full commercial orders
+     */
+    synchronized long countFullCommercialOrders() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number of commercial order lines
+     */
+    synchronized long countCommercialOrderLines() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number of purchase order lines
+     */
+    synchronized long countPurchaseOrderLines() {
+        // TODO
+        return -1;
+    }
+
+    /**
      * @return the number of purchase orders
      */
     synchronized long countPurchaseOrders() {
@@ -103,5 +145,73 @@ public class RecordCountRepository {
         catch (Exception exc) {
             return -1;
         }
+    }
+
+    /**
+     * @return the number of warehouse order lines
+     */
+    synchronized long countWarehouseOrderLines() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number of matched warehouse order lines
+     */
+    synchronized long countMatchedWarehouseOrderLines() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number of unmatched warehouse order lines
+     */
+    synchronized long countUnmatchedWarehouseOrderLines() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number of recovered warehouse order lines
+     */
+    synchronized long countRecoveredWarehouseOrderLines() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number of failed warehouse order lines
+     */
+    synchronized long countFailedWarehouseOrderLines() {
+        try {
+            return warehouseOrderLineRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
+    }
+
+    /**
+     * @return the number of full warehouse order lines
+     */
+    synchronized long countFullWarehouseOrderLines() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number of warehouse orders
+     */
+    synchronized long countWarehouseOrders() {
+        // TODO
+        return -1;
+    }
+
+    /**
+     * @return the number items in the products cache
+     */
+    synchronized long countProductsCache() {
+        // TODO
+        return -1;
     }
 }
