@@ -83,7 +83,7 @@ window.onload = function() {
             .fail(function (xhr) {
                 var defaultMsg = 'An error occurred changing the status of a process!';
                 var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
-                console.error(msg);
+                showError(msg);
             });
     });
 
@@ -175,7 +175,7 @@ window.onload = function() {
             .fail(function (xhr) {
                 var defaultMsg = 'An error occurred getting data from the server!';
                 var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
-                console.error(msg);
+                showError(msg);
             });
     };
 

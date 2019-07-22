@@ -184,11 +184,110 @@
     </g>
 
     <g>
+        <title>full-commercial-orders topic</title>
+        <a id="svg-full-commercial-orders-topic-box">
+            <rect x="810" y="495" width="300" height="170" />
+        </a>
+        <circle cx="960" cy="615" r="40" />
+        <text id="svg-full-commercial-orders-topic-count" x="960" y="615">--</text>
+    </g>
+
+    <g>
+        <title>commercial-order-lines topic</title>
+        <a id="svg-commercial-order-lines-topic-box">
+            <rect x="810" y="175" width="300" height="170" />
+        </a>
+        <circle cx="960" cy="295" r="40" />
+        <text id="svg-commercial-order-lines-topic-count" x="960" y="295">--</text>
+    </g>
+
+    <g>
+        <title>purchase-order-lines topic</title>
+        <a id="svg-purchase-order-lines-topic-box">
+            <rect x="1370" y="175" width="300" height="170" />
+        </a>
+        <circle cx="1520" cy="295" r="40" />
+        <text id="svg-purchase-order-lines-topic-count" x="1520" y="295">--</text>
+    </g>
+
+    <g>
         <title>purchase-orders topic</title>
         <a id="svg-purchase-orders-topic-box">
             <rect x="1925" y="175" width="300" height="170" />
         </a>
         <circle cx="2075" cy="295" r="40" />
         <text id="svg-purchase-orders-topic-count" x="2075" y="295">--</text>
+    </g>
+
+    <g>
+        <title>warehouse-order-lines topic</title>
+        <a id="svg-warehouse-order-lines-topic-box">
+            <rect x="810" y="815" width="300" height="170" />
+        </a>
+        <circle cx="960" cy="935" r="40" />
+        <text id="svg-warehouse-order-lines-topic-count" x="960" y="935">--</text>
+    </g>
+
+    <g>
+        <title>matched-warehouse-order-lines topic</title>
+        <a id="svg-matched-warehouse-order-lines-topic-box">
+            <rect x="1370" y="815" width="300" height="170" />
+        </a>
+        <circle cx="1520" cy="935" r="40" />
+        <text id="svg-matched-warehouse-order-lines-topic-count" x="1520" y="935">--</text>
+    </g>
+
+    <g>
+        <title>unmatched-warehouse-order-lines topic</title>
+        <a id="svg-unmatched-warehouse-order-lines-topic-box">
+            <rect x="1370" y="1135" width="300" height="170" />
+        </a>
+        <circle cx="1520" cy="1255" r="40" />
+        <text id="svg-unmatched-warehouse-order-lines-topic-count" x="1520" y="1255">--</text>
+    </g>
+
+    <g>
+        <title>recovered-warehouse-order-lines topic</title>
+        <a id="svg-recovered-warehouse-order-lines-topic-box">
+            <rect x="1930" y="975" width="300" height="170" />
+        </a>
+        <circle cx="2080" cy="1095" r="40" />
+        <text id="svg-recovered-warehouse-order-lines-topic-count" x="2080" y="1095">--</text>
+    </g>
+
+    <g>
+        <title>failed-warehouse-order-lines topic</title>
+        <a id="svg-failed-warehouse-order-lines-topic-box">
+            <rect x="1930" y="1295" width="300" height="170" />
+        </a>
+        <circle cx="2080" cy="1415" r="40" />
+        <text id="svg-failed-warehouse-order-lines-topic-count" x="2080" y="1415">--</text>
+    </g>
+
+    <g>
+        <title>full-warehouse-order-lines topic</title>
+        <a id="svg-full-warehouse-order-lines-topic-box">
+            <rect x="1930" y="495" width="300" height="170" />
+        </a>
+        <circle cx="2080" cy="615" r="40" />
+        <text id="svg-full-warehouse-order-lines-topic-count" x="2080" y="615">--</text>
+    </g>
+
+    <g>
+        <title>warehouse-orders topic</title>
+        <a id="svg-warehouse-orders-topic-box">
+            <rect x="2490" y="495" width="300" height="170" />
+        </a>
+        <circle cx="2640" cy="615" r="40" />
+        <text id="svg-warehouse-orders-topic-count" x="2640" y="615">--</text>
+    </g>
+
+    <g>
+        <title>products-cache topic</title>
+        <a id="svg-products-cache-topic-box">
+            <rect x="810" y="1135" width="300" height="170" />
+        </a>
+        <circle cx="960" cy="1255" r="40" />
+        <text id="svg-products-cache-topic-count" x="960" y="1255">--</text>
     </g>
 </svg>
