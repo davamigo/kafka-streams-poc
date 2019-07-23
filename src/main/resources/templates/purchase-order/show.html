@@ -20,7 +20,9 @@
     <dl>
         <dt>Uuid:</dt>
         <dd>
-            <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getUuid()})}" th:text="${purchaseOrder.getUuid()}"></a>
+            <strong>
+                <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getUuid()})}" th:text="${purchaseOrder.getUuid()}"></a>
+            </strong>
         </dd>
 
         <dt>Aggregation Key:</dt>
@@ -43,7 +45,7 @@
             Purchase Order without lines!
         </dd>
         <dd th:if="${!purchaseOrder.getLines().isEmpty()}">
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
                         <th>Uuid</th>
@@ -55,11 +57,11 @@
                 </thead>
                 <tbody>
                     <tr th:each="purchaseOrderLine : ${purchaseOrder.getLines()}">
-                        <td th:text="${purchaseOrderLine.getUuid()}"></td>
-                        <td th:text="${purchaseOrderLine.getAggregationKey()}"></td>
                         <td>
-                            <a th:href="@{/product/{id}(id=${purchaseOrderLine.getProductUuid()})}" th:text="${purchaseOrderLine.getProductUuid()}"></a>
+                            <strong th:text="${purchaseOrderLine.getUuid()}"></strong>
                         </td>
+                        <td th:text="${purchaseOrderLine.getAggregationKey()}"></td>
+                        <td th:text="${purchaseOrderLine.getProductUuid()}"></td>
                         <td th:text="${purchaseOrderLine.getPrice()}"></td>
                         <td th:text="${purchaseOrderLine.getQuantity()}"></td>
                     </tr>

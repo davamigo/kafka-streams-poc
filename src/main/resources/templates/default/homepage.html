@@ -21,24 +21,30 @@
 <h3>Data lists</h3>
 <ul>
     <li>
-        <a th:href="@{/commercial-order}">Show commercial orders</a>
-        (<span th:text="${commercialOrderCount}"></span>)
+        <a th:href="@{/commercial-order/new}">Show commercial orders</a>
+        (<span th:text="${topicCount['commercial-orders']}"></span>)
     </li>
     <li>
         <a th:href="@{/product}">Show products</a>
-        (<span th:text="${productCount}"></span>)
+        (<span th:text="${topicCount['products']}"></span>)
     </li>
     <li>
         <a th:href="@{/member}">Show members</a>
-        (<span th:text="${memberCount}"></span>)
+        (<span th:text="${topicCount['members']}"></span>)
+    </li>
+    <br>
+    <li>
+        <a th:href="@{/commercial-order/converted}">Show converted commercial orders</a>
+        (<span th:text="${topicCount['full-commercial-orders']}"></span>)
     </li>
     <li>
         <a th:href="@{/purchase-order}">Show purchase orders</a>
-        (<span th:text="${purchaseOrderCount}"></span>)
+        (<span th:text="${topicCount['purchase-orders']}"></span>)
     </li>
-    <br/>
+    <br>
     <li>
         <a th:href="@{/warehouse-order/line/failed}">Show failed warehouse order lines</a>
+        (<span th:text="${topicCount['failed-warehouse-order-lines']}"></span>)
     </li>
 </ul>
 
@@ -46,25 +52,25 @@
 <ul>
     <li th:each="process : ${processesStatuses}">
         <form action="#" method="post" th:if="${process.value}" th:action="@{/process/{procid}/stop(procid=${process.key})}">
-            <span th:text="${process.key}"></span> is <strong>Running</strong>
             <button type="submit">Stop</button>
+            <span th:text="${process.key}"></span> is <strong>Running</strong>
         </form>
         <form action="#" method="post" th:if="${!process.value}" th:action="@{/process/{procid}/start(procid=${process.key})}">
-            <span th:text="${process.key}"></span> is <strong>Stopped</strong>
             <button type="submit">Start</button>
+            <span th:text="${process.key}"></span> is <strong>Stopped</strong>
         </form>
     </li>
     <br>
     <li>
         <form action="#" method="post" th:action="@{/process/stop}">
-            All processes
             <button type="submit">Stop</button>
+            All processes
         </form>
     </li>
     <li>
         <form action="#" method="post" th:action="@{/process//start}">
-            All processes
             <button type="submit">Start</button>
+            All processes
         </form>
     </li>
 </ul>

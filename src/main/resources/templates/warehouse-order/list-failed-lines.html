@@ -15,7 +15,7 @@
 </div>
 
 <div th:if="${!orderLines.isEmpty()}">
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Uuid</th>
@@ -30,7 +30,9 @@
         <tbody>
             <tr th:each="line : ${orderLines}">
                 <td>
-                    <a th:href="@{/warehouse-order/line/failed/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
+                    <strong>
+                        <a th:href="@{/warehouse-order/line/failed/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
+                    </strong>
                 </td>
                 <td th:text="${line.getCountry()}"></td>
                 <td th:text="${line.getDate()}"></td>

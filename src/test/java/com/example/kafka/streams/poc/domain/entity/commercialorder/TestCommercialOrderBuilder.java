@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 public class TestCommercialOrderBuilder {
 
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         Date datetime = new Date();
         Member member = Member.newBuilder().setUuid("111").build();

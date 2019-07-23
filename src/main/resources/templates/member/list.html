@@ -30,7 +30,9 @@
         <tbody>
             <tr th:each="member : ${members}">
                 <td class="text-monospace">
-                    <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
+                    <strong>
+                        <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
+                    </strong>
                 </td>
                 <td th:text="${member.getFirstName()}"></td>
                 <td th:text="${member.getLastName()}"></td>

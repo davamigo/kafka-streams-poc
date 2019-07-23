@@ -14,8 +14,10 @@ window.onload = function() {
     var $producerForm = $('#js-modal-producer-form');
 
     var $productsTopicBox = $('#svg-products-topic-box', $svgDocument);
-    var $commercialOrdersTopicBox = $('#svg-commercial-orders-topic-box', $svgDocument);
     var $membersTopicBox = $('#svg-members-topic-box', $svgDocument);
+    var $commercialOrdersTopicBox = $('#svg-commercial-orders-topic-box', $svgDocument);
+    var $convertedCommercialOrdersTopicBox = $('#svg-full-commercial-orders-topic-box', $svgDocument);
+    var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
 
     var $topicContentModal = $('#js-modal-topics-content');
     var $topicContentTitle = $('#js-modal-topics-content-title');
@@ -59,15 +61,27 @@ window.onload = function() {
         loadTopicContent(url);
     });
 
+    $membersTopicBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.data('getMembersUrl');
+        loadTopicContent(url);
+    });
+
     $commercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.data('getCommercialOrdersUrl');
         loadTopicContent(url);
     });
 
-    $membersTopicBox.click(function (ev) {
+    $convertedCommercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('getMembersUrl');
+        var url = $topicContentModal.data('getConvertedCommercialOrdersUrl');
+        loadTopicContent(url);
+    });
+
+    $purchaseOrdersTopicBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.data('getPurchaseOrdersUrl');
         loadTopicContent(url);
     });
 

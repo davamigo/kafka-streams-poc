@@ -53,7 +53,7 @@ public class NewCommercialOrdersKafkaConsumer {
             @Header(KafkaHeaders.RECEIVED_MESSAGE_KEY) String key,
             @Header(KafkaHeaders.RECEIVED_TOPIC) String topic
     ) {
-        LOGGER.info(">>> Consuming commercial order: Topic={}, Key={}", topic, key);
+        LOGGER.info(">>> Consuming new commercial order: Topic={}, Key={}", topic, key);
 
         try {
             newCommercialOrderReceptionProcessor.process(
@@ -64,10 +64,10 @@ public class NewCommercialOrdersKafkaConsumer {
             );
             ack.acknowledge();
 
-            LOGGER.info(">>> The commercial order with Key={} has been consumed!", key);
+            LOGGER.info(">>> The new commercial order with Key={} has been consumed!", key);
         }
         catch (ProcessorException exc) {
-            LOGGER.error(">>> An error occurred consuming a received commercial order: Key={}, Message={}", topic, exc.getMessage());
+            LOGGER.error(">>> An error occurred consuming a received new commercial order: Key={}, Message={}", topic, exc.getMessage());
             exc.printStackTrace();
         }
     }

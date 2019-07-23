@@ -20,7 +20,9 @@
     <dl>
         <dt>Uuid:</dt>
         <dd>
-            <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
+            <strong>
+                <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
+            </strong>
         </dd>
 
         <dt>First Name:</dt>
@@ -34,7 +36,7 @@
             Member without addresses!
         </dd>
         <dd th:if="${!member.getAddresses().isEmpty()}">
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
                         <th>Street</th>

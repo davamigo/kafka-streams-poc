@@ -20,7 +20,9 @@
     <dl>
         <dt>Uuid:</dt>
         <dd>
-            <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
+            <strong>
+                <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
+            </strong>
         </dd>
 
         <dt>Name:</dt>

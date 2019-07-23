@@ -93,8 +93,10 @@
          aria-labelledby="Topic content"
          aria-hidden="true"
          th:data-get-products-url="@{/product}"
-         th:data-get-commercial-orders-url="@{/commercial-order}"
-         th:data-get-members-url="@{/member}">
+         th:data-get-members-url="@{/member}"
+         th:data-get-commercial-orders-url="@{/commercial-order/new}"
+         th:data-get-converted-commercial-orders-url="@{/commercial-order/converted}"
+         th:data-get-purchase-orders-url="@{/purchase-order}">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">

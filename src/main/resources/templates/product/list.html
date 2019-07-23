@@ -31,7 +31,9 @@
         <tbody>
             <tr th:each="product : ${products}">
                 <td class="text-monospace">
-                    <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
+                    <strong>
+                        <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
+                    </strong>
                 </td>
                 <td th:text="${product.getName()}"></td>
                 <td th:text="${product.getType()}"></td>

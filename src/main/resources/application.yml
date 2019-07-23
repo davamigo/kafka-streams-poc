@@ -28,6 +28,7 @@ spring:
       members-new: "${spring.application.name}.members.new"
       products-new: "${spring.application.name}.products.new"
       commercial-orders-new: "${spring.application.name}.commercial-orders.new"
+      commercial-orders-converted: "${spring.application.name}.commercial-orders.converted"
       purchase-orders-generated: "${spring.application.name}.purchase-orders.generated"
       warehouse-order-lines-failed: "${spring.application.name}.warehouse-order-lines-failed"
     topics:

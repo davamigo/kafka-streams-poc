@@ -75,7 +75,7 @@ public class CommercialOrderEntity {
     /**
      * @return the member uuid of the order (client
      */
-    public String getMemberUUid() {
+    public String getMemberUuid() {
         return memberUUid;
     }
 

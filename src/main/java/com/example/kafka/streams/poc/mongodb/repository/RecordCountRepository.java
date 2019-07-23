@@ -21,6 +21,9 @@ public class RecordCountRepository {
     /** The mongoDB repository where to retrieve the commercial orders */
     private final CommercialOrderRepository commercialOrderRepository;
 
+    /** The mongoDB repository where to retrieve the converted commercial orders */
+    private final CommercialOrderConvertedRepository commercialOrderConvertedRepository;
+
     /** The mongoDB repository where to retrieve the purchase orders */
     private final PurchaseOrderRepository purchaseOrderRepository;
 
@@ -33,6 +36,7 @@ public class RecordCountRepository {
      * @param productRepository the mongoDB product repository
      * @param memberRepository the mongoDB member repository
      * @param commercialOrderRepository the mongoDB commercial order repository
+     * @param commercialOrderConvertedRepository the mongoDB converted commercial order repository
      * @param purchaseOrderRepository the mongoDB warehouse order lines repository
      * @param warehouseOrderLineRepository the mongoDB purchase order repository
      */
@@ -41,12 +45,14 @@ public class RecordCountRepository {
             ProductRepository productRepository,
             MemberRepository memberRepository,
             CommercialOrderRepository commercialOrderRepository,
+            CommercialOrderConvertedRepository commercialOrderConvertedRepository,
             PurchaseOrderRepository purchaseOrderRepository,
             WarehouseOrderLineRepository warehouseOrderLineRepository
     ) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
         this.commercialOrderRepository = commercialOrderRepository;
+        this.commercialOrderConvertedRepository = commercialOrderConvertedRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.warehouseOrderLineRepository = warehouseOrderLineRepository;
     }
@@ -115,8 +121,12 @@ public class RecordCountRepository {
      * @return the number of full commercial orders
      */
     synchronized long countFullCommercialOrders() {
-        // TODO
-        return -1;
+        try {
+            return commercialOrderConvertedRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
     }
 
     /**

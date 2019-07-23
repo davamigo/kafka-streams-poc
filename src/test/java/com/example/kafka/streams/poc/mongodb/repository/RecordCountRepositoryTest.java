@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 /**
@@ -27,6 +26,9 @@ public class RecordCountRepositoryTest {
 
     @Mock
     private CommercialOrderRepository commercialOrderRepository;
+
+    @Mock
+    private CommercialOrderConvertedRepository commercialOrderConvertedRepository;
 
     @Mock
     private PurchaseOrderRepository purchaseOrderRepository;
@@ -124,6 +126,28 @@ public class RecordCountRepositoryTest {
     }
 
     @Test
+    public void testCountFullCommercialOrdersWhenSuccess() {
+
+        when(commercialOrderConvertedRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countFullCommercialOrders();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountFullCommercialOrdersWhenError() {
+
+        when(commercialOrderConvertedRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countFullCommercialOrders();
+
+        Assert.assertEquals(result, -1);
+    }
+
+    @Test
     public void testCountPurchaseOrdersWhenSuccess() {
 
         when(purchaseOrderRepository.count()).thenReturn(new Long(3));
@@ -150,6 +174,7 @@ public class RecordCountRepositoryTest {
                 productRepository,
                 memberRepository,
                 commercialOrderRepository,
+                commercialOrderConvertedRepository,
                 purchaseOrderRepository,
                 warehouseOrderLineRepository
         );

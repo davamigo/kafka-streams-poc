@@ -29,7 +29,7 @@ public class TestCommercialOrderEntity {
 
         assertNull(commercialOrderEntity.getUuid());
         assertNull(commercialOrderEntity.getDatetime());
-        assertNull(commercialOrderEntity.getMemberUUid());
+        assertNull(commercialOrderEntity.getMemberUuid());
         assertNull(commercialOrderEntity.getShippingAddress());
         assertNull(commercialOrderEntity.getBillingAddress());
         assertNotNull(commercialOrderEntity.getLines());
@@ -51,7 +51,7 @@ public class TestCommercialOrderEntity {
 
         assertEquals("101", commercialOrderEntity.getUuid());
         assertEquals(date, commercialOrderEntity.getDatetime());
-        assertEquals("111", commercialOrderEntity.getMemberUUid());
+        assertEquals("111", commercialOrderEntity.getMemberUuid());
         assertEquals("ES", commercialOrderEntity.getShippingAddress().getCountry());
         assertEquals("US", commercialOrderEntity.getBillingAddress().getCountry());
         assertEquals("121", commercialOrderEntity.getLines().get(0).getUuid());

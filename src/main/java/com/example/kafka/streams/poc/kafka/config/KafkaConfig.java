@@ -2,6 +2,7 @@ package com.example.kafka.streams.poc.kafka.config;
 
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
+import com.example.kafka.streams.poc.schemas.order.CommercialOrderConverted;
 import com.example.kafka.streams.poc.schemas.product.Product;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
@@ -151,6 +152,15 @@ public class KafkaConfig {
     }
 
     /**
+     * Creates a factory for consuming CommercialOrderConverted messages from Kafka
+     *
+     * @return the default kafka consumer factory.
+     */
+    ConsumerFactory<String, CommercialOrderConverted> commercialOrderConvertedConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    }
+
+    /**
      * Creates a factory for consuming PurchaseOrder messages from Kafka
      *
      * @return the default kafka consumer factory.
@@ -243,6 +253,19 @@ public class KafkaConfig {
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrder>> commercialOrderKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, CommercialOrder> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(commercialOrderConsumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
+
+    /**
+     * Kafka listener container factory bean for consuming CommercialOrderConverted messages from Kafka
+     *
+     * @return the kafka listener container factory for consumer.
+     */
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrderConverted>> commercialOrderConvertedKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CommercialOrderConverted> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(commercialOrderConvertedConsumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }

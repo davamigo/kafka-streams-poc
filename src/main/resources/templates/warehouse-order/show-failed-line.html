@@ -20,7 +20,9 @@
     <dl>
         <dt>Uuid:</dt>
         <dd>
-            <a th:href="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" th:text="${warehouseOrderLine.getUuid()}"></a>
+            <strong>
+                <a th:href="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" th:text="${warehouseOrderLine.getUuid()}"></a>
+            </strong>
         </dd>
 
         <dt>Country:</dt>
@@ -30,9 +32,7 @@
         <dd th:text="${warehouseOrderLine.getDate()}"></dd>
 
         <dt>Product Uuid:</dt>
-        <dd>
-            <a th:href="@{/product/{id}(id=${warehouseOrderLine.getProductUuid()})}" th:text="${warehouseOrderLine.getProductUuid()}"></a>
-        </dd>
+        <dd th:text="${warehouseOrderLine.getProductUuid()}"></dd>
 
         <dt>Product Name:</dt>
         <dd th:text="${warehouseOrderLine.getProductName()}"></dd>

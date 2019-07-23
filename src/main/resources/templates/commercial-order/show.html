@@ -20,16 +20,16 @@
     <dl>
         <dt>Uuid:</dt>
         <dd>
-            <a th:href="@{/commercial-order/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+            <strong>
+                <a th:href="@{/commercial-order/new/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+            </strong>
         </dd>
 
         <dt>Date:</dt>
         <dd th:text="${commercialOrder.getDatetime()}"></dd>
 
         <dt>Member:</dt>
-        <dd>
-            <a th:href="@{/member/{id}(id=${commercialOrder.getMemberUUid()})}" th:text="${commercialOrder.getMemberUUid()}"></a>
-        </dd>
+        <dd th:text="${commercialOrder.getMemberUuid()}"></dd>
 
         <dt>Shipping Address:</dt>
         <dd>
@@ -61,7 +61,7 @@
             Commercial Order without lines!
         </dd>
         <dd th:if="${!commercialOrder.getLines().isEmpty()}">
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
                         <th>Uuid</th>
@@ -72,10 +72,8 @@
                 </thead>
                 <tbody>
                     <tr th:each="commercialOrderLine : ${commercialOrder.getLines()}">
-                        <td th:text="${commercialOrderLine.getUuid()}"></td>
-                        <td>
-                            <a th:href="@{/product/{id}(id=${commercialOrderLine.getProductUuid()})}" th:text="${commercialOrderLine.getProductUuid()}"></a>
-                        </td>
+                        <td><strong th:text="${commercialOrderLine.getUuid()}"></strong></td>
+                        <td th:text="${commercialOrderLine.getProductUuid()}"></td>
                         <td th:text="${commercialOrderLine.getPrice()}"></td>
                         <td th:text="${commercialOrderLine.getQuantity()}"></td>
                     </tr>
@@ -88,7 +86,7 @@
 <p>
     Navigation
     &ndash;
-    <a th:href="@{/commercial-order}">Show commercial orders</a>
+    <a th:href="@{/commercial-order/new}">Show commercial orders</a>
     &ndash;
     <a th:href="@{/}">Homepage</a>
 </p>

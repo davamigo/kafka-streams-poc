@@ -73,10 +73,7 @@ public class DefaultController {
         Map<String, Long> counters = recordCountRepository.countRecords();
 
         final ModelAndView mav  = new ModelAndView("default/homepage");
-        mav.addObject("productCount", counters.get("products"));
-        mav.addObject("memberCount", counters.get("members"));
-        mav.addObject("commercialOrderCount", counters.get("commercial-orders"));
-        mav.addObject("purchaseOrderCount", counters.get("purchase-orders"));
+        mav.addObject("topicCount", counters);
         mav.addObject("processesStatuses", processesStatuses);
         return mav;
     }

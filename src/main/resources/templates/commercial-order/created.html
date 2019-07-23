@@ -30,7 +30,7 @@
     </p>
     <ul th:if="${commercialOrders != null}" th:each="commercialOrder : ${commercialOrders}">
         <li>
-            <a th:href="@{/commercial-order/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+            <a th:href="@{/commercial-order/new/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
         </li>
     </ul>
 </div>
