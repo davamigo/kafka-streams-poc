@@ -109,6 +109,25 @@ public class CommercialOrderController {
     }
 
     /**
+     * GET /commercial-order/new/{id}
+     *
+     * Shows a commercial order
+     *
+     * @param uuid the uuid of the commercial order
+     * @return the model and view
+     */
+    @GetMapping("/new/{id}")
+    public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
+
+        final Optional<CommercialOrderEntity> commercialOrder = newCommercialOrderRepository.findById(uuid);
+
+        final ModelAndView mav  = new ModelAndView("commercial-order/show");
+        mav.addObject("uuid", uuid);
+        mav.addObject("commercialOrder", commercialOrder.orElse(null));
+        return mav;
+    }
+
+    /**
      * GET /commercial-order/converted
      *
      * Lists the converted commercial orders
@@ -137,25 +156,6 @@ public class CommercialOrderController {
         mav.addObject("page", page);
         mav.addObject("prev", prev);
         mav.addObject("next", next);
-        return mav;
-    }
-
-    /**
-     * GET /commercial-order/new/{id}
-     *
-     * Shows a commercial order
-     *
-     * @param uuid the uuid of the commercial order
-     * @return the model and view
-     */
-    @GetMapping("/new/{id}")
-    public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
-
-        final Optional<CommercialOrderEntity> commercialOrder = newCommercialOrderRepository.findById(uuid);
-
-        final ModelAndView mav  = new ModelAndView("commercial-order/show");
-        mav.addObject("uuid", uuid);
-        mav.addObject("commercialOrder", commercialOrder.orElse(null));
         return mav;
     }
 }

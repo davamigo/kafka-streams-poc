@@ -3,6 +3,7 @@ package com.example.kafka.streams.poc.kafka.config;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderConverted;
+import com.example.kafka.streams.poc.schemas.order.CommercialOrderLineSplit;
 import com.example.kafka.streams.poc.schemas.product.Product;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
@@ -161,6 +162,15 @@ public class KafkaConfig {
     }
 
     /**
+     * Creates a factory for consuming CommercialOrderLineSplit messages from Kafka
+     *
+     * @return the default kafka consumer factory.
+     */
+    ConsumerFactory<String, CommercialOrderLineSplit> commercialOrderLineSplitConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    }
+
+    /**
      * Creates a factory for consuming PurchaseOrder messages from Kafka
      *
      * @return the default kafka consumer factory.
@@ -266,6 +276,19 @@ public class KafkaConfig {
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrderConverted>> commercialOrderConvertedKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, CommercialOrderConverted> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(commercialOrderConvertedConsumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
+
+    /**
+     * Kafka listener container factory bean for consuming CommercialOrderLineSplit messages from Kafka
+     *
+     * @return the kafka listener container factory for consumer.
+     */
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrderLineSplit>> commercialOrderLineSplitKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, CommercialOrderLineSplit> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(commercialOrderLineSplitConsumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }

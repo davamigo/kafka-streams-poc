@@ -31,6 +31,9 @@ public class RecordCountRepositoryTest {
     private CommercialOrderConvertedRepository commercialOrderConvertedRepository;
 
     @Mock
+    private CommercialOrderLineSplitRepository commercialOrderLineSplitRepository;
+
+    @Mock
     private PurchaseOrderRepository purchaseOrderRepository;
 
     @Mock
@@ -148,6 +151,28 @@ public class RecordCountRepositoryTest {
     }
 
     @Test
+    public void testCountCommercialOrderLinesWhenSuccess() {
+
+        when(commercialOrderLineSplitRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countCommercialOrderLines();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountCommercialOrderLinesWhenError() {
+
+        when(commercialOrderLineSplitRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countCommercialOrderLines();
+
+        Assert.assertEquals(result, -1);
+    }
+
+    @Test
     public void testCountPurchaseOrdersWhenSuccess() {
 
         when(purchaseOrderRepository.count()).thenReturn(new Long(3));
@@ -175,6 +200,7 @@ public class RecordCountRepositoryTest {
                 memberRepository,
                 commercialOrderRepository,
                 commercialOrderConvertedRepository,
+                commercialOrderLineSplitRepository,
                 purchaseOrderRepository,
                 warehouseOrderLineRepository
         );

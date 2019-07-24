@@ -192,9 +192,7 @@ public class CommercialOrderConverted {
      */
     public static class Builder {
 
-        /**
-         * The commercial order converted object
-         */
+        /** The commercial order converted object */
         private CommercialOrderConverted order;
 
         /**
@@ -235,9 +233,9 @@ public class CommercialOrderConverted {
         }
 
         /**
-         * Copy data from an Avro commercial order object
+         * Copy data from an Avro commercial order converted object
          *
-         * @param order the Avro source commercial order
+         * @param order the Avro source commercial converted order
          * @return this
          */
         public Builder set(com.example.kafka.streams.poc.schemas.order.CommercialOrderConverted order) {

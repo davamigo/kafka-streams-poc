@@ -13,7 +13,7 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.test.annotation.DirtiesContext;
 
 /**
- * Unit tests for NewCommercialOrdersConvertedKafkaConsumer class
+ * Unit tests for ConvertedCommercialOrdersKafkaConsumer class
  */
 @SpringBootTest
 @DirtiesContext
@@ -21,7 +21,7 @@ import org.springframework.test.annotation.DirtiesContext;
 public class TestConvertedCommercialOrdersKafkaConsumer {
 
     @Mock
-    ConvertedCommercialOrderReceptionProcessorInterface convertedCommercialOrderReceptionProcessorInterface;
+    ConvertedCommercialOrderReceptionProcessorInterface convertedCommercialOrderReceptionProcessor;
 
     @Mock
     Acknowledgment ack;
@@ -33,11 +33,11 @@ public class TestConvertedCommercialOrdersKafkaConsumer {
         CommercialOrderConverted order = getTestCommercialOrderConverted();
 
         // Run the test
-        ConvertedCommercialOrdersKafkaConsumer convertedCommercialOrdersKafkaConsumer = new ConvertedCommercialOrdersKafkaConsumer(convertedCommercialOrderReceptionProcessorInterface);
+        ConvertedCommercialOrdersKafkaConsumer convertedCommercialOrdersKafkaConsumer = new ConvertedCommercialOrdersKafkaConsumer(convertedCommercialOrderReceptionProcessor);
         convertedCommercialOrdersKafkaConsumer.listen(order, ack, "101", "ttt");
 
         // Assertions
-        Mockito.verify(convertedCommercialOrderReceptionProcessorInterface, Mockito.times(1)).process(Mockito.any(
+        Mockito.verify(convertedCommercialOrderReceptionProcessor, Mockito.times(1)).process(Mockito.any(
                 com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderConverted.class
         ));
 
@@ -50,14 +50,14 @@ public class TestConvertedCommercialOrdersKafkaConsumer {
         // Prepare test data
         CommercialOrderConverted order = getTestCommercialOrderConverted();
 
-        Mockito.doThrow(new ProcessorException("_msg_")).when(convertedCommercialOrderReceptionProcessorInterface).process(Mockito.any());
+        Mockito.doThrow(new ProcessorException("_msg_")).when(convertedCommercialOrderReceptionProcessor).process(Mockito.any());
 
         // Run the test
-        ConvertedCommercialOrdersKafkaConsumer convertedCommercialOrdersKafkaConsumer = new ConvertedCommercialOrdersKafkaConsumer(convertedCommercialOrderReceptionProcessorInterface);
+        ConvertedCommercialOrdersKafkaConsumer convertedCommercialOrdersKafkaConsumer = new ConvertedCommercialOrdersKafkaConsumer(convertedCommercialOrderReceptionProcessor);
         convertedCommercialOrdersKafkaConsumer.listen(order, ack, "101", "ttt");
 
         // Assertions
-        Mockito.verify(convertedCommercialOrderReceptionProcessorInterface, Mockito.times(1)).process(Mockito.any(
+        Mockito.verify(convertedCommercialOrderReceptionProcessor, Mockito.times(1)).process(Mockito.any(
                 com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrderConverted.class
         ));
 

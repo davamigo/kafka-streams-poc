@@ -37,7 +37,7 @@ public class ConvertedCommercialOrdersKafkaConsumer {
     /**
      * Kafka listener
      *
-     * @param order The data of the commercial order
+     * @param order The data of the converted commercial order
      * @param ack   The acknowledgment object
      * @param key   The key of the message in the topic
      * @param topic The name of the topic

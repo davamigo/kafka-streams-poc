@@ -3,6 +3,7 @@ package com.example.kafka.streams.poc.kafka.config;
 import com.example.kafka.streams.poc.schemas.member.Member;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrder;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderConverted;
+import com.example.kafka.streams.poc.schemas.order.CommercialOrderLineSplit;
 import com.example.kafka.streams.poc.schemas.product.Product;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
@@ -176,6 +177,17 @@ public class TestKafkaConfig {
     }
 
     @Test
+    public void testCommercialOrderLineSplitConsumerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        ConsumerFactory<String, CommercialOrderLineSplit> factory = kafkaConfig.commercialOrderLineSplitConsumerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
     public void testWarehouseOrderLineConsumerFactory() {
 
         // Run the test
@@ -280,6 +292,17 @@ public class TestKafkaConfig {
         // Run the test
         KafkaConfig kafkaConfig = new KafkaConfig(environment);
         KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrderConverted>> factory = kafkaConfig.commercialOrderConvertedKafkaListenerContainerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testCommercialOrderLineSplitKafkaListenerContainerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, CommercialOrderLineSplit>> factory = kafkaConfig.commercialOrderLineSplitKafkaListenerContainerFactory();
 
         // Assertions
         assertNotNull(factory);
