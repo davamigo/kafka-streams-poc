@@ -7,6 +7,14 @@
 <body>
 <h1>Kafka Streams PoC</h1>
 <h2>Homepage</h2>
+
+<h3>Demo</h3>
+<ul>
+    <li>
+        <a th:href="@{/demo}">Show demo page</a>
+    </li>
+</ul>
+
 <h3>Generators</h3>
 <ul>
     <li>
@@ -18,10 +26,10 @@
     </li>
 </ul>
 
-<h3>Data lists</h3>
+<h3>Data in topics</h3>
 <ul>
     <li>
-        <a th:href="@{/commercial-order/new}">Show commercial orders</a>
+        <a th:href="@{/commercial-order/new-orders}">Show commercial orders</a>
         (<span th:text="${topicCount['commercial-orders']}"></span>)
     </li>
     <li>
@@ -36,6 +44,10 @@
     <li>
         <a th:href="@{/commercial-order/converted}">Show converted commercial orders</a>
         (<span th:text="${topicCount['full-commercial-orders']}"></span>)
+    </li>
+    <li>
+        <a th:href="@{/commercial-order/lines-split}">Show split commercial order lines</a>
+        (<span th:text="${topicCount['commercial-order-lines']}"></span>)
     </li>
     <li>
         <a th:href="@{/purchase-order}">Show purchase orders</a>

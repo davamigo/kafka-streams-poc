@@ -17,6 +17,7 @@ window.onload = function() {
     var $membersTopicBox = $('#svg-members-topic-box', $svgDocument);
     var $commercialOrdersTopicBox = $('#svg-commercial-orders-topic-box', $svgDocument);
     var $convertedCommercialOrdersTopicBox = $('#svg-full-commercial-orders-topic-box', $svgDocument);
+    var $splitCommercialOrderLinesTopicBox = $('#svg-commercial-order-lines-topic-box', $svgDocument);
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
 
     var $topicContentModal = $('#js-modal-topics-content');
@@ -76,6 +77,12 @@ window.onload = function() {
     $convertedCommercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.data('getConvertedCommercialOrdersUrl');
+        loadTopicContent(url);
+    });
+
+    $splitCommercialOrderLinesTopicBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.data('getSplitCommercialOrderLinesUrl');
         loadTopicContent(url);
     });
 
@@ -153,44 +160,49 @@ window.onload = function() {
     };
 
     var loadTopicContent = function(url) {
-        $.get(url)
-            .done(function (response) {
-                var $title = $('#js-modal-topics-content-title', response);
-                $topicContentTitle.html($title.text());
+        if (url === "" || url == null || typeof url == 'undefined') {
+            showError('Can\'t get data from the server. Invalid URL!');
+        }
+        else {
+            $.get(url)
+                .done(function (response) {
+                    var $title = $('#js-modal-topics-content-title', response);
+                    $topicContentTitle.html($title.text());
 
-                var $error = $('#js-modal-topics-content-error', response);
-                if ($error.length > 0) {
-                    var alert = '<tr><td><div class="alert alert-danger" role="alert">' + $error.html() + '</div></td></tr>';
-                    $topicContentTable.html(alert);
-                    $topicContentTotal.html('');
-                    $topicContentButtonFirst.prop('disabled', true);
-                    $topicContentButtonPrev.prop('disabled', true);
-                    $topicContentButtonNext.prop('disabled', true);
-                } else {
-                    var $table = $('#js-modal-topics-content-table', response);
-                    var $total = $('#js-modal-topics-content-total', response);
-                    $topicContentTable.replaceWith($table);
-                    $topicContentTotal.replaceWith($total);
-                    $topicContentTable = $('#js-modal-topics-content-table');
-                    $topicContentTotal = $('#js-modal-topics-content-total');
+                    var $error = $('#js-modal-topics-content-error', response);
+                    if ($error.length > 0) {
+                        var alert = '<tr><td><div class="alert alert-danger" role="alert">' + $error.html() + '</div></td></tr>';
+                        $topicContentTable.html(alert);
+                        $topicContentTotal.html('');
+                        $topicContentButtonFirst.prop('disabled', true);
+                        $topicContentButtonPrev.prop('disabled', true);
+                        $topicContentButtonNext.prop('disabled', true);
+                    } else {
+                        var $table = $('#js-modal-topics-content-table', response);
+                        var $total = $('#js-modal-topics-content-total', response);
+                        $topicContentTable.replaceWith($table);
+                        $topicContentTotal.replaceWith($total);
+                        $topicContentTable = $('#js-modal-topics-content-table');
+                        $topicContentTotal = $('#js-modal-topics-content-total');
 
-                    var $targetLink = $('#js-modal-topics-content-first', response);
-                    setButtonClickHandler($topicContentButtonFirst, $targetLink.attr('href'));
+                        var $targetLink = $('#js-modal-topics-content-first', response);
+                        setButtonClickHandler($topicContentButtonFirst, $targetLink.attr('href'));
 
-                    $targetLink = $('#js-modal-topics-content-prev', response);
-                    setButtonClickHandler($topicContentButtonPrev, $targetLink.attr('href'));
+                        $targetLink = $('#js-modal-topics-content-prev', response);
+                        setButtonClickHandler($topicContentButtonPrev, $targetLink.attr('href'));
 
-                    $targetLink = $('#js-modal-topics-content-next', response);
-                    setButtonClickHandler($topicContentButtonNext, $targetLink.attr('href'));
-                }
+                        $targetLink = $('#js-modal-topics-content-next', response);
+                        setButtonClickHandler($topicContentButtonNext, $targetLink.attr('href'));
+                    }
 
-                $topicContentModal.modal('show');
-            })
-            .fail(function (xhr) {
-                var defaultMsg = 'An error occurred getting data from the server!';
-                var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
-                showError(msg);
-            });
+                    $topicContentModal.modal('show');
+                })
+                .fail(function (xhr) {
+                    var defaultMsg = 'An error occurred getting data from the server!';
+                    var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
+                    showError(msg);
+                });
+        }
     };
 
     var setButtonClickHandler = function($button, url) {

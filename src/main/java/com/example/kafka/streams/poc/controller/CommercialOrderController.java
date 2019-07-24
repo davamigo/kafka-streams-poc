@@ -3,7 +3,9 @@ package com.example.kafka.streams.poc.controller;
 import com.example.kafka.streams.poc.domain.entity.commercialorder.CommercialOrder;
 import com.example.kafka.streams.poc.mongodb.entity.CommercialOrderConvertedEntity;
 import com.example.kafka.streams.poc.mongodb.entity.CommercialOrderEntity;
+import com.example.kafka.streams.poc.mongodb.entity.CommercialOrderLineSplitEntity;
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderConvertedRepository;
+import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderLineSplitRepository;
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderRepository;
 import com.example.kafka.streams.poc.service.producer.commercialorder.RandomCommercialOrderProducer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,22 +35,28 @@ public class CommercialOrderController {
     /** The mongoDB repository where to retrieve the converted commercial orders */
     private final CommercialOrderConvertedRepository convertedCommercialOrderRepository;
 
+    /** The mongoDB repository where to retrieve the split commercial order lines */
+    private final CommercialOrderLineSplitRepository splitCommercialOrderLineRepository;
+
     /**
      * Autowired constructor
      *
-     * @param randomCommercialOrderProducer service to produce commercial orders
-     * @param newCommercialOrderRepository the mongoDB new commercial order repository
+     * @param randomCommercialOrderProducer      the service to produce commercial orders
+     * @param newCommercialOrderRepository       the mongoDB new commercial order repository
      * @param convertedCommercialOrderRepository the mongoDB converted commercial order repository
+     * @param splitCommercialOrderLineRepository the mongoDB split commercial order line repository
      */
     @Autowired
     public CommercialOrderController(
             RandomCommercialOrderProducer randomCommercialOrderProducer,
             CommercialOrderRepository newCommercialOrderRepository,
-            CommercialOrderConvertedRepository convertedCommercialOrderRepository
+            CommercialOrderConvertedRepository convertedCommercialOrderRepository,
+            CommercialOrderLineSplitRepository splitCommercialOrderLineRepository
     ) {
         this.randomCommercialOrderProducer = randomCommercialOrderProducer;
         this.newCommercialOrderRepository = newCommercialOrderRepository;
         this.convertedCommercialOrderRepository = convertedCommercialOrderRepository;
+        this.splitCommercialOrderLineRepository = splitCommercialOrderLineRepository;
     }
 
     /**
@@ -77,15 +85,15 @@ public class CommercialOrderController {
     }
 
     /**
-     * GET /commercial-order/new
+     * GET /commercial-order/new-orders
      *
-     * Lists the commercial orders
+     * Lists the new commercial orders
      *
      * @param size  the page size (default = 15)
      * @param page  the page number (default = 0)
      * @return the model and view
      */
-    @GetMapping("/new")
+    @GetMapping("/new-orders")
     public ModelAndView getNewOrdersAction(
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
@@ -109,19 +117,19 @@ public class CommercialOrderController {
     }
 
     /**
-     * GET /commercial-order/new/{id}
+     * GET /commercial-order/new-orders/{id}
      *
-     * Shows a commercial order
+     * Shows a new commercial order
      *
      * @param uuid the uuid of the commercial order
      * @return the model and view
      */
-    @GetMapping("/new/{id}")
-    public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
+    @GetMapping("/new-orders/{id}")
+    public ModelAndView getNewOrdersAction(@PathVariable("id") String uuid) {
 
         final Optional<CommercialOrderEntity> commercialOrder = newCommercialOrderRepository.findById(uuid);
 
-        final ModelAndView mav  = new ModelAndView("commercial-order/show");
+        final ModelAndView mav  = new ModelAndView("commercial-order/show-new");
         mav.addObject("uuid", uuid);
         mav.addObject("commercialOrder", commercialOrder.orElse(null));
         return mav;
@@ -156,6 +164,76 @@ public class CommercialOrderController {
         mav.addObject("page", page);
         mav.addObject("prev", prev);
         mav.addObject("next", next);
+        return mav;
+    }
+
+    /**
+     * GET /commercial-order/converted/{id}
+     *
+     * Shows a converted commercial order
+     *
+     * @param uuid the uuid of the commercial order
+     * @return the model and view
+     */
+    @GetMapping("/converted/{id}")
+    public ModelAndView getConvertedOrdersAction(@PathVariable("id") String uuid) {
+
+        final Optional<CommercialOrderConvertedEntity> commercialOrder = convertedCommercialOrderRepository.findById(uuid);
+
+        final ModelAndView mav  = new ModelAndView("commercial-order/show-converted");
+        mav.addObject("uuid", uuid);
+        mav.addObject("commercialOrder", commercialOrder.orElse(null));
+        return mav;
+    }
+
+    /**
+     * GET /commercial-order/lines-split
+     *
+     * Lists the split commercial order liness
+     *
+     * @param size  the page size (default = 15)
+     * @param page  the page number (default = 0)
+     * @return the model and view
+     */
+    @GetMapping("/lines-split")
+    public ModelAndView getSplitOrderLinessAction(
+            @RequestParam(value="size", required=false, defaultValue="15") int size,
+            @RequestParam(value="page", required=false, defaultValue="0") int page
+    )  {
+        final List<CommercialOrderLineSplitEntity> lines = splitCommercialOrderLineRepository
+                .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "datetime")))
+                .getContent();
+
+        final long count = splitCommercialOrderLineRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
+
+        final ModelAndView mav  = new ModelAndView("commercial-order/list-lines-split");
+        mav.addObject("lines", lines);
+        mav.addObject("count", count);
+        mav.addObject("size", size);
+        mav.addObject("page", page);
+        mav.addObject("prev", prev);
+        mav.addObject("next", next);
+        return mav;
+    }
+
+    /**
+     * GET /commercial-order/lines-split/{id}
+     *
+     * Shows a split commercial order line
+     *
+     * @param uuid the uuid of the commercial order line
+     * @return the model and view
+     */
+    @GetMapping("/lines-split/{id}")
+    public ModelAndView getSplitOrderLinessAction(@PathVariable("id") String uuid) {
+
+        final Optional<CommercialOrderLineSplitEntity> line = splitCommercialOrderLineRepository.findById(uuid);
+
+        final ModelAndView mav  = new ModelAndView("commercial-order/show-lines-split");
+        mav.addObject("uuid", uuid);
+        mav.addObject("line", line.orElse(null));
         return mav;
     }
 }

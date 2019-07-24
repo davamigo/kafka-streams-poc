@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Commercial Order Line Split - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Commercial Order Line Split</h2>
+
+<div th:if="${null == line}">
+    <p>
+        The commercial order line split with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != line}">
+    <dl>
+        <dt>Uuid:</dt>
+        <dd>
+            <strong>
+                <a th:href="@{/commercial-order/lines-split/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
+            </strong>
+        </dd>
+
+        <dt>Commercial Order Uuid:</dt>
+        <dd th:text="${line.getCommercialOrderUuid()}"></dd>
+
+        <dt>Commercial Order Date:</dt>
+        <dd th:text="${line.getCommercialOrderDatetime()}"></dd>
+
+        <dt>Shipping Country:</dt>
+        <dd th:text="${line.getShippingCountry()}"></dd>
+
+        <dt>Member Uuid:</dt>
+        <dd th:text="${line.getMemberUuid()}"></dd>
+
+        <dt>Product Uuid:</dt>
+        <dd th:text="${line.getProductUuid()}"></dd>
+
+        <dt>Product Name:</dt>
+        <dd th:text="${line.getProductName()}"></dd>
+
+        <dt>Product Type:</dt>
+        <dd th:text="${line.getProductType()}"></dd>
+
+        <dt>Product Bar Code:</dt>
+        <dd th:text="${line.getProductBarCode()}"></dd>
+
+        <dt>Product Price:</dt>
+        <dd th:text="${line.getProductPrice()}"></dd>
+
+        <dt>Sell Price:</dt>
+        <dd th:text="${line.getOrderLinePrice()}"></dd>
+
+        <dt>Quantity:</dt>
+        <dd th:text="${line.getQuantity()}"></dd>
+
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/commercial-order/lines-split}">Show commercial order liness split</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

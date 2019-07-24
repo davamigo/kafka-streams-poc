@@ -21,7 +21,7 @@
         <dt>Uuid:</dt>
         <dd>
             <strong>
-                <a th:href="@{/commercial-order/new/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+                <a th:href="@{/commercial-order/new-orders/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
             </strong>
         </dd>
 
@@ -86,7 +86,7 @@
 <p>
     Navigation
     &ndash;
-    <a th:href="@{/commercial-order/new}">Show commercial orders</a>
+    <a th:href="@{/commercial-order/new-orders}">Show commercial orders</a>
     &ndash;
     <a th:href="@{/}">Homepage</a>
 </p>

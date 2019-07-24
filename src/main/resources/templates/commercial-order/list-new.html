@@ -32,7 +32,7 @@
             <tr th:each="commercialOrder : ${commercialOrders}">
                 <td class="text-monospace">
                     <strong>
-                        <a th:href="@{/commercial-order/new/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+                        <a th:href="@{/commercial-order/new-orders/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
                     </strong>
                 </td>
                 <td class="text-monospace" th:text="${commercialOrder.getDatetime()}"></td>
@@ -65,13 +65,13 @@
         Pagination
         <span th:if="${prev < page}">
             &ndash;
-            <a id="js-modal-topics-content-first" th:href="@{/commercial-order/new(page=0,size=${size})}">First</a>
+            <a id="js-modal-topics-content-first" th:href="@{/commercial-order/new-orders(page=0,size=${size})}">First</a>
             &ndash;
-            <a id="js-modal-topics-content-prev" th:href="@{/commercial-order/new(page=${prev},size=${size})}">Prev</a>
+            <a id="js-modal-topics-content-prev" th:href="@{/commercial-order/new-orders(page=${prev},size=${size})}">Prev</a>
         </span>
         <span th:if="${next > page}">
             &ndash;
-            <a id="js-modal-topics-content-next" th:href="@{/commercial-order/new(page=${next},size=${size})}">Next</a>
+            <a id="js-modal-topics-content-next" th:href="@{/commercial-order/new-orders(page=${next},size=${size})}">Next</a>
         </span>
     </p>
 </div>

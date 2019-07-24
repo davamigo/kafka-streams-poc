@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Commercial Order Converted - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Commercial Order Converted</h2>
+
+<div th:if="${null == commercialOrder}">
+    <p>
+        The commercial order converted with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != commercialOrder}">
+    <dl>
+        <dt>Uuid:</dt>
+        <dd>
+            <strong>
+                <a th:href="@{/commercial-order/converted/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+            </strong>
+        </dd>
+
+        <dt>Date:</dt>
+        <dd th:text="${commercialOrder.getDatetime()}"></dd>
+
+        <dt>Member Uuid:</dt>
+        <dd th:text="${commercialOrder.getMemberUuid()}"></dd>
+
+        <dt>Member First Name:</dt>
+        <dd th:text="${commercialOrder.getMemberFirstName()}"></dd>
+
+        <dt>Member Last Name:</dt>
+        <dd th:text="${commercialOrder.getMemberLastName()}"></dd>
+
+        <dt>Shipping Country:</dt>
+        <dd th:text="${commercialOrder.getShippingCountry()}"></dd>
+
+        <dt>Shipping City:</dt>
+        <dd th:text="${commercialOrder.getShippingCity()}"></dd>
+
+        <dt>Shipping Zip Code:</dt>
+        <dd th:text="${commercialOrder.getShippingZipCode()}"></dd>
+
+        <dt>Total Amount:</dt>
+        <dd th:text="${commercialOrder.getTotalAmount()}"></dd>
+
+        <dt>Total Quantity:</dt>
+        <dd th:text="${commercialOrder.getTotalQuantity()}"></dd>
+
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/commercial-order/converted}">Show commercial orders converted</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
