@@ -9,17 +9,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 /**
- * Unit test for PurchaseOrderLine.Builder class
+ * Unit test for PurchaseOrderLineCondensed.Builder class
  */
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class TestPurchaseOrderLineBuilder {
+public class TestPurchaseOrderLineCondensedBuilder {
 
     @Test
     public void testBuiderSettersReturnExpectedResults() {
 
-        PurchaseOrderLine.Builder builder = PurchaseOrderLine.newBuilder();
-        PurchaseOrderLine line = builder
+        PurchaseOrderLineCondensed.Builder builder = PurchaseOrderLineCondensed.newBuilder();
+        PurchaseOrderLineCondensed line = builder
                 .setUuid("101")
                 .setAggregationKey("102")
                 .setProductUuid("103")
@@ -37,9 +37,9 @@ public class TestPurchaseOrderLineBuilder {
     @Test
     public void testSetCopiesTheContentFromSourceObject() {
 
-        PurchaseOrderLine source = new PurchaseOrderLine("201", "202", "203", 204f, 205);
-        PurchaseOrderLine.Builder builder = PurchaseOrderLine.newBuilder().set(source);
-        PurchaseOrderLine line = builder.build();
+        PurchaseOrderLineCondensed source = new PurchaseOrderLineCondensed("201", "202", "203", 204f, 205);
+        PurchaseOrderLineCondensed.Builder builder = PurchaseOrderLineCondensed.newBuilder().set(source);
+        PurchaseOrderLineCondensed line = builder.build();
 
         assertEquals(source, line);
         assertNotSame(source, line);
@@ -62,7 +62,7 @@ public class TestPurchaseOrderLineBuilder {
                         .setQuantity(305)
                         .build();
 
-        PurchaseOrderLine line = PurchaseOrderLine.newBuilder().set(sourceLine).build();
+        PurchaseOrderLineCondensed line = PurchaseOrderLineCondensed.newBuilder().set(sourceLine).build();
 
         assertEquals("301", line.getUuid());
         assertEquals("302", line.getAggregationKey());

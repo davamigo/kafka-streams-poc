@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Purchase order line domain entity
  */
-public class PurchaseOrderLine {
+public class PurchaseOrderLineCondensed {
 
     /** The unique identifier of the purchase order line */
     private String uuid;
@@ -25,7 +25,7 @@ public class PurchaseOrderLine {
     /**
      * Default constructor
      */
-    public PurchaseOrderLine() {
+    public PurchaseOrderLineCondensed() {
         this.uuid = null;
         this.aggregationKey = null;
         this.productUuid = null;
@@ -42,7 +42,7 @@ public class PurchaseOrderLine {
      * @param price          the unit price for the product in the purchase order line
      * @param quantity       the quantity of the product in the purchase order line
      */
-    public PurchaseOrderLine(
+    public PurchaseOrderLineCondensed(
             String uuid,
             String aggregationKey,
             String productUuid,
@@ -100,11 +100,11 @@ public class PurchaseOrderLine {
     @Override
     public boolean equals(Object obj) {
 
-        if (!(obj instanceof PurchaseOrderLine) || this.uuid == null) {
+        if (!(obj instanceof PurchaseOrderLineCondensed) || this.uuid == null) {
             return false;
         }
 
-        return Objects.equals(this.uuid, ((PurchaseOrderLine) obj).uuid);
+        return Objects.equals(this.uuid, ((PurchaseOrderLineCondensed) obj).uuid);
     }
 
     /**
@@ -123,13 +123,13 @@ public class PurchaseOrderLine {
     public static class Builder {
 
         /** The purchase order line object */
-        private PurchaseOrderLine line;
+        private PurchaseOrderLineCondensed line;
 
         /**
          * Default constructor
          */
         public Builder() {
-            this.line = new PurchaseOrderLine();
+            this.line = new PurchaseOrderLineCondensed();
         }
 
         /**
@@ -137,7 +137,7 @@ public class PurchaseOrderLine {
          *
          * @return the purchase order line object
          */
-        public PurchaseOrderLine build() {
+        public PurchaseOrderLineCondensed build() {
             return line;
         }
 
@@ -147,7 +147,7 @@ public class PurchaseOrderLine {
          * @param line the source purchase order line
          * @return this
          */
-        public Builder set(PurchaseOrderLine line) {
+        public Builder set(PurchaseOrderLineCondensed line) {
             return this
                     .setUuid(line.getUuid())
                     .setAggregationKey(line.getAggregationKey())

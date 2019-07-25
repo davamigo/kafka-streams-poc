@@ -29,7 +29,7 @@ public class PurchaseOrder {
     private int totalQuantity;
 
     /** The purchase order lines */
-    private List<PurchaseOrderLine> lines;
+    private List<PurchaseOrderLineCondensed> lines;
 
     /**
      * Default constructor
@@ -62,7 +62,7 @@ public class PurchaseOrder {
             Date date,
             float totalAmount,
             int totalQuantity,
-            List<PurchaseOrderLine> lines
+            List<PurchaseOrderLineCondensed> lines
     ) {
         this.uuid = uuid;
         this.aggregationKey = aggregationKey;
@@ -118,7 +118,7 @@ public class PurchaseOrder {
     /**
      * @return the purchase order lines
      */
-    public List<PurchaseOrderLine> getLines() {
+    public List<PurchaseOrderLineCondensed> getLines() {
         return lines;
     }
 
@@ -200,9 +200,9 @@ public class PurchaseOrder {
 
             Date date = new Date(order.getDate());
 
-            List<PurchaseOrderLine> lines = new ArrayList<>();
+            List<PurchaseOrderLineCondensed> lines = new ArrayList<>();
             for (com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed sourceLine : order.getLines()) {
-                lines.add(PurchaseOrderLine.newBuilder().set(sourceLine).build());
+                lines.add(PurchaseOrderLineCondensed.newBuilder().set(sourceLine).build());
             }
 
             return this
@@ -285,7 +285,7 @@ public class PurchaseOrder {
          * @param line the new order line
          * @return this
          */
-        public  Builder addLine(PurchaseOrderLine line) {
+        public  Builder addLine(PurchaseOrderLineCondensed line) {
             this.order.lines.add(line);
             return this;
         }
@@ -294,7 +294,7 @@ public class PurchaseOrder {
          * @param lines the purchase order lines
          * @return this
          */
-        public Builder setLines(List<PurchaseOrderLine> lines) {
+        public Builder setLines(List<PurchaseOrderLineCondensed> lines) {
             this.order.lines = lines != null ? new ArrayList<>(lines) : new ArrayList<>();
             return this;
         }

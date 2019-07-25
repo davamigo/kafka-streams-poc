@@ -43,8 +43,8 @@ public class TestPurchaseOrderBuilder {
     @Test
     public void testSetCopiesTheContentFromSourceObject() {
 
-        PurchaseOrderLine line = PurchaseOrderLine.newBuilder().setUuid("211").build();
-        List<PurchaseOrderLine> lines = new ArrayList<>();
+        PurchaseOrderLineCondensed line = PurchaseOrderLineCondensed.newBuilder().setUuid("211").build();
+        List<PurchaseOrderLineCondensed> lines = new ArrayList<>();
         lines.add(line);
 
         PurchaseOrder source = new PurchaseOrder("201", "202", "203", new Date(204), 205f, 206, lines);
@@ -109,9 +109,9 @@ public class TestPurchaseOrderBuilder {
     @Test
     public void testSetLines() {
 
-        PurchaseOrderLine purchaseOrderLine1 = PurchaseOrderLine.newBuilder().setUuid("411").build();
-        PurchaseOrderLine purchaseOrderLine2 = PurchaseOrderLine.newBuilder().setUuid("421").build();
-        List<PurchaseOrderLine> lines = new ArrayList<>();
+        PurchaseOrderLineCondensed purchaseOrderLine1 = PurchaseOrderLineCondensed.newBuilder().setUuid("411").build();
+        PurchaseOrderLineCondensed purchaseOrderLine2 = PurchaseOrderLineCondensed.newBuilder().setUuid("421").build();
+        List<PurchaseOrderLineCondensed> lines = new ArrayList<>();
         lines.add(purchaseOrderLine1);
         lines.add(purchaseOrderLine2);
 
@@ -128,8 +128,8 @@ public class TestPurchaseOrderBuilder {
     @Test
     public void testAddLines() {
 
-        PurchaseOrderLine purchaseOrderLine1 = PurchaseOrderLine.newBuilder().setUuid("521").build();
-        PurchaseOrderLine purchaseOrderLine2 = PurchaseOrderLine.newBuilder().setUuid("521").build();
+        PurchaseOrderLineCondensed purchaseOrderLine1 = PurchaseOrderLineCondensed.newBuilder().setUuid("521").build();
+        PurchaseOrderLineCondensed purchaseOrderLine2 = PurchaseOrderLineCondensed.newBuilder().setUuid("521").build();
 
         PurchaseOrder.Builder builder = PurchaseOrder.newBuilder();
         PurchaseOrder purchaseOrder = builder
@@ -146,7 +146,7 @@ public class TestPurchaseOrderBuilder {
     public void testClearPurchaseOrderLine() {
 
         PurchaseOrder purchaseOrder = PurchaseOrder.newBuilder()
-                .addLine(new PurchaseOrderLine())
+                .addLine(new PurchaseOrderLineCondensed())
                 .clearLines()
                 .build();
 

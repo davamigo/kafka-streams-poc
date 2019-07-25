@@ -1,7 +1,7 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
 import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder;
-import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLine;
+import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLineCondensed;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -57,7 +57,7 @@ public class PurchaseOrderEntity {
         this.totalAmount = source.getTotalAmount();
         this.totalQuantity = source.getTotalQuantity();
         this.lines = new ArrayList<>();
-        for (PurchaseOrderLine line : source.getLines()) {
+        for (PurchaseOrderLineCondensed line : source.getLines()) {
             this.lines.add(new PurchaseOrderLineEntity(line));
         }
     }

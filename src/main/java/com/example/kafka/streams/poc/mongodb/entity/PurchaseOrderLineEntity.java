@@ -1,6 +1,6 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
-import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLine;
+import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLineCondensed;
 
 /**
  * Purchase order line MongoDB entity
@@ -33,7 +33,7 @@ public class PurchaseOrderLineEntity {
      *
      * @param source the source purchase order line object
      */
-    public PurchaseOrderLineEntity(PurchaseOrderLine source) {
+    public PurchaseOrderLineEntity(PurchaseOrderLineCondensed source) {
         this.uuid = source.getUuid();
         this.aggregationKey = source.getAggregationKey();
         this.productUuid = source.getProductUuid();

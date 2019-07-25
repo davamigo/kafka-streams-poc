@@ -8,15 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.Assert.*;
 
 /**
- * Unit test for PurchaseOrderLine domain entity
+ * Unit test for PurchaseOrderLineCondensed domain entity
  */
 @SpringBootTest
 @RunWith(MockitoJUnitRunner.class)
-public class TestPurchaseOrderLine {
+public class TestPurchaseOrderLineCondensed {
 
     @Test
     public void testDefaultConstructor() {
-        PurchaseOrderLine line = new PurchaseOrderLine();
+        PurchaseOrderLineCondensed line = new PurchaseOrderLineCondensed();
 
         assertNull(line.getUuid());
         assertNull(line.getAggregationKey());
@@ -27,7 +27,7 @@ public class TestPurchaseOrderLine {
 
     @Test
     public void testCompleteConstructor() {
-        PurchaseOrderLine line = new PurchaseOrderLine("101", "102", "103", 104f, 105);
+        PurchaseOrderLineCondensed line = new PurchaseOrderLineCondensed("101", "102", "103", 104f, 105);
 
         assertEquals("101", line.getUuid());
         assertEquals("102", line.getAggregationKey());
@@ -38,8 +38,8 @@ public class TestPurchaseOrderLine {
 
     @Test
     public void testTwoLinesAreEqualWhenTheyHaveTheSameKey() {
-        PurchaseOrderLine line1 = new PurchaseOrderLine("201", "202", "203", 204f, 205);
-        PurchaseOrderLine line2 = new PurchaseOrderLine("201", "212", "203", 214f, 215);
+        PurchaseOrderLineCondensed line1 = new PurchaseOrderLineCondensed("201", "202", "203", 204f, 205);
+        PurchaseOrderLineCondensed line2 = new PurchaseOrderLineCondensed("201", "212", "203", 214f, 215);
 
         assertEquals(line1, line2);
         assertNotSame(line1, line2);
@@ -47,15 +47,15 @@ public class TestPurchaseOrderLine {
 
     @Test
     public void testTwoPurchaseOrderLinesAreDifferentWhenTheyHaveDifferentKey() {
-        PurchaseOrderLine line1 = new PurchaseOrderLine("301", "302", "303", 304f, 305);
-        PurchaseOrderLine line2 = new PurchaseOrderLine("401", "302", "303", 304f, 305);
+        PurchaseOrderLineCondensed line1 = new PurchaseOrderLineCondensed("301", "302", "303", 304f, 305);
+        PurchaseOrderLineCondensed line2 = new PurchaseOrderLineCondensed("401", "302", "303", 304f, 305);
 
         assertNotEquals(line1, line2);
     }
 
     @Test
     public void testEqualsWithNonPurchaseOrderLine() {
-        PurchaseOrderLine purchaseOrderLine = new PurchaseOrderLine();
+        PurchaseOrderLineCondensed purchaseOrderLine = new PurchaseOrderLineCondensed();
 
         assertNotEquals(purchaseOrderLine, new String());
     }

@@ -1,7 +1,7 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
 import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrder;
-import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLine;
+import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLineCondensed;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -37,8 +37,8 @@ public class TestPurchaseOrderEntity {
     @Test
     public void testCopyConstructor() {
 
-        List<PurchaseOrderLine> lines = new ArrayList<>();
-        PurchaseOrderLine  line = PurchaseOrderLine.newBuilder().setUuid("121").build();
+        List<PurchaseOrderLineCondensed> lines = new ArrayList<>();
+        PurchaseOrderLineCondensed line = PurchaseOrderLineCondensed.newBuilder().setUuid("121").build();
         lines.add(line);
 
         PurchaseOrder purchaseOrder = new PurchaseOrder("101", "102", "103", new Date(104), 105f, 106, lines);

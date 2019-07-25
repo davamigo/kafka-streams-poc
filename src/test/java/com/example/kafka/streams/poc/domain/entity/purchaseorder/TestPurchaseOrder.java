@@ -51,8 +51,8 @@ public class TestPurchaseOrder {
 
         Date date = new Date();
 
-        PurchaseOrderLine line = PurchaseOrderLine.newBuilder().setUuid("111").build();
-        List<PurchaseOrderLine> lines = new ArrayList<>();
+        PurchaseOrderLineCondensed line = PurchaseOrderLineCondensed.newBuilder().setUuid("111").build();
+        List<PurchaseOrderLineCondensed> lines = new ArrayList<>();
         lines.add(line);
 
         PurchaseOrder purchaseOrder = new PurchaseOrder("101", "102", "103", date, 104f, 105, lines);
