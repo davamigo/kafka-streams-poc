@@ -3,7 +3,7 @@ package com.example.kafka.streams.poc.domain.entity.purchaseorder;
 import java.util.Objects;
 
 /**
- * Purchase order line domain entity
+ * Purchase order line condensed domain entity (to be used inside PurchaseOrder domain entity)
  */
 public class PurchaseOrderLineCondensed {
 
