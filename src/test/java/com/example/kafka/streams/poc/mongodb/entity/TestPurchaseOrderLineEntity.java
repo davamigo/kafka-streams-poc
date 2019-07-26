@@ -1,13 +1,13 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
-import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLineCondensed;
+import com.example.kafka.streams.poc.domain.entity.purchaseorder.PurchaseOrderLine;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import java.util.Date;
 
 /**
  * Unit test for purchase order line mongoDB entity
@@ -19,25 +19,47 @@ public class TestPurchaseOrderLineEntity {
     @Test
     public void testEmptyConstructor() {
 
-        PurchaseOrderLineEntity purchaseOrderLineEntity = new PurchaseOrderLineEntity();
+        PurchaseOrderLineEntity lineEntity = new PurchaseOrderLineEntity();
 
-        assertNull(purchaseOrderLineEntity.getUuid());
-        assertNull(purchaseOrderLineEntity.getAggregationKey());
-        assertNull(purchaseOrderLineEntity.getProductUuid());
-        assertEquals(0, purchaseOrderLineEntity.getPrice(), 0.001);
-        assertEquals(0, purchaseOrderLineEntity.getQuantity());
+        Assert.assertNull(lineEntity.getUuid());
+        Assert.assertNull(lineEntity.getAggregationKey());
+        Assert.assertNull(lineEntity.getCountry());
+        Assert.assertNull(lineEntity.getDate());
+        Assert.assertNull(lineEntity.getProductUuid());
+        Assert.assertNull(lineEntity.getProductName());
+        Assert.assertNull(lineEntity.getProductType());
+        Assert.assertNull(lineEntity.getProductBarCode());
+        Assert.assertEquals(0f, lineEntity.getProductPrice(), 0.001);
+        Assert.assertEquals(0, lineEntity.getQuantity());
     }
 
     @Test
     public void testCopyConstructor() {
 
-        PurchaseOrderLineCondensed purchaseOrderLine = new PurchaseOrderLineCondensed("101", "102", "103", 104f, 105);
-        PurchaseOrderLineEntity purchaseOrderLineEntity = new PurchaseOrderLineEntity(purchaseOrderLine);
+        PurchaseOrderLine source = new PurchaseOrderLine(
+                "101",
+                "102",
+                "103",
+                new Date(104L),
+                "105",
+                "106",
+                "107",
+                "108",
+                109f,
+                110
+        );
 
-        assertEquals("101", purchaseOrderLineEntity.getUuid());
-        assertEquals("102", purchaseOrderLineEntity.getAggregationKey());
-        assertEquals("103", purchaseOrderLineEntity.getProductUuid());
-        assertEquals(104f, purchaseOrderLineEntity.getPrice(), 0.001);
-        assertEquals(105, purchaseOrderLineEntity.getQuantity());
+        PurchaseOrderLineEntity lineEntity = new PurchaseOrderLineEntity(source);
+
+        Assert.assertEquals("101", lineEntity.getUuid());
+        Assert.assertEquals("102", lineEntity.getAggregationKey());
+        Assert.assertEquals("103", lineEntity.getCountry());
+        Assert.assertEquals(104L, lineEntity.getDate().getTime());
+        Assert.assertEquals("105", lineEntity.getProductUuid());
+        Assert.assertEquals("106", lineEntity.getProductName());
+        Assert.assertEquals("107", lineEntity.getProductType());
+        Assert.assertEquals("108", lineEntity.getProductBarCode());
+        Assert.assertEquals(109f, lineEntity.getProductPrice(), 0.001);
+        Assert.assertEquals(110, lineEntity.getQuantity());
     }
 }

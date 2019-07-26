@@ -35,7 +35,7 @@ public class PurchaseOrderEntity {
     private int totalQuantity;
 
     /** The purchase order lines */
-    private List<PurchaseOrderLineEntity> lines;
+    private List<PurchaseOrderLineCondensedEntity> lines;
 
     /**
      * Empty constructor
@@ -58,7 +58,7 @@ public class PurchaseOrderEntity {
         this.totalQuantity = source.getTotalQuantity();
         this.lines = new ArrayList<>();
         for (PurchaseOrderLineCondensed line : source.getLines()) {
-            this.lines.add(new PurchaseOrderLineEntity(line));
+            this.lines.add(new PurchaseOrderLineCondensedEntity(line));
         }
     }
 
@@ -107,7 +107,7 @@ public class PurchaseOrderEntity {
     /**
      * @return the purchase order lines
      */
-    public List<PurchaseOrderLineEntity> getLines() {
+    public List<PurchaseOrderLineCondensedEntity> getLines() {
         return lines;
     }
 }

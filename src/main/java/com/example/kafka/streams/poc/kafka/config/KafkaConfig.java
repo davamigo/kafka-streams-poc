@@ -6,6 +6,7 @@ import com.example.kafka.streams.poc.schemas.order.CommercialOrderConverted;
 import com.example.kafka.streams.poc.schemas.order.CommercialOrderLineSplit;
 import com.example.kafka.streams.poc.schemas.product.Product;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
+import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLine;
 import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -180,6 +181,15 @@ public class KafkaConfig {
     }
 
     /**
+     * Creates a factory for consuming PurchaseOrderLine messages from Kafka
+     *
+     * @return the default kafka consumer factory.
+     */
+    ConsumerFactory<String, PurchaseOrderLine> purchaseOrderLineConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    }
+
+    /**
      * Creates a factory for consuming WarehouseOrderLine messages from Kafka
      *
      * @return the default kafka consumer factory.
@@ -302,6 +312,19 @@ public class KafkaConfig {
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PurchaseOrder>> purchaseOrderKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, PurchaseOrder> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(purchaseOrderConsumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
+
+    /**
+     * Kafka listener container factory bean for consuming PurchaseOrderLine messages from Kafka
+     *
+     * @return the kafka listener container factory for consumer.
+     */
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, PurchaseOrderLine>> purchaseOrderLineKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, PurchaseOrderLine> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(purchaseOrderLineConsumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }

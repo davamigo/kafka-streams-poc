@@ -30,6 +30,7 @@ spring:
       commercial-orders-new: "${spring.application.name}.commercial-orders.new"
       commercial-orders-converted: "${spring.application.name}.commercial-orders.converted"
       commercial-order-lines-split: "${spring.application.name}.commercial-order-lines.split"
+      purchase-order-lines-aggregated: "${spring.application.name}.purchase-order-lines.generated"
       purchase-orders-generated: "${spring.application.name}.purchase-orders.generated"
       warehouse-order-lines-failed: "${spring.application.name}.warehouse-order-lines-failed"
     topics:

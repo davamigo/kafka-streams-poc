@@ -30,6 +30,9 @@ public class RecordCountRepository {
     /** The mongoDB repository where to retrieve the purchase orders */
     private final PurchaseOrderRepository purchaseOrderRepository;
 
+    /** The mongoDB repository where to retrieve the purchase order lines */
+    private final PurchaseOrderLineRepository purchaseOrderLineRepository;
+
     /** The mongoDB repository where to retrieve the warehouse order lines */
     private final WarehouseOrderLineRepository warehouseOrderLineRepository;
 
@@ -41,8 +44,9 @@ public class RecordCountRepository {
      * @param commercialOrderRepository          the mongoDB commercial order repository
      * @param commercialOrderConvertedRepository the mongoDB converted commercial order repository
      * @param commercialOrderLineSplitRepository the mongoDB split commercial order line repository
-     * @param purchaseOrderRepository            the mongoDB warehouse order lines repository
-     * @param warehouseOrderLineRepository       the mongoDB purchase order repository
+     * @param purchaseOrderRepository            the mongoDB purchase order repository
+     * @param purchaseOrderLineRepository        the mongoDB purchase order lines repository
+     * @param warehouseOrderLineRepository       the mongoDB warehouse order repository
      */
     @Autowired
     public RecordCountRepository(
@@ -52,6 +56,7 @@ public class RecordCountRepository {
             CommercialOrderConvertedRepository commercialOrderConvertedRepository,
             CommercialOrderLineSplitRepository commercialOrderLineSplitRepository,
             PurchaseOrderRepository purchaseOrderRepository,
+            PurchaseOrderLineRepository purchaseOrderLineRepository,
             WarehouseOrderLineRepository warehouseOrderLineRepository
     ) {
         this.productRepository = productRepository;
@@ -60,6 +65,7 @@ public class RecordCountRepository {
         this.commercialOrderLineSplitRepository = commercialOrderLineSplitRepository;
         this.commercialOrderConvertedRepository = commercialOrderConvertedRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
+        this.purchaseOrderLineRepository = purchaseOrderLineRepository;
         this.warehouseOrderLineRepository = warehouseOrderLineRepository;
     }
     /**
@@ -151,8 +157,12 @@ public class RecordCountRepository {
      * @return the number of purchase order lines
      */
     synchronized long countPurchaseOrderLines() {
-        // TODO
-        return -1;
+        try {
+            return purchaseOrderLineRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
     }
 
     /**
