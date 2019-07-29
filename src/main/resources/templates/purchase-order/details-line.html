@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Kafka Streams Aggregate Purchase Order Lines Process - Kafka Streams PoC</title>
+    <title>Aggregate Purchase Order Lines Process - Kafka Streams PoC</title>
 </head>
 <body>
 
@@ -25,7 +25,7 @@
         <img th:src="@{/images/stream-aggregate-purchase-order-lines.png}" alt="Aggregate Purchase Order Lines Process" class="img-fluid">
 
         <pre class="alert alert-secondary" role="alert"><code>
-KStream&lt;String, CommercialOrderLineSplit&gt; commercialOrderLinesStream = builder.stream("t.commercial-order-lines-split", /*...*/);
+KStream&lt;String, CommercialOrderLineSplit&gt; commercialOrderLinesStream = builder.stream("t.commercial-order-lines-split", /* ... */);
 
 KStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesAggregatedStream = commercialOrderLinesStream
         .<strong>map</strong>((String commercialOrderLineUuid, CommercialOrderLineSplit commercialOrderLine) -&gt; {
@@ -36,7 +36,7 @@ KStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesAggregatedStream = co
                         + "-" + commercialOrderLine.getProductUuid();
                 PurchaseOrderLine purchaseOrderLine = PurchaseOrderLine
                         .newBuilder()
-                        .set/* ... */()
+                        /* .sets...() */
                         .build();
                 return KeyValue.pair(aggregationKey, purchaseOrderLine);
         })

@@ -21,6 +21,7 @@ window.onload = function() {
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
     var $purchaseOrderLinesTopicBox = $('#svg-purchase-order-lines-topic-box', $svgDocument);
 
+    var $commercialOrderLinesSplitStreamBox = $('#svg-stream-commercial-order-lines-split-box', $svgDocument);
     var $purchaseOrderLinesGenerateStreamBox = $('#svg-stream-purchase-order-lines-generate-box', $svgDocument);
 
     var $topicContentModal = $('#js-modal-topics-content');
@@ -105,6 +106,12 @@ window.onload = function() {
     $purchaseOrderLinesGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.data('showPurchaseOrderLinesDetailsUrl');
+        loadTopicContent(url);
+    });
+
+    $commercialOrderLinesSplitStreamBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.data('showCommercialOrderLinesDetailsUrl');
         loadTopicContent(url);
     });
 

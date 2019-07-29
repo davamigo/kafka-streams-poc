@@ -236,4 +236,16 @@ public class CommercialOrderController {
         mav.addObject("line", line.orElse(null));
         return mav;
     }
+
+    /**
+     * GET /commercial-order/lines-split/details
+     *
+     * Shows the details the commercial order lines split process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/lines-split/details")
+    public ModelAndView getOrderLinesDetailsAction() {
+        return new ModelAndView("commercial-order/details-lines-split");
+    }
 }

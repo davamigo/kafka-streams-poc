@@ -148,7 +148,7 @@ public class PurchaseOrderController {
     /**
      * GET /purchase-order/line/details
      *
-     * Shows the details of creating the purchase order lines topic
+     * Shows the details the purchase order lines aggregation process
      *
      * @return the model and view
      */

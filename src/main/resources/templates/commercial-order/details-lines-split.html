@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Split Commercial Order Lines Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Split Commercial Order Lines Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            Extracts all the <strong>order lines</strong> from the <strong>commercial orders</strong> and joins each
+            commercial order line with the <strong>product</strong> data.
+            Each order line will generate one or more message in the target stream.
+            The key of the new stream will be the same (the <code>uuid</code> of the commercial order) to allow grouping.
+        </p>
+
+        <img th:src="@{/images/stream-split-commercial-order-lines.png}" alt="Split Commercial Order Lines Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, CommercialOrder&gt; commercialOrdersStream = builder.stream("t.commercial-orders.new", /* ... */);
+GlobalKTable&lt;String, Product&gt; productsGlobalTable = builder.globalTable("t.products.new", /* ... */);
+
+KStream&lt;String, CommercialOrderLineSplit&gt; commercialOrderLinesStream = commercialOrdersStream
+            .<strong>flatMap</strong>(
+                (String uuid, CommercialOrder commercialOrder) -&gt; {
+                    List&lt;KeyValue&lt;String, CommercialOrderLineSplit&gt;&gt; result = new LinkedList&lt;&gt;();
+                    for (CommercialOrderLine line : commercialOrder.getLines()) {
+                        CommercialOrderLineSplit commercialOrderLineSplit = CommercialOrderLineSplit
+                                .newBuilder()
+                                .setUuid(line.getUuid())
+                                /* .sets...() */
+                                .build();
+
+                        result.add(KeyValue.pair(uuid, commercialOrderLineSplit));
+                    }
+                    return result;
+                }
+        );
+
+KStream&lt;String, CommercialOrderLineSplit&gt; joinedCommercialOrderLinesStream = commercialOrderLinesStream
+            .<strong>join</strong>(
+                productsGlobalTable,
+                (String uuid, CommercialOrderLineSplit line) -&gt; line.getProductUuid(),
+                (CommercialOrderLineSplit line, Product product) -&gt; {
+                    return CommercialOrderLineSplit
+                            .newBuilder(line)
+                            .setProductName(product.getName())
+                            .setProductType(product.getType())
+                            .setProductBarCode(product.getBarCode())
+                            .setProductPrice(product.getPrice())
+                            .build();
+                }
+        );
+
+joinedCommercialOrderLinesStream.to("t.commercial-order-lines-split", /* ... */);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>
