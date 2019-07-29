@@ -5,10 +5,14 @@
     <title>Homepage - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Homepage</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2>Homepage</h2>
+</div>
 
 <h3>Demo</h3>
+
 <ul>
     <li>
         <a th:href="@{/demo}">Show demo page</a>
@@ -16,6 +20,7 @@
 </ul>
 
 <h3>Generators</h3>
+
 <ul>
     <li>
         <form id="orderCountForm" action="#" method="post" th:action="@{/commercial-order/create}">
@@ -27,6 +32,7 @@
 </ul>
 
 <h3>Data in topics</h3>
+
 <ul>
     <li>
         <a th:href="@{/commercial-order/new-orders}">Show commercial orders</a>
@@ -40,7 +46,9 @@
         <a th:href="@{/member}">Show members</a>
         (<span th:text="${topicCount['members']}"></span>)
     </li>
-    <br>
+</ul>
+
+<ul>
     <li>
         <a th:href="@{/commercial-order/converted}">Show converted commercial orders</a>
         (<span th:text="${topicCount['full-commercial-orders']}"></span>)
@@ -49,7 +57,9 @@
         <a th:href="@{/commercial-order/lines-split}">Show split commercial order lines</a>
         (<span th:text="${topicCount['commercial-order-lines']}"></span>)
     </li>
-    <br>
+</ul>
+
+<ul>
     <li>
         <a th:href="@{/purchase-order/line}">Show purchase order lines</a>
         (<span th:text="${topicCount['purchase-order-lines']}"></span>)
@@ -58,14 +68,52 @@
         <a th:href="@{/purchase-order}">Show purchase orders</a>
         (<span th:text="${topicCount['purchase-orders']}"></span>)
     </li>
-    <br>
+</ul>
+
+<ul>
     <li>
         <a th:href="@{/warehouse-order/line/failed}">Show failed warehouse order lines</a>
         (<span th:text="${topicCount['failed-warehouse-order-lines']}"></span>)
     </li>
 </ul>
 
+<h3>Process details</h3>
+
+<ul>
+    <li>
+        Show Convert Commercial Orders Process
+    </li>
+    <li>
+        Show Split Commercial Orders Lines Process
+    </li>
+    <li>
+        <a th:href="@{/purchase-order/line/details}">Show Generate Purchase Order Lines Process</a>
+    </li>
+    <li>
+        Show Generate Purchase Order Process
+    </li>
+    <li>
+        Show Generate Warehouse Order Lines Process
+    </li>
+    <li>
+        Show Match With Product Legacy Id. Process
+    </li>
+    <li>
+        Show Recover Warehouse Order Lines Process
+    </li>
+    <li>
+        Show Merge Warehouse Order Lines Process
+    </li>
+    <li>
+        Show Generate Warehouse Orders Process
+    </li>
+    <li>
+        Show Product Legacy Id. Feeder Process
+    </li>
+</ul>
+
 <h3>Process statuses</h3>
+
 <ul>
     <li th:each="process : ${processesStatuses}">
         <form action="#" method="post" th:if="${process.value}" th:action="@{/process/{procid}/stop(procid=${process.key})}">
@@ -77,7 +125,9 @@
             <span th:text="${process.key}"></span> is <strong>Stopped</strong>
         </form>
     </li>
-    <br>
+</ul>
+
+<ul>
     <li>
         <form action="#" method="post" th:action="@{/process/stop}">
             <button type="submit">Stop</button>

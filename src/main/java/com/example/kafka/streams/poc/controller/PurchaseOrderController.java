@@ -144,4 +144,16 @@ public class PurchaseOrderController {
         mav.addObject("purchaseOrderLine", purchaseOrderLine.orElse(null));
         return mav;
     }
+
+    /**
+     * GET /purchase-order/line/details
+     *
+     * Shows the details of creating the purchase order lines topic
+     *
+     * @return the model and view
+     */
+    @GetMapping("/line/details")
+    public ModelAndView getOrderLinesDetailsAction() {
+        return new ModelAndView("purchase-order/details-line");
+    }
 }

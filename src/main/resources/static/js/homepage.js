@@ -21,8 +21,11 @@ window.onload = function() {
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
     var $purchaseOrderLinesTopicBox = $('#svg-purchase-order-lines-topic-box', $svgDocument);
 
+    var $purchaseOrderLinesGenerateStreamBox = $('#svg-stream-purchase-order-lines-generate-box', $svgDocument);
+
     var $topicContentModal = $('#js-modal-topics-content');
     var $topicContentTitle = $('#js-modal-topics-content-title');
+    var $topicContentBody = $('#js-modal-topics-content-body');
     var $topicContentTable = $('#js-modal-topics-content-table');
     var $topicContentTotal = $('#js-modal-topics-content-total');
     var $topicContentButtonFirst = $('#js-modal-topics-content-first');
@@ -96,6 +99,12 @@ window.onload = function() {
     $purchaseOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.data('getPurchaseOrderLinesUrl');
+        loadTopicContent(url);
+    });
+
+    $purchaseOrderLinesGenerateStreamBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.data('showPurchaseOrderLinesDetailsUrl');
         loadTopicContent(url);
     });
 
@@ -178,28 +187,37 @@ window.onload = function() {
 
                     var $error = $('#js-modal-topics-content-error', response);
                     if ($error.length > 0) {
-                        var alert = '<tr><td><div class="alert alert-danger" role="alert">' + $error.html() + '</div></td></tr>';
-                        $topicContentTable.html(alert);
+                        var alert = '<div class="alert alert-danger" role="alert">' + $error.html() + '</div>';
+                        $topicContentBody.html(alert);
                         $topicContentTotal.html('');
-                        $topicContentButtonFirst.prop('disabled', true);
-                        $topicContentButtonPrev.prop('disabled', true);
-                        $topicContentButtonNext.prop('disabled', true);
+                        $topicContentButtonFirst.hide();
+                        $topicContentButtonPrev.hide();
+                        $topicContentButtonNext.hide();
                     } else {
-                        var $table = $('#js-modal-topics-content-table', response);
-                        var $total = $('#js-modal-topics-content-total', response);
-                        $topicContentTable.replaceWith($table);
-                        $topicContentTotal.replaceWith($total);
-                        $topicContentTable = $('#js-modal-topics-content-table');
-                        $topicContentTotal = $('#js-modal-topics-content-total');
+                        var $body = $('#js-modal-topics-content-body', response);
+                        if ($body.length > 0) {
+                            $topicContentBody.html($body.html());
+                            $topicContentTotal.html('');
+                            $topicContentButtonFirst.hide();
+                            $topicContentButtonPrev.hide();
+                            $topicContentButtonNext.hide();
+                        } else {
+                            var $table = $('#js-modal-topics-content-table', response);
+                            var $total = $('#js-modal-topics-content-total', response);
+                            $topicContentBody.html($table);
+                            $topicContentTotal.replaceWith($total);
+                            $topicContentTable = $('#js-modal-topics-content-table');
+                            $topicContentTotal = $('#js-modal-topics-content-total');
 
-                        var $targetLink = $('#js-modal-topics-content-first', response);
-                        setButtonClickHandler($topicContentButtonFirst, $targetLink.attr('href'));
+                            var $targetLink = $('#js-modal-topics-content-first', response);
+                            setButtonClickHandler($topicContentButtonFirst, $targetLink.attr('href'));
 
-                        $targetLink = $('#js-modal-topics-content-prev', response);
-                        setButtonClickHandler($topicContentButtonPrev, $targetLink.attr('href'));
+                            $targetLink = $('#js-modal-topics-content-prev', response);
+                            setButtonClickHandler($topicContentButtonPrev, $targetLink.attr('href'));
 
-                        $targetLink = $('#js-modal-topics-content-next', response);
-                        setButtonClickHandler($topicContentButtonNext, $targetLink.attr('href'));
+                            $targetLink = $('#js-modal-topics-content-next', response);
+                            setButtonClickHandler($topicContentButtonNext, $targetLink.attr('href'));
+                        }
                     }
 
                     $topicContentModal.modal('show');
@@ -223,6 +241,7 @@ window.onload = function() {
         } else {
             $button.prop('disabled', true);
         }
+        $button.show();
     };
 
     countTopics();

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Kafka Streams Aggregate Purchase Order Lines Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Aggregate Purchase Order Lines Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            Reduces the <strong>commercial order lines</strong> by adding the quantities for the same country, product and
+            day to generate the <strong>purchase order lines</strong>.
+            One purchase order line will be generated per per <u>country</u>, <u>product</u> and <u>day</u>.
+            The key of the new stream will be the concatenation of <code>contry-code</code>, <code>date(yyyy-mm-dd)</code>
+            and <code>product-uuid</code>.
+        </p>
+
+
+        <img th:src="@{/images/stream-aggregate-purchase-order-lines.png}" alt="Aggregate Purchase Order Lines Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, CommercialOrderLineSplit&gt; commercialOrderLinesStream = builder.stream("t.commercial-order-lines-split", /*...*/);
+
+KStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesAggregatedStream = commercialOrderLinesStream
+        .<strong>map</strong>((String commercialOrderLineUuid, CommercialOrderLineSplit commercialOrderLine) -&gt; {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date datetime = new Date(commercialOrderLine.getCommercialOrderDatetime());
+                String aggregationKey = commercialOrderLine.getShippingCountry()
+                        + "-" + df.format(datetime)
+                        + "-" + commercialOrderLine.getProductUuid();
+                PurchaseOrderLine purchaseOrderLine = PurchaseOrderLine
+                        .newBuilder()
+                        .set/* ... */()
+                        .build();
+                return KeyValue.pair(aggregationKey, purchaseOrderLine);
+        })
+        .<strong>groupByKey</strong>(Serialized.with(stringKeyAvroSerde, purchaseOrderLineValueAvroSerde))
+        .<strong>reduce</strong>((PurchaseOrderLine aggregatedPurchaseOrderLine, PurchaseOrderLine newPurchaseOrderLine) -&gt; {
+                int quantity = aggregatedPurchaseOrderLine.getQuantity() + newPurchaseOrderLine.getQuantity();
+                return PurchaseOrderLine
+                        .newBuilder(aggregatedPurchaseOrderLine)
+                        .setQuantity(quantity)
+                        .build();
+        })
+        .toStream();
+
+purchaseOrderLinesAggregatedStream.to("t.purchase-order-lines.aggregated", /*...*/);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>

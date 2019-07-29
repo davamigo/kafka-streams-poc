@@ -98,7 +98,8 @@
          th:data-get-converted-commercial-orders-url="@{/commercial-order/converted}"
          th:data-get-split-commercial-order-lines-url="@{/commercial-order/lines-split}"
          th:data-get-purchase-order-lines-url="@{/purchase-order/line}"
-         th:data-get-purchase-orders-url="@{/purchase-order}">
+         th:data-get-purchase-orders-url="@{/purchase-order}"
+         th:data-show-purchase-order-lines-details-url="@{/purchase-order/line/details}">
         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -109,7 +110,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div id="js-modal-topics-content-body" class="modal-body">
                     <table id="js-modal-topics-content-table" class="table">
                         <thead>
                         <tr>
@@ -149,9 +150,10 @@
                                 </p>
                             </div>
                             <div class="col-sm-6 text-right">
-                                <button id="js-modal-topics-content-first" class="btn btn-secondary">First</button>
-                                <button id="js-modal-topics-content-prev" class="btn btn-secondary">Prev</button>
-                                <button id="js-modal-topics-content-next" class="btn btn-primary">Next</button>
+                                <button id="js-modal-topics-content-first" type="button" class="btn btn-secondary">First</button>
+                                <button id="js-modal-topics-content-prev" type="button" class="btn btn-secondary">Prev</button>
+                                <button id="js-modal-topics-content-next" type="button" class="btn btn-primary">Next</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
