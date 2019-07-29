@@ -49,7 +49,6 @@
                 <thead>
                     <tr>
                         <th>Uuid</th>
-                        <th>Aggregation Key</th>
                         <th>Product</th>
                         <th>Price</th>
                         <th>Quantity</th>
@@ -60,7 +59,6 @@
                         <td>
                             <strong th:text="${purchaseOrderLine.getUuid()}"></strong>
                         </td>
-                        <td th:text="${purchaseOrderLine.getAggregationKey()}"></td>
                         <td th:text="${purchaseOrderLine.getProductUuid()}"></td>
                         <td th:text="${purchaseOrderLine.getPrice()}"></td>
                         <td th:text="${purchaseOrderLine.getQuantity()}"></td>

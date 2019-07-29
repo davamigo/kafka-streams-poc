@@ -22,7 +22,6 @@
         <thead class="thead-light">
             <tr>
                 <th scope="col">Uuid</th>
-                <th scope="col">Aggregation Key</th>
                 <th scope="col">Country</th>
                 <th scope="col">Date</th>
                 <th scope="col" class="text-right">Total Amount</th>
@@ -37,7 +36,6 @@
                         <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getUuid()})}" th:text="${purchaseOrder.getUuid()}"></a>
                     </strong>
                 </td>
-                <td class="text-monospace" th:text="${purchaseOrder.getAggregationKey()}"></td>
                 <td th:text="${purchaseOrder.getCountry()}"></td>
                 <td class="text-monospace" th:text="${purchaseOrder.getDate()}"></td>
                 <td class="text-monospace text-right" th:text="${purchaseOrder.getTotalAmount()}"></td>

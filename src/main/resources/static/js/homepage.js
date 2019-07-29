@@ -19,6 +19,7 @@ window.onload = function() {
     var $convertedCommercialOrdersTopicBox = $('#svg-full-commercial-orders-topic-box', $svgDocument);
     var $splitCommercialOrderLinesTopicBox = $('#svg-commercial-order-lines-topic-box', $svgDocument);
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
+    var $purchaseOrderLinesTopicBox = $('#svg-purchase-order-lines-topic-box', $svgDocument);
 
     var $topicContentModal = $('#js-modal-topics-content');
     var $topicContentTitle = $('#js-modal-topics-content-title');
@@ -89,6 +90,12 @@ window.onload = function() {
     $purchaseOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.data('getPurchaseOrdersUrl');
+        loadTopicContent(url);
+    });
+
+    $purchaseOrderLinesTopicBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.data('getPurchaseOrderLinesUrl');
         loadTopicContent(url);
     });
 

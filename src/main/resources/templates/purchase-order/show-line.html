@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Purchase Order Line - Kafka Streams PoC</title>
+</head>
+<body>
+<h1>Kafka Streams PoC</h1>
+<h2>Purchase Order Line</h2>
+
+<div th:if="${null == purchaseOrderLine}">
+    <p>
+        The purchase order line with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != purchaseOrderLine}">
+    <dl>
+        <dt>Uuid:</dt>
+        <dd>
+            <strong>
+                <a th:href="@{/purchase-order/line/{id}(id=${purchaseOrderLine.getUuid()})}" th:text="${purchaseOrderLine.getUuid()}"></a>
+            </strong>
+        </dd>
+
+        <dt>Aggregation Key:</dt>
+        <dd th:text="${purchaseOrderLine.getAggregationKey()}"></dd>
+
+        <dt>Country:</dt>
+        <dd th:text="${purchaseOrderLine.getCountry()}"></dd>
+
+        <dt>Date:</dt>
+        <dd th:text="${purchaseOrderLine.getDate()}"></dd>
+
+        <dt>Product Uuid:</dt>
+        <dd th:text="${purchaseOrderLine.getProductUuid()}"></dd>
+
+        <dt>Product Name:</dt>
+        <dd th:text="${purchaseOrderLine.getProductName()}"></dd>
+
+        <dt>Product Type:</dt>
+        <dd th:text="${purchaseOrderLine.getProductType()}"></dd>
+
+        <dt>Product Bar Code:</dt>
+        <dd th:text="${purchaseOrderLine.getProductBarCode()}"></dd>
+
+        <dt>Product Price:</dt>
+        <dd th:text="${purchaseOrderLine.getProductPrice()}"></dd>
+
+        <dt>Quantity:</dt>
+        <dd th:text="${purchaseOrderLine.getQuantity()}"></dd>
+    </dl>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/purchase-order/line}">Show purchase order lines</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
