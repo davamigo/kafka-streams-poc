@@ -26,7 +26,7 @@
         </dd>
 
         <dt>Date:</dt>
-        <dd th:text="${commercialOrder.getDatetime()}"></dd>
+        <dd th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
 
         <dt>Member:</dt>
         <dd th:text="${commercialOrder.getMemberUuid()}"></dd>
@@ -74,8 +74,8 @@
                     <tr th:each="commercialOrderLine : ${commercialOrder.getLines()}">
                         <td><strong th:text="${commercialOrderLine.getUuid()}"></strong></td>
                         <td th:text="${commercialOrderLine.getProductUuid()}"></td>
-                        <td th:text="${commercialOrderLine.getPrice()}"></td>
-                        <td th:text="${commercialOrderLine.getQuantity()}"></td>
+                        <td th:text="${#numbers.formatDecimal(commercialOrderLine.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                        <td th:text="${#numbers.formatDecimal(commercialOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
                     </tr>
                 </tbody>
             </table>

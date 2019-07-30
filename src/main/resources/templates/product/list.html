@@ -38,7 +38,7 @@
                 <td th:text="${product.getName()}"></td>
                 <td th:text="${product.getType()}"></td>
                 <td class="text-monospace" th:text="${product.getBarCode()}"></td>
-                <td class="text-monospace text-right" th:text="${product.getPrice()}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(product.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
             </tr>
         </tbody>
     </table>

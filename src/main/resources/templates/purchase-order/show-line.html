@@ -32,7 +32,7 @@
         <dd th:text="${purchaseOrderLine.getCountry()}"></dd>
 
         <dt>Date:</dt>
-        <dd th:text="${purchaseOrderLine.getDate()}"></dd>
+        <dd th:text="${#calendars.format(purchaseOrderLine.getDate(), 'yyyy-MM-dd')}"></dd>
 
         <dt>Product Uuid:</dt>
         <dd th:text="${purchaseOrderLine.getProductUuid()}"></dd>
@@ -47,10 +47,10 @@
         <dd th:text="${purchaseOrderLine.getProductBarCode()}"></dd>
 
         <dt>Product Price:</dt>
-        <dd th:text="${purchaseOrderLine.getProductPrice()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(purchaseOrderLine.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
         <dt>Quantity:</dt>
-        <dd th:text="${purchaseOrderLine.getQuantity()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(purchaseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
     </dl>
 </div>
 

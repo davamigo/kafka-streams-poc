@@ -29,7 +29,7 @@
         <dd th:text="${line.getCommercialOrderUuid()}"></dd>
 
         <dt>Commercial Order Date:</dt>
-        <dd th:text="${line.getCommercialOrderDatetime()}"></dd>
+        <dd th:text="${#calendars.format(line.getCommercialOrderDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
 
         <dt>Shipping Country:</dt>
         <dd th:text="${line.getShippingCountry()}"></dd>
@@ -50,13 +50,13 @@
         <dd th:text="${line.getProductBarCode()}"></dd>
 
         <dt>Product Price:</dt>
-        <dd th:text="${line.getProductPrice()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(line.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
         <dt>Sell Price:</dt>
-        <dd th:text="${line.getOrderLinePrice()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(line.getOrderLinePrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
         <dt>Quantity:</dt>
-        <dd th:text="${line.getQuantity()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(line.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
 
     </dl>
 </div>

@@ -47,8 +47,8 @@
                 <td th:text="${commercialOrder.getShippingCountry()}"></td>
                 <td th:text="${commercialOrder.getShippingCity()}"></td>
                 <td th:text="${commercialOrder.getShippingZipCode()}"></td>
-                <td class="text-monospace text-right" th:text="${commercialOrder.getTotalAmount()}"></td>
-                <td class="text-monospace text-right" th:text="${commercialOrder.getTotalQuantity()}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(commercialOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(commercialOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
             </tr>
         </tbody>
     </table>

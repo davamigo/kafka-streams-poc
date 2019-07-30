@@ -35,7 +35,7 @@
         <dd th:text="${product.getBarCode()}"></dd>
 
         <dt>Cost Price:</dt>
-        <dd th:text="${product.getPrice()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(product.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
     </dl>
 </div>
 

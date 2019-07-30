@@ -26,7 +26,7 @@
         </dd>
 
         <dt>Date:</dt>
-        <dd th:text="${commercialOrder.getDatetime()}"></dd>
+        <dd th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
 
         <dt>Member Uuid:</dt>
         <dd th:text="${commercialOrder.getMemberUuid()}"></dd>
@@ -47,10 +47,10 @@
         <dd th:text="${commercialOrder.getShippingZipCode()}"></dd>
 
         <dt>Total Amount:</dt>
-        <dd th:text="${commercialOrder.getTotalAmount()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(commercialOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
         <dt>Total Quantity:</dt>
-        <dd th:text="${commercialOrder.getTotalQuantity()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(commercialOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
 
     </dl>
 </div>

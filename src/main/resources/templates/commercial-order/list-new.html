@@ -46,7 +46,7 @@
                     <span th:text="${commercialOrder.getShippingAddress().getState()}"></span>
                     <span th:text="${commercialOrder.getShippingAddress().getCountry()}"></span>
                 </td>
-                <td class="text-monospace text-right" th:text="${commercialOrder.getLines().size()}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(commercialOrder.getLines().size(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
             </tr>
         </tbody>
     </table>

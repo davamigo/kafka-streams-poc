@@ -29,7 +29,7 @@
         <dd th:text="${warehouseOrderLine.getCountry()}"></dd>
 
         <dt>Date:</dt>
-        <dd th:text="${warehouseOrderLine.getDate()}"></dd>
+        <dd th:text="${#calendars.format(warehouseOrderLine.getDate(), 'yyyy-MM-dd')}"></dd>
 
         <dt>Product Uuid:</dt>
         <dd th:text="${warehouseOrderLine.getProductUuid()}"></dd>
@@ -50,7 +50,7 @@
         </dd>
 
         <dt>Quantity:</dt>
-        <dd th:text="${warehouseOrderLine.getQuantity()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(warehouseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
     </dl>
 </div>
 

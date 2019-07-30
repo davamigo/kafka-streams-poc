@@ -38,9 +38,9 @@
                 </td>
                 <td th:text="${purchaseOrder.getCountry()}"></td>
                 <td class="text-monospace" th:text="${#calendars.format(purchaseOrder.getDate(), 'yyyy-MM-dd')}"></td>
-                <td class="text-monospace text-right" th:text="${purchaseOrder.getTotalAmount()}"></td>
-                <td class="text-monospace text-right" th:text="${purchaseOrder.getTotalQuantity()}"></td>
-                <td class="text-monospace text-right" th:text="${purchaseOrder.getLines().size()}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(purchaseOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(purchaseOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(purchaseOrder.getLines().size(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
             </tr>
         </tbody>
     </table>

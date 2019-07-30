@@ -44,9 +44,9 @@
                 <td class="text-monospace" th:text="${line.getMemberUuid()}"></td>
                 <td class="text-monospace" th:text="${line.getProductUuid()}"></td>
                 <td th:text="${line.getProductName()}"></td>
-                <td class="text-monospace text-right" th:text="${line.getProductPrice()}"></td>
-                <td class="text-monospace text-right" th:text="${line.getOrderLinePrice()}"></td>
-                <td class="text-monospace text-right" th:text="${line.getQuantity()}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(line.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(line.getOrderLinePrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(line.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
             </tr>
         </tbody>
     </table>

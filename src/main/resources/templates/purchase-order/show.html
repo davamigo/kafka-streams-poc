@@ -32,13 +32,13 @@
         <dd th:text="${purchaseOrder.getCountry()}"></dd>
 
         <dt>Date:</dt>
-        <dd th:text="${purchaseOrder.getDate()}"></dd>
+        <dd th:text="${#calendars.format(purchaseOrder.getDate(), 'yyyy-MM-dd')}"></dd>
 
         <dt>Total Amount:</dt>
-        <dd th:text="${purchaseOrder.getTotalAmount()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(purchaseOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
         <dt>Total Quantity:</dt>
-        <dd th:text="${purchaseOrder.getTotalQuantity()}"></dd>
+        <dd th:text="${#numbers.formatDecimal(purchaseOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
 
         <dt>Lines:</dt>
         <dd th:if="${purchaseOrder.getLines().isEmpty()}">
@@ -60,8 +60,8 @@
                             <strong th:text="${purchaseOrderLine.getUuid()}"></strong>
                         </td>
                         <td th:text="${purchaseOrderLine.getProductUuid()}"></td>
-                        <td th:text="${purchaseOrderLine.getPrice()}"></td>
-                        <td th:text="${purchaseOrderLine.getQuantity()}"></td>
+                        <td th:text="${#numbers.formatDecimal(purchaseOrderLine.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                        <td th:text="${#numbers.formatDecimal(purchaseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
                     </tr>
                 </tbody>
             </table>
