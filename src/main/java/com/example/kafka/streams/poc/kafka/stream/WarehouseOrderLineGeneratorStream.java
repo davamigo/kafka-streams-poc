@@ -169,7 +169,6 @@ public class WarehouseOrderLineGeneratorStream extends BaseStream {
                         (String dummy, WarehouseOrderLine warehouseOrderLine) -> warehouseOrderLine.getUuid()
                 );
 
-
         warehouseOrderLinesStrem.to(
                 warehouseOrderLinesTopic,
                 Produced.with(stringKeyAvroSerde, warehouseOrderLineValueAvroSerde)

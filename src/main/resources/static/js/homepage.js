@@ -25,6 +25,7 @@ window.onload = function() {
     var $commercialOrderLinesSplitStreamBox = $('#svg-stream-commercial-order-lines-split-box', $svgDocument);
     var $purchaseOrderLinesGenerateStreamBox = $('#svg-stream-purchase-order-lines-generate-box', $svgDocument);
     var $purchaseOrdersGenerateStreamBox = $('#svg-stream-purchase-order-generate-box', $svgDocument);
+    var $warehouseOrderLinesGenerateStreamBox = $('#svg-stream-warehouse-order-line-generator-box', $svgDocument);
 
     var $topicContentModal = $('#js-modal-topics-content');
     var $topicContentTitle = $('#js-modal-topics-content-title');
@@ -126,6 +127,12 @@ window.onload = function() {
     $purchaseOrdersGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.attr('data-show-purchase-orders-details-url');
+        loadTopicContent(url);
+    });
+
+    $warehouseOrderLinesGenerateStreamBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.attr('data-show-warehouse-order-lines-details-url');
         loadTopicContent(url);
     });
 

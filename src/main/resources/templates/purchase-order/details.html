@@ -37,7 +37,7 @@ KGroupedStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesGroupedStream 
         );
 
 KStream&lt;String, PurchaseOrder&gt; purchaseOrderStream = purchaseOrderLinesGroupedStream
-        .aggregate(
+            .<strong>aggregate</strong>(
                 PurchaseOrder::new,
                 (String aggregationKey, PurchaseOrderLine newPOLine, PurchaseOrder aggregatedPO) -&gt; {
                         /* ... */

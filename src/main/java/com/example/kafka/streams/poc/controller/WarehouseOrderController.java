@@ -49,6 +49,18 @@ public class WarehouseOrderController {
     }
 
     /**
+     * GET /warehouse-order/line/details
+     *
+     * Shows the details the warehouse order lines generation process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/line/details")
+    public ModelAndView getOrdersDetailsAction() {
+        return new ModelAndView("warehouse-order/details");
+    }
+
+    /**
      * GET /warehouse-order/line/failed
      *
      * Lists the failed warehouse order liness

@@ -104,6 +104,7 @@ The key of the new stream will be the concatenation of `contry-code` and `date(y
 ### Generate warehouse order lines
 
 Generates the **warehouse order lines** from the **purchase order lines**.
+The key will be the `uuid` of the new warehouse order line.
 
 ![](docs/images/stream-generate-warehouse-order-lines.png)
 
