@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Generate Purchase Orders Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Generate Purchase Orders Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            Generates one <strong>purchase order</strong> per country and day by aggregating the
+            <strong>purchase order lines</strong>.
+            The purchase order will have a list of all order lines.
+            The key of the new stream will be the concatenation of <code>contry-code</code> and
+            <code>date(yyyy-mm-dd)</code> and <code>product-uuid</code>.
+        </p>
+
+        <img th:src="@{/images/stream-generate-purchase-orders.png}" alt="Generate Purchase Orders Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesStream = builder.stream("t.purchase-oeder-line.aggregated", /* ... */);
+
+KGroupedStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesGroupedStream = purchaseOrderLinesStream
+        .<strong>groupBy</strong>(
+                (String poLineAggregationKey, PurchaseOrderLine poLine) -&gt; {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        Date datetime = new Date(poLine.getDate());
+                        return poLine.getCountry() + "-" + df.format(datetime);
+                },
+                Serialized.with(/* ... */)
+        );
+
+KStream&lt;String, PurchaseOrder&gt; purchaseOrderStream = purchaseOrderLinesGroupedStream
+        .aggregate(
+                PurchaseOrder::new,
+                (String aggregationKey, PurchaseOrderLine newPOLine, PurchaseOrder aggregatedPO) -&gt; {
+                        /* ... */
+                        PurchaseOrder result = PurchaseOrder
+                                .newBuilder(aggregatedPO)
+                                .setUuid(uuid)
+                                .setAggregationKey(aggregationKey)
+                                .setCountry(newPOLine.getCountry())
+                                .setDate(newPOLine.getDate())
+                                .setLines(newLines)
+                                .setTotalAmount(newAmount)
+                                .setTotalQuantity(newQuantity)
+                                .build();
+                        return result;
+                },
+                Materialized.with(/* ... */)
+        )
+        .toStream();
+
+purchaseOrderStream.to("t.purchase-order.generated", /* ... */);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>

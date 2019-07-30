@@ -91,7 +91,7 @@ The key of the new stream will be the concatenation of `contry-code`, `date(yyyy
 ### Generate the purchase orders
 
 Generates one **purchase order** per country and day by aggregating the **purchase order lines**.
-The purchase order will havea list of all order lines.
+The purchase order will have a list of all order lines.
 The key of the new stream will be the concatenation of `contry-code` and `date(yyyy-mm-dd)`.
 
 ![](docs/images/stream-generate-purchase-orders.png)

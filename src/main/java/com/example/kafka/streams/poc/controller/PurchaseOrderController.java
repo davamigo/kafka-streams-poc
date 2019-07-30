@@ -95,6 +95,18 @@ public class PurchaseOrderController {
     }
 
     /**
+     * GET /purchase-order/details
+     *
+     * Shows the details the purchase order lines aggregation process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/details")
+    public ModelAndView getOrdersDetailsAction() {
+        return new ModelAndView("purchase-order/details");
+    }
+
+    /**
      * GET /purchase-order/line
      *
      * Lists the purchase order lines
