@@ -40,7 +40,7 @@
                         <a th:href="@{/commercial-order/converted/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
                     </strong>
                 </td>
-                <td class="text-monospace" th:text="${commercialOrder.getDatetime()}"></td>
+                <td class="text-monospace" th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td class="text-monospace" th:text="${commercialOrder.getMemberUuid()}"></td>
                 <td th:text="${commercialOrder.getMemberFirstName()}"></td>
                 <td th:text="${commercialOrder.getMemberLastName()}"></td>

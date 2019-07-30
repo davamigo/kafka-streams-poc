@@ -35,7 +35,7 @@
                         <a th:href="@{/commercial-order/new-orders/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
                     </strong>
                 </td>
-                <td class="text-monospace" th:text="${commercialOrder.getDatetime()}"></td>
+                <td class="text-monospace" th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td class="text-monospace" th:text="${commercialOrder.getMemberUuid()}"></td>
                 <td>
                     <span th:text="${commercialOrder.getShippingAddress().getStreet()}"></span>

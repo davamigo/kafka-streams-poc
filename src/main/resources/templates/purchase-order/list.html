@@ -37,7 +37,7 @@
                     </strong>
                 </td>
                 <td th:text="${purchaseOrder.getCountry()}"></td>
-                <td class="text-monospace" th:text="${purchaseOrder.getDate()}"></td>
+                <td class="text-monospace" th:text="${#calendars.format(purchaseOrder.getDate(), 'yyyy-MM-dd')}"></td>
                 <td class="text-monospace text-right" th:text="${purchaseOrder.getTotalAmount()}"></td>
                 <td class="text-monospace text-right" th:text="${purchaseOrder.getTotalQuantity()}"></td>
                 <td class="text-monospace text-right" th:text="${purchaseOrder.getLines().size()}"></td>

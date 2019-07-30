@@ -23,13 +23,10 @@
             <tr>
                 <th scope="col">Uuid</th>
                 <th scope="col">Commercial Order Uuid</th>
-                <th scope="col">Commercial Order Date</th>
                 <th scope="col">Shipping Country</th>
                 <th scope="col">Member Uuid</th>
                 <th scope="col">Product Uuid</th>
                 <th scope="col">Product Name</th>
-                <th scope="col">Product Type </th>
-                <th scope="col">Product Bar Code</th>
                 <th scope="col" class="text-right">Product Price</th>
                 <th scope="col" class="text-right">Sell Price</th>
                 <th scope="col" class="text-right">Quantity</th>
@@ -43,13 +40,10 @@
                     </strong>
                 </td>
                 <td class="text-monospace" th:text="${line.getCommercialOrderUuid()}"></td>
-                <td class="text-monospace" th:text="${line.getCommercialOrderDatetime()}"></td>
                 <td th:text="${line.getShippingCountry()}"></td>
                 <td class="text-monospace" th:text="${line.getMemberUuid()}"></td>
                 <td class="text-monospace" th:text="${line.getProductUuid()}"></td>
                 <td th:text="${line.getProductName()}"></td>
-                <td th:text="${line.getProductType()}"></td>
-                <td th:text="${line.getProductBarCode()}"></td>
                 <td class="text-monospace text-right" th:text="${line.getProductPrice()}"></td>
                 <td class="text-monospace text-right" th:text="${line.getOrderLinePrice()}"></td>
                 <td class="text-monospace text-right" th:text="${line.getQuantity()}"></td>

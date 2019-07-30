@@ -38,7 +38,7 @@
                     </strong>
                 </td>
                 <td th:text="${line.getCountry()}"></td>
-                <td class="text-monospace" th:text="${line.getDate()}"></td>
+                <td class="text-monospace" th:text="${#calendars.format(line.getDate(), 'yyyy-MM-dd')}"></td>
                 <td class="text-monospace" th:text="${line.getProductUuid()}"></td>
                 <td th:text="${line.getProductName()}"></td>
                 <td class="text-monospace text-right" th:text="${line.getProductPrice()}"></td>
