@@ -1,8 +1,8 @@
 package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine;
-import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineEntity;
-import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineRepository;
+import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineFailedEntity;
+import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineFailedRepository;
 import com.example.kafka.streams.poc.service.producer.warehouseorder.ManuallyRecoveredWarehouseOrderLineProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -27,8 +27,8 @@ import java.util.Optional;
 @RequestMapping("/warehouse-order")
 public class WarehouseOrderController {
 
-    /** The mongoDB repository where to retrieve the warehouse order lines */
-    private final WarehouseOrderLineRepository warehouseOrderLineRepository;
+    /** The mongoDB repository where to retrieve the failed warehouse order lines */
+    private final WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
 
     /** The service to publish the recovered warehouse order line */
     private final ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer;
@@ -36,15 +36,15 @@ public class WarehouseOrderController {
     /**
      * Autowired constructor
      *
-     * @param warehouseOrderLineRepository the mongoDB warehouse order line repository
-     * @param warehouseOrderLineProducer   the service to publish the recovered warehouse order line
+     * @param warehouseOrderLineFailedRepository the mongoDB warehouse order line failed repository
+     * @param warehouseOrderLineProducer         the service to publish the recovered warehouse order line
      */
     @Autowired
     public WarehouseOrderController(
-            WarehouseOrderLineRepository warehouseOrderLineRepository,
+            WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository,
             ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer
     ) {
-        this.warehouseOrderLineRepository = warehouseOrderLineRepository;
+        this.warehouseOrderLineFailedRepository = warehouseOrderLineFailedRepository;
         this.warehouseOrderLineProducer = warehouseOrderLineProducer;
     }
 
@@ -62,11 +62,11 @@ public class WarehouseOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
-        final List<WarehouseOrderLineEntity> orderLines = warehouseOrderLineRepository
+        final List<WarehouseOrderLineFailedEntity> orderLines = warehouseOrderLineFailedRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "date")))
                 .getContent();
 
-        final long count = warehouseOrderLineRepository.count();
+        final long count = warehouseOrderLineFailedRepository.count();
         final long prev = (page > 0) ? page - 1 : 0;
         final long next = (size * (page + 1) < count) ? page + 1 : page;
 
@@ -91,7 +91,7 @@ public class WarehouseOrderController {
     @GetMapping("/line/failed/{id}")
     public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
 
-        final Optional<WarehouseOrderLineEntity> warehouseOrderLine = warehouseOrderLineRepository.findById(uuid);
+        final Optional<WarehouseOrderLineFailedEntity> warehouseOrderLine = warehouseOrderLineFailedRepository.findById(uuid);
 
         final ModelAndView mav  = new ModelAndView("warehouse-order/show-failed-line");
         mav.addObject("uuid", uuid);
@@ -114,7 +114,7 @@ public class WarehouseOrderController {
             @RequestParam Integer productLegacyId
     ) {
         // Read the warehouse order line from the MongoDB database
-        WarehouseOrderLineEntity entity = warehouseOrderLineRepository.findById(uuid).orElse(null);
+        WarehouseOrderLineFailedEntity entity = warehouseOrderLineFailedRepository.findById(uuid).orElse(null);
         if (entity == null) {
             return new ModelAndView("redirect:/warehouse-order/line/failed/{id}", Collections.singletonMap("id", uuid));
         }
@@ -123,7 +123,7 @@ public class WarehouseOrderController {
         warehouseOrderLineProducer.publish(WarehouseOrderLine.newBuilder().set(entity).setProductLegacyId(productLegacyId).build());
 
         // Delete the warehouse order line from mongo
-        warehouseOrderLineRepository.delete(entity);
+        warehouseOrderLineFailedRepository.delete(entity);
 
         // Redirect to the failed warehouse order lines controller
         return new ModelAndView("redirect:/warehouse-order/line/failed");

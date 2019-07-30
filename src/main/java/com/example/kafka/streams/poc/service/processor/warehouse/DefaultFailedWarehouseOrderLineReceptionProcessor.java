@@ -1,8 +1,8 @@
 package com.example.kafka.streams.poc.service.processor.warehouse;
 
 import com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine;
-import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineEntity;
-import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineRepository;
+import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineFailedEntity;
+import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineFailedRepository;
 import com.example.kafka.streams.poc.service.processor.exception.ProcessorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,36 +20,36 @@ public class DefaultFailedWarehouseOrderLineReceptionProcessor implements Failed
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFailedWarehouseOrderLineReceptionProcessor.class);
 
-    /** The mongoDB repository where to store the warehouse order lines received */
-    private WarehouseOrderLineRepository repository;
+    /** The mongoDB repository where to store the failed warehouse order lines received */
+    private WarehouseOrderLineFailedRepository repository;
 
     /**
      * Autowired constructor
      *
-     * @param repository the mongoDB warehouse order line repository
+     * @param repository the mongoDB failed warehouse order line repository
      */
     @Autowired
-    public DefaultFailedWarehouseOrderLineReceptionProcessor(WarehouseOrderLineRepository repository) {
+    public DefaultFailedWarehouseOrderLineReceptionProcessor(WarehouseOrderLineFailedRepository repository) {
         this.repository = repository;
     }
 
     /**
      * Process the reception of a generated warehouse order line
      *
-     * @param line the warehouse order line received
+     * @param line the failed warehouse order line received
      * @throws ProcessorException when an error occurred
      */
     @Override
     public void process(WarehouseOrderLine line) throws ProcessorException {
 
         try {
-            Optional<WarehouseOrderLineEntity> queryResult = repository.findById(line.getUuid());
+            Optional<WarehouseOrderLineFailedEntity> queryResult = repository.findById(line.getUuid());
             if (queryResult.isPresent()) {
-                repository.save(new WarehouseOrderLineEntity(line));
+                repository.save(new WarehouseOrderLineFailedEntity(line));
                 LOGGER.info(">>> Warehouse order line key={} updated in mongoDB", line.getUuid());
             }
             else {
-                repository.insert(new WarehouseOrderLineEntity(line));
+                repository.insert(new WarehouseOrderLineFailedEntity(line));
                 LOGGER.info(">>> Warehouse order line key={} inserted in mongoDB", line.getUuid());
             }
         }

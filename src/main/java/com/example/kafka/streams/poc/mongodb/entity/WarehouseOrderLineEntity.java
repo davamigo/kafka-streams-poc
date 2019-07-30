@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Warehouse order MongoDB entity
  */
-@Document(collection="failedWarehouseOrderLine")
+@Document(collection="warehouseOrderLine")
 public class WarehouseOrderLineEntity {
 
     /** The uuid of warehouse order line */

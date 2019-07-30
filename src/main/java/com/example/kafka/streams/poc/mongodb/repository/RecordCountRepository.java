@@ -33,8 +33,8 @@ public class RecordCountRepository {
     /** The mongoDB repository where to retrieve the purchase order lines */
     private final PurchaseOrderLineRepository purchaseOrderLineRepository;
 
-    /** The mongoDB repository where to retrieve the warehouse order lines */
-    private final WarehouseOrderLineRepository warehouseOrderLineRepository;
+    /** The mongoDB repository where to retrieve the failed warehouse order lines */
+    private final WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
 
     /**
      * Autowired constructor
@@ -46,7 +46,7 @@ public class RecordCountRepository {
      * @param commercialOrderLineSplitRepository the mongoDB split commercial order line repository
      * @param purchaseOrderRepository            the mongoDB purchase order repository
      * @param purchaseOrderLineRepository        the mongoDB purchase order lines repository
-     * @param warehouseOrderLineRepository       the mongoDB warehouse order repository
+     * @param warehouseOrderLineFailedRepository the mongoDB failed warehouse order repository
      */
     @Autowired
     public RecordCountRepository(
@@ -57,7 +57,7 @@ public class RecordCountRepository {
             CommercialOrderLineSplitRepository commercialOrderLineSplitRepository,
             PurchaseOrderRepository purchaseOrderRepository,
             PurchaseOrderLineRepository purchaseOrderLineRepository,
-            WarehouseOrderLineRepository warehouseOrderLineRepository
+            WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository
     ) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
@@ -66,7 +66,7 @@ public class RecordCountRepository {
         this.commercialOrderConvertedRepository = commercialOrderConvertedRepository;
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseOrderLineRepository = purchaseOrderLineRepository;
-        this.warehouseOrderLineRepository = warehouseOrderLineRepository;
+        this.warehouseOrderLineFailedRepository = warehouseOrderLineFailedRepository;
     }
     /**
      * Count the records in all the collections
@@ -214,7 +214,7 @@ public class RecordCountRepository {
      */
     synchronized long countFailedWarehouseOrderLines() {
         try {
-            return warehouseOrderLineRepository.count();
+            return warehouseOrderLineFailedRepository.count();
         }
         catch (Exception exc) {
             return -1;

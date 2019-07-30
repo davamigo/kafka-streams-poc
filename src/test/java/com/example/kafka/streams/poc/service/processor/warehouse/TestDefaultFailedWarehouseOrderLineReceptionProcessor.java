@@ -1,8 +1,8 @@
 package com.example.kafka.streams.poc.service.processor.warehouse;
 
 import com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine;
-import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineEntity;
-import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineRepository;
+import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineFailedEntity;
+import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineFailedRepository;
 import com.example.kafka.streams.poc.service.processor.exception.ProcessorException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +23,9 @@ import static org.mockito.Mockito.*;
 @DirtiesContext
 @RunWith(MockitoJUnitRunner.class)
 public class TestDefaultFailedWarehouseOrderLineReceptionProcessor {
+
     @Mock
-    private WarehouseOrderLineRepository repository;
+    private WarehouseOrderLineFailedRepository repository;
 
     @Test
     public void testProcessCallsInsertWhenNew() {
@@ -36,7 +37,7 @@ public class TestDefaultFailedWarehouseOrderLineReceptionProcessor {
         DefaultFailedWarehouseOrderLineReceptionProcessor processor = new DefaultFailedWarehouseOrderLineReceptionProcessor(repository);
         processor.process(warehouseOrderLine);
 
-        verify(repository, times(1)).insert(any(WarehouseOrderLineEntity.class));
+        verify(repository, times(1)).insert(any(WarehouseOrderLineFailedEntity.class));
     }
 
     @Test
@@ -44,12 +45,12 @@ public class TestDefaultFailedWarehouseOrderLineReceptionProcessor {
 
         WarehouseOrderLine warehouseOrderLine = WarehouseOrderLine.newBuilder().setUuid("201").build();
 
-        when(repository.findById("201")).thenReturn(Optional.of(new WarehouseOrderLineEntity()));
+        when(repository.findById("201")).thenReturn(Optional.of(new WarehouseOrderLineFailedEntity()));
 
         DefaultFailedWarehouseOrderLineReceptionProcessor processor = new DefaultFailedWarehouseOrderLineReceptionProcessor(repository);
         processor.process(warehouseOrderLine);
 
-        verify(repository, times(1)).save(any(WarehouseOrderLineEntity.class));
+        verify(repository, times(1)).save(any(WarehouseOrderLineFailedEntity.class));
     }
 
     @Test(expected = ProcessorException.class)
@@ -57,11 +58,11 @@ public class TestDefaultFailedWarehouseOrderLineReceptionProcessor {
 
         WarehouseOrderLine warehouseOrderLine = WarehouseOrderLine.newBuilder().setUuid("301").build();
 
-        when(repository.insert(any(WarehouseOrderLineEntity.class))).thenThrow(new NullPointerException());
+        when(repository.insert(any(WarehouseOrderLineFailedEntity.class))).thenThrow(new NullPointerException());
 
         DefaultFailedWarehouseOrderLineReceptionProcessor processor = new DefaultFailedWarehouseOrderLineReceptionProcessor(repository);
         processor.process(warehouseOrderLine);
 
-        verify(repository, times(1)).insert(any(WarehouseOrderLineEntity.class));
+        verify(repository, times(1)).insert(any(WarehouseOrderLineFailedEntity.class));
     }
 }

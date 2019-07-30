@@ -40,7 +40,7 @@ public class RecordCountRepositoryTest {
     PurchaseOrderLineRepository purchaseOrderLineRepository;
 
     @Mock
-    private WarehouseOrderLineRepository warehouseOrderLineRepository;
+    private WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
 
     @Test
     public void testCountRecords() {
@@ -228,7 +228,7 @@ public class RecordCountRepositoryTest {
                 commercialOrderLineSplitRepository,
                 purchaseOrderRepository,
                 purchaseOrderLineRepository,
-                warehouseOrderLineRepository
+                warehouseOrderLineFailedRepository
         );
 
     }
