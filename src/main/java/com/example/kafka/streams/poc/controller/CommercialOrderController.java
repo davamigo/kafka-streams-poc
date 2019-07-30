@@ -187,6 +187,18 @@ public class CommercialOrderController {
     }
 
     /**
+     * GET /commercial-order/converted/details
+     *
+     * Shows the details the commercial order converter process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/converted/details")
+    public ModelAndView getConvertedOrdersDetailsAction() {
+        return new ModelAndView("commercial-order/details-converted");
+    }
+
+    /**
      * GET /commercial-order/lines-split
      *
      * Lists the split commercial order liness

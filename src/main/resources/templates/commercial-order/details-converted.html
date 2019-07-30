@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Convert Commercial Orders Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Convert Commercial Orders Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            Joins each <strong>commercial order</strong> with the <strong>member</strong> data.
+            Also computes some fields like the total amount of the order.
+            The target stream won't have the billing address nor the order lines.
+            The key in the new stream will be the same (the <code>uuid</code> of the commercial order).
+        </p>
+
+        <img th:src="@{/images/stream-convert-commercial-orders.png}" alt="Convert Commercial Orders Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, CommercialOrder&gt; commercialOrdersStream = builder.stream("t.commercial-orders.new", /* ... */);
+GlobalKTable&lt;String, Member&gt; membersGlobalTable = builder.globalTable("t.members.new", /* ... */);
+
+KStream&lt;String, CommercialOrderConverted&gt; commercialOrdersConvertedStream = commercialOrdersStream
+        .<strong>join</strong>(
+                membersGlobalTable,
+                (String uuid, CommercialOrder commercialOrder) -&gt; commercialOrder.getMemberUuid(),
+                (CommercialOrder commercialOrder, Member member) -&gt; {
+                        double amount = commercialOrder.getLines().stream().mapToDouble(line -&gt; line.getPrice() * line.getQuantity()).sum();
+                        int quantity = commercialOrder.getLines().stream().mapToInt(CommercialOrderLine::getQuantity).sum();
+                        return CommercialOrderConverted
+                                .newBuilder()
+                                .setUuid(commercialOrder.getUuid())
+                                /* .sets...() */
+                                .build();
+                }
+        );
+
+commercialOrdersConvertedStream.to("t.commercial-orders.converted", /* ... */);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>

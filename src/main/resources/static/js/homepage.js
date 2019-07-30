@@ -21,6 +21,7 @@ window.onload = function() {
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
     var $purchaseOrderLinesTopicBox = $('#svg-purchase-order-lines-topic-box', $svgDocument);
 
+    var $commercialOrderConverterStreamBox = $('#svg-stream-commercial-orders-converter-box', $svgDocument);
     var $commercialOrderLinesSplitStreamBox = $('#svg-stream-commercial-order-lines-split-box', $svgDocument);
     var $purchaseOrderLinesGenerateStreamBox = $('#svg-stream-purchase-order-lines-generate-box', $svgDocument);
 
@@ -50,7 +51,7 @@ window.onload = function() {
             type: $form.attr('method'),
             url: $form.attr('action'),
             success: function (response) {
-                setTimeout(countTopics(), 500);
+                startCountTopicsTimers();
                 showMessage('Created ' + response.length + ' commercial order(s) with random data!');
             },
             error: function (xhr) {
@@ -63,55 +64,61 @@ window.onload = function() {
 
     $productsTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('getProductsUrl');
+        var url = $topicContentModal.attr('data-get-products-url');
         loadTopicContent(url);
     });
 
     $membersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('getMembersUrl');
+        var url = $topicContentModal.attr('data-get-members-url');
         loadTopicContent(url);
     });
 
     $commercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('getCommercialOrdersUrl');
+        var url = $topicContentModal.attr('data-get-commercial-orders-url');
         loadTopicContent(url);
     });
 
     $convertedCommercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('getConvertedCommercialOrdersUrl');
+        var url = $topicContentModal.attr('data-get-converted-commercial-orders-url');
         loadTopicContent(url);
     });
 
     $splitCommercialOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('getSplitCommercialOrderLinesUrl');
-        loadTopicContent(url);
-    });
-
-    $purchaseOrdersTopicBox.click(function (ev) {
-        ev.preventDefault();
-        var url = $topicContentModal.data('getPurchaseOrdersUrl');
+        var url = $topicContentModal.attr('data-get-split-commercial-order-lines-url');
         loadTopicContent(url);
     });
 
     $purchaseOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('getPurchaseOrderLinesUrl');
+        var url = $topicContentModal.attr('data-get-purchase-order-lines-url');
         loadTopicContent(url);
     });
 
-    $purchaseOrderLinesGenerateStreamBox.click(function (ev) {
+    $purchaseOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('showPurchaseOrderLinesDetailsUrl');
+        var url = $topicContentModal.attr('data-get-purchase-orders-url');
+        loadTopicContent(url);
+    });
+
+    $commercialOrderConverterStreamBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.attr('data-show-commercial-orders-converter-details-url');
         loadTopicContent(url);
     });
 
     $commercialOrderLinesSplitStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.data('showCommercialOrderLinesDetailsUrl');
+        var url = $topicContentModal.attr('data-show-commercial-order-lines-details-url');
+        loadTopicContent(url);
+    });
+
+    $purchaseOrderLinesGenerateStreamBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.attr('data-show-purchase-order-lines-details-url');
         loadTopicContent(url);
     });
 
@@ -119,10 +126,11 @@ window.onload = function() {
         ev.preventDefault();
         var id = $(this).attr('id');
         var prodid = '&' + id.slice(4, -7);
-        var url = $svgObject.data('processToggleUrl').replace("{procid}", prodid);
+        var url = $svgObject.attr('data-process-toggle-url').replace("{procid}", prodid);
         $.post(url)
             .done(function () {
                 checkProcessesStatuses();
+                startCountTopicsTimers();
             })
             .fail(function (xhr) {
                 var defaultMsg = 'An error occurred changing the status of a process!';
@@ -147,8 +155,18 @@ window.onload = function() {
         $alertModal.modal('show');
     };
 
+    var startCountTopicsTimers = function() {
+        countTopics();
+        setTimeout(countTopics, 500);
+        setTimeout(countTopics, 1000);
+        setTimeout(countTopics, 2500);
+        setTimeout(countTopics, 5000);
+        setTimeout(countTopics, 10000);
+        setTimeout(countTopics, 25000);
+    };
+
     var countTopics = function() {
-        $.get($svgObject.data('topicsCountUrl'))
+        $.get($svgObject.attr('data-topics-count-url'))
             .done(function (response) {
                 if (typeof response !== 'undefined' && response != null) {
                     for (var topic in response) {
@@ -164,7 +182,7 @@ window.onload = function() {
     };
 
     var checkProcessesStatuses = function() {
-        $.get($svgObject.data('processesStatusUrl'))
+        $.get($svgObject.attr('data-processes-status-url'))
             .done(function (response) {
                 if (typeof response !== 'undefined' && response != null) {
                     for (var process in response) {
