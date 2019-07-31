@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Match  Warehouse Order Lines Win Legacy Product Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Match  Warehouse Order Lines Win Legacy Product Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            In this PoC we are assuming the <strong>WMS</strong> (<i>Warehouse Management System</i>) needs a
+            <strong><i>legacy product id</i></strong> which is stored in another topic, but it's possible this
+            <code>legacy_id</code> is not there.
+            So we are doing a <code>leftJoin</code> operation to not loose any product.
+        </p>
+        <p>
+            The output of this process are two topics (<strong><i>matched</i></strong> and <strong><i>unmatched</i></strong>),
+            depending on the legacy product id was found or not.
+        </p>
+
+        <img src="#" th:src="@{/images/stream-match-warehouse-order-lines.png}" alt="Match  Warehouse Order Lines Win Legacy Product Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, WarehouseOrderLine&gt; generatedWarehouseOrderLinesStream = builder.stream("t.warehouse-order-line.generated", /* ... */);
+KTable&lt;String, Integer&gt; productLecgaryIdsTable = builder.table("t.products-legacy-id.cache", /* ... */);
+
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesBase = generatedWarehouseOrderLinesStream
+        .selectKey((String lineUuid, WarehouseOrderLine line) -&gt; line.getProductUuid())
+        .<strong>leftJoin</strong>(
+                productLecgaryIdsTable,
+                (WarehouseOrderLine line, Integer productLegacyId) -&gt; {
+                    return WarehouseOrderLine
+                            .newBuilder(line)
+                            .setProductLegacyId(productLegacyId)
+                            .build();
+                },
+                Joined.with(/* ... */)
+        ).selectKey((String dummy, WarehouseOrderLine line) -&gt; line.getUuid());
+
+@SuppressWarnings("unchecked")
+KStream&lt;String, WarehouseOrderLine&gt;[] warehouseOrderLinesBranches = warehouseOrderLinesBase
+        .<strong>branch</strong>(
+                (String productUuid, WarehouseOrderLine line) -&gt; null != line.getProductLegacyId(),
+                (String productUuid, WarehouseOrderLine line) -&gt; true
+        );
+
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesMatched = warehouseOrderLinesBranches[0];
+warehouseOrderLinesMatched.to("t.warehouse-order-lines.matched", /*...*/);
+
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesUnmatched = warehouseOrderLinesBranches[1];
+warehouseOrderLinesUnmatched.to("t.warehouse-order-lines.unmatched", /*...*/);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>

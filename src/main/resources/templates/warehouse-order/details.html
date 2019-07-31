@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Generate Warehouse Orders Process - Kafka Streams PoC</title>
+    <title>Generate Warehouse Order Lines Process - Kafka Streams PoC</title>
 </head>
 <body>
 
 <div>
     <h1>Kafka Streams PoC</h1>
-    <h2 id="js-modal-topics-content-title">Generate Warehouse Orders Process</h2>
+    <h2 id="js-modal-topics-content-title">Generate Warehouse Order Lines Process</h2>
 </div>
 
 <div>
@@ -18,7 +18,7 @@
             The key will be the <code>uuid</code> of the new warehouse order line.
         </p>
 
-        <img th:src="@{/images/stream-generate-warehouse-order-lines.png}" alt="Generate Warehouse Orders Process" class="img-fluid">
+        <img th:src="@{/images/stream-generate-warehouse-order-lines.png}" alt="Generate Warehouse Order Lines Process" class="img-fluid">
 
         <pre class="alert alert-secondary" role="alert"><code>
 KStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesStream = builder.stream("t.purchase-order-lines.aggregated", /* ... */);

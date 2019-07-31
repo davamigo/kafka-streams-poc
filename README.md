@@ -115,7 +115,7 @@ The key will be the `uuid` of the new warehouse order line.
 
 ### Match warehouse order line with the product legacy id
 
-In this example we are assuming the WMS (_Warehouse Management System_) needs a ***legacy product id*** which is in another topic, but it's possible this legacy id is not there.
+In this example we are assuming the WMS (_Warehouse Management System_) needs a ***legacy product id*** which is stored in another topic, but it's possible this `legacy_id` is not there.
 So we are doing a `leftJoin` operation to not loose any product.
 
 The output are two topics (_matched_ or _unmatched_), depending on the legacy product id was found or not.

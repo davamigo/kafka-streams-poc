@@ -56,8 +56,20 @@ public class WarehouseOrderController {
      * @return the model and view
      */
     @GetMapping("/line/details")
-    public ModelAndView getOrdersDetailsAction() {
+    public ModelAndView getOrderLinessDetailsAction() {
         return new ModelAndView("warehouse-order/details");
+    }
+
+    /**
+     * GET /warehouse-order/line/match/details
+     *
+     * Shows the details the warehouse order lines matching with legacy product process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/line/match/details")
+    public ModelAndView getOrderLineMatchsDetailsAction() {
+        return new ModelAndView("warehouse-order/details-match");
     }
 
     /**
