@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Merge Warehouse Order Lines Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Merge Warehouse Order Lines Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            Merges the <strong>matched warehouse order lines</strong> and the
+            <strong>recovered warehouse order lines</strong> streams into one larger stream.
+            The order is not guaranteed!
+        </p>
+
+        <img src="#" th:src="@{/images/stream-merge-warehouse-order-lines.png}" alt="Merge Warehouse Order Lines Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, WarehouseOrderLine&gt; matchedWarehouseOrderLineStream = builder.stream("t.warehouse-order-lines.matched", /* ... */);
+
+KStream&lt;String, WarehouseOrderLine&gt; recoveredWarehouseOrderLineStream = builder.stream("t.warehouse-order-lines.recovered", /* ... */);
+
+KStream&lt;String, WarehouseOrderLine&gt; newWarehouseOrderLineStream = matchedWarehouseOrderLineStream.merge(recoveredWarehouseOrderLineStream);
+
+newWarehouseOrderLineStream.to("t.warehouse-order-lines.new", /* ... */);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>

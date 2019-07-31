@@ -26,8 +26,9 @@ window.onload = function() {
     var $purchaseOrderLinesGenerateStreamBox = $('#svg-stream-purchase-order-lines-generate-box', $svgDocument);
     var $purchaseOrdersGenerateStreamBox = $('#svg-stream-purchase-order-generate-box', $svgDocument);
     var $warehouseOrderLinesGenerateStreamBox = $('#svg-stream-warehouse-order-line-generator-box', $svgDocument);
-    var $warehouseOrderLinesMatcherGenerateStreamBox = $('#svg-match-with-legacy-product-id-box', $svgDocument);
-    var $warehouseOrderLinesRecoverGenerateStreamBox = $('#svg-recover-warehouse-order-lines-box', $svgDocument);
+    var $warehouseOrderLinesMatcherStreamBox = $('#svg-match-with-legacy-product-id-box', $svgDocument);
+    var $warehouseOrderLinesRecoverStreamBox = $('#svg-recover-warehouse-order-lines-box', $svgDocument);
+    var $warehouseOrderLinesMergerStreamBox = $('#svg-merge-warehouse-order-lines-box', $svgDocument);
     var $productLegacyIdFeederStreamBox = $('#svg-product-legacy-id-feeder-box', $svgDocument);
 
     var $topicContentModal = $('#js-modal-topics-content');
@@ -139,15 +140,21 @@ window.onload = function() {
         loadTopicContent(url);
     });
 
-    $warehouseOrderLinesMatcherGenerateStreamBox.click(function (ev) {
+    $warehouseOrderLinesMatcherStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.attr('data-show-warehouse-order-lines-match-details-url');
         loadTopicContent(url);
     });
 
-    $warehouseOrderLinesRecoverGenerateStreamBox.click(function (ev) {
+    $warehouseOrderLinesRecoverStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.attr('data-show-warehouse-order-lines-recover-details-url');
+        loadTopicContent(url);
+    });
+
+    $warehouseOrderLinesMergerStreamBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.attr('data-show-warehouse-order-lines-merger-details-url');
         loadTopicContent(url);
     });
 

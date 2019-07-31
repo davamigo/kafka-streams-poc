@@ -85,6 +85,18 @@ public class WarehouseOrderController {
     }
 
     /**
+     * GET /warehouse-order/line/merger/details
+     *
+     * Shows the details the warehouse order lines merger process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/line/merger/details")
+    public ModelAndView getOrderLinesMergerDetailsAction() {
+        return new ModelAndView("warehouse-order/details-merger");
+    }
+
+    /**
      * GET /warehouse-order/line/failed
      *
      * Lists the failed warehouse order liness

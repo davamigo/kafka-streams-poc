@@ -146,6 +146,7 @@ The output are two topics (_recovered_ or _failed_), depending on the legacy pro
 ### Merge matched and recovered warehouse order lines
 
 Merges the **matched warehouse order lines** and the **recovered warehouse order lines** streams into one larger stream.
+The order is not guaranteed!
 
 ![](docs/images/stream-merge-warehouse-order-lines.png)
 
