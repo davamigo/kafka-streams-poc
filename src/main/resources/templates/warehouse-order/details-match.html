@@ -51,10 +51,10 @@ KStream&lt;String, WarehouseOrderLine&gt;[] warehouseOrderLinesBranches = wareho
         );
 
 KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesMatched = warehouseOrderLinesBranches[0];
-warehouseOrderLinesMatched.to("t.warehouse-order-lines.matched", /*...*/);
+warehouseOrderLinesMatched.to("t.warehouse-order-lines.matched", /* ... */);
 
 KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesUnmatched = warehouseOrderLinesBranches[1];
-warehouseOrderLinesUnmatched.to("t.warehouse-order-lines.unmatched", /*...*/);
+warehouseOrderLinesUnmatched.to("t.warehouse-order-lines.unmatched", /* ... */);
         </code></pre>
     </div>
 </div>

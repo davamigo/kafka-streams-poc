@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Recover Warehouse Order Lines Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Recover Warehouse Order Lines Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            Takes the unmatched <strong>warehouse order lines</strong> and tries to recover the
+            <strong>product legacy id</strong> from an external API.
+        </p>
+        <p>
+            The output are two topics (<strong><i>recovered</i></strong> or <strong><i>failed</i></strong>),
+            depending on the legacy product id was found or not.
+        </p>
+
+        <img src="#" th:src="@{/images/stream-recover-warehouse-order-lines.png}" alt="Recover Warehouse Order Lines Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLineStream = builder.stream("t.warehouse-order-lines.unmatched", /* ... */);
+
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesMapped = warehouseOrderLineStream
+        .<strong>mapValues</strong>(
+                (String lineUuid, WarehouseOrderLine line) -&gt; {
+                        WarehouseOrderLine.Builder lineBuilder  = WarehouseOrderLine.newBuilder(line);
+                        Integer productLegacyId = legacyProductIdsApi.getLegacyId(line.getProductUuid()).orElse(null);
+                        if (null != productLegacyId) {
+                            lineBuilder.setProductLegacyId(productLegacyId);
+                        }
+                        return lineBuilder.build();
+                }
+        );
+
+@SuppressWarnings("unchecked")
+KStream&lt;String, WarehouseOrderLine&gt;[] warehouseOrderLinesBranches = warehouseOrderLinesMapped
+        .<strong>branch</strong>(
+                (String productUuid, WarehouseOrderLine line) -&gt; line.getProductLegacyId() != null,
+                (String productUuid, WarehouseOrderLine line) -&gt; true
+        );
+
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesRecovered = warehouseOrderLinesBranches[0];
+warehouseOrderLinesRecovered.to("t.warehouse-order-lines.recovered", /* ... */);
+
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesFailed = warehouseOrderLinesBranches[1];
+warehouseOrderLinesFailed.to("t.warehouse-order-lines.failed", /* ... */);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>

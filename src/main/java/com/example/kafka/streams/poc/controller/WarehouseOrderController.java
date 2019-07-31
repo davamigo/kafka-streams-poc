@@ -68,8 +68,20 @@ public class WarehouseOrderController {
      * @return the model and view
      */
     @GetMapping("/line/match/details")
-    public ModelAndView getOrderLineMatchsDetailsAction() {
+    public ModelAndView getOrderLinesMatchDetailsAction() {
         return new ModelAndView("warehouse-order/details-match");
+    }
+
+    /**
+     * GET /warehouse-order/line/recover/details
+     *
+     * Shows the details the warehouse order lines recover process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/line/recover/details")
+    public ModelAndView getOrderLinesRecoverDetailsAction() {
+        return new ModelAndView("warehouse-order/details-recover");
     }
 
     /**
