@@ -28,6 +28,7 @@ window.onload = function() {
     var $warehouseOrderLinesGenerateStreamBox = $('#svg-stream-warehouse-order-line-generator-box', $svgDocument);
     var $warehouseOrderLinesMatcherGenerateStreamBox = $('#svg-match-with-legacy-product-id-box', $svgDocument);
     var $warehouseOrderLinesRecoverGenerateStreamBox = $('#svg-recover-warehouse-order-lines-box', $svgDocument);
+    var $productLegacyIdFeederStreamBox = $('#svg-product-legacy-id-feeder-box', $svgDocument);
 
     var $topicContentModal = $('#js-modal-topics-content');
     var $topicContentTitle = $('#js-modal-topics-content-title');
@@ -147,6 +148,12 @@ window.onload = function() {
     $warehouseOrderLinesRecoverGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.attr('data-show-warehouse-order-lines-recover-details-url');
+        loadTopicContent(url);
+    });
+
+    $productLegacyIdFeederStreamBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.attr('data-show-product-legacy-id-feeder-details-url');
         loadTopicContent(url);
     });
 

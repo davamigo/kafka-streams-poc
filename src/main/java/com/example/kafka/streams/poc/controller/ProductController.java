@@ -87,4 +87,16 @@ public class ProductController {
         mav.addObject("product", product.orElse(null));
         return mav;
     }
+
+    /**
+     * GET /product/legacy/details
+     *
+     * Shows the details of the legacy product feeder process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/legacy/details")
+    public ModelAndView getOrderLinesRecoverDetailsAction() {
+        return new ModelAndView("product/details-legacy");
+    }
 }

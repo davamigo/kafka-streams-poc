@@ -40,7 +40,7 @@
         <dt>Bar Code:</dt>
         <dd th:text="${warehouseOrderLine.getProductBarCode()}"></dd>
 
-        <dt>Product Legacy Id.</dt>
+        <dt>Product Legacy Id</dt>
         <dd>
             <form id="productLegacyIdForm" action="#" th:action="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" method="post">
                 <label for="productLegacyId">Set to:</label>

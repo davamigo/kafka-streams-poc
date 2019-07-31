@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Feed Product Legacy Id Topic Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Feed Product Legacy Id Topic Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            This Kafka Stream process fills the <strong>product legacy id topic</strong> with the relation between
+            the <strong>product uuid</strong> and the <strong>product legacy id</strong>.
+            That topic was used before in the <strong>Generate warehouse order lines</strong> Kafka Streams process.
+        </p>
+
+        <img src="#" th:src="@{/images/stream-feed-product-legacy-id-cache.png}" alt="Feed Product Legacy Id Topic Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesStream = builder.stream("t.warehouse-order-lines.recovered", /* ... */);
+
+KStream&lt;String, Integer&gt; productLegacyIdsStream = warehouseOrderLinesStream.map(
+        (String dummy, WarehouseOrderLine line) -&gt; KeyValue.pair(line.getProductUuid(), line.getProductLegacyId())
+);
+
+productLegacyIdsStream.to("t.products-legacy-id.cache", /* ... */);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>
