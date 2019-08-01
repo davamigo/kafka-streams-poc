@@ -5,11 +5,14 @@
     <title>Product - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Product</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Product</h2>
+</div>
 
 <div th:if="${null == product}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The product with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,26 +20,28 @@
 </div>
 
 <div th:if="${null != product}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/product/{id}(id=${product.getUuid()})}" th:text="${product.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>Name:</dt>
-        <dd th:text="${product.getName()}"></dd>
+            <dt class="col-sm-3">Name:</dt>
+            <dd class="col-sm-9" th:text="${product.getName()}"></dd>
 
-        <dt>Type:</dt>
-        <dd th:text="${product.getType()}"></dd>
+            <dt class="col-sm-3">Type:</dt>
+            <dd class="col-sm-9" th:text="${product.getType()}"></dd>
 
-        <dt>Bar Code:</dt>
-        <dd th:text="${product.getBarCode()}"></dd>
+            <dt class="col-sm-3">Bar Code:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${product.getBarCode()}"></dd>
 
-        <dt>Cost Price:</dt>
-        <dd th:text="${#numbers.formatDecimal(product.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
-    </dl>
+            <dt class="col-sm-3">Cost Price:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(product.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
+        </dl>
+    </div>
 </div>
 
 <p>

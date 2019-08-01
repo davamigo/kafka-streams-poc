@@ -66,16 +66,28 @@ public class RandomCommercialOrderProducer {
             throw new InvalidArgumentException("The count of commercial orders to create must be between 1 and 500!");
         }
 
-        List<CommercialOrder> result = new ArrayList<>();
+        // Create the commercial orders and publis members and products to Kafka
+        List<CommercialOrder> commercialOrders = new ArrayList<>();
         while (count-- > 0) {
             CommercialOrder commercialOrder = commercialOrderGenerator.getCommercialOrder();
             publishMemberFromCommercialOrder(commercialOrder);
             publishProductsFromCommercialOrder(commercialOrder);
-            publishCommercialOrder(commercialOrder);
-            result.add(commercialOrder);
+            commercialOrders.add(commercialOrder);
         }
 
-        return result;
+        // Sleep the thread for 100 millisecs to avoid publishing first the commercial-orders
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Publish the commercial orders
+        for (CommercialOrder commercialOrder : commercialOrders) {
+            publishCommercialOrder(commercialOrder);
+        }
+
+        return commercialOrders;
     }
 
     /**

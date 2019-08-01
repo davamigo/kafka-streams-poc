@@ -5,11 +5,14 @@
     <title>Commercial Order - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Commercial Order</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Commercial Order</h2>
+</div>
 
 <div th:if="${null == commercialOrder}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The commercial order with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,70 +20,72 @@
 </div>
 
 <div th:if="${null != commercialOrder}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/commercial-order/new-orders/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/commercial-order/new-orders/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>Date:</dt>
-        <dd th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
+            <dt class="col-sm-3">Date:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
 
-        <dt>Member:</dt>
-        <dd th:text="${commercialOrder.getMemberUuid()}"></dd>
+            <dt class="col-sm-3">Member:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${commercialOrder.getMemberUuid()}"></dd>
 
-        <dt>Shipping Address:</dt>
-        <dd>
-            <span th:text="${commercialOrder.getShippingAddress().getStreet()}"></span>
-            <span th:text="${commercialOrder.getShippingAddress().getNumber()}"></span>
-            <span th:text="${commercialOrder.getShippingAddress().getExtra()}"></span>
-            <span th:text="${commercialOrder.getShippingAddress().getZipCode()}"></span>
-            <span th:text="${commercialOrder.getShippingAddress().getCity()}"></span>
-            <span th:text="${commercialOrder.getShippingAddress().getState()}"></span>
-            <span th:text="${commercialOrder.getShippingAddress().getCountry()}"></span>
-        </dd>
+            <dt class="col-sm-3">Shipping Address:</dt>
+            <dd class="col-sm-9">
+                <span th:text="${commercialOrder.getShippingAddress().getStreet()}"></span>
+                <span th:text="${commercialOrder.getShippingAddress().getNumber()}"></span>
+                <span th:text="${commercialOrder.getShippingAddress().getExtra()}"></span>
+                <span th:text="${commercialOrder.getShippingAddress().getZipCode()}"></span>
+                <span th:text="${commercialOrder.getShippingAddress().getCity()}"></span>
+                <span th:text="${commercialOrder.getShippingAddress().getState()}"></span>
+                <span th:text="${commercialOrder.getShippingAddress().getCountry()}"></span>
+            </dd>
 
-        <dt>Billing Address:</dt>
-        <dd th:if="${null == commercialOrder.getBillingAddress()}">
-            &ndash;
-        </dd>
-        <dd th:if="${null != commercialOrder.getBillingAddress()}">
-            <span th:text="${commercialOrder.getBillingAddress().getStreet()}"></span>
-            <span th:text="${commercialOrder.getBillingAddress().getNumber()}"></span>
-            <span th:text="${commercialOrder.getBillingAddress().getExtra()}"></span>
-            <span th:text="${commercialOrder.getBillingAddress().getZipCode()}"></span>
-            <span th:text="${commercialOrder.getBillingAddress().getCity()}"></span>
-            <span th:text="${commercialOrder.getBillingAddress().getState()}"></span>
-            <span th:text="${commercialOrder.getBillingAddress().getCountry()}"></span>
-        </dd>
+            <dt class="col-sm-3">Billing Address:</dt>
+            <dd class="col-sm-9" th:if="${null == commercialOrder.getBillingAddress()}">
+                &ndash;
+            </dd>
+            <dd class="col-sm-9" th:if="${null != commercialOrder.getBillingAddress()}">
+                <span th:text="${commercialOrder.getBillingAddress().getStreet()}"></span>
+                <span th:text="${commercialOrder.getBillingAddress().getNumber()}"></span>
+                <span th:text="${commercialOrder.getBillingAddress().getExtra()}"></span>
+                <span th:text="${commercialOrder.getBillingAddress().getZipCode()}"></span>
+                <span th:text="${commercialOrder.getBillingAddress().getCity()}"></span>
+                <span th:text="${commercialOrder.getBillingAddress().getState()}"></span>
+                <span th:text="${commercialOrder.getBillingAddress().getCountry()}"></span>
+            </dd>
 
-        <dt>Lines:</dt>
-        <dd th:if="${commercialOrder.getLines().isEmpty()}">
-            Commercial Order without lines!
-        </dd>
-        <dd th:if="${!commercialOrder.getLines().isEmpty()}">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Uuid</th>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="commercialOrderLine : ${commercialOrder.getLines()}">
-                        <td><strong th:text="${commercialOrderLine.getUuid()}"></strong></td>
-                        <td th:text="${commercialOrderLine.getProductUuid()}"></td>
-                        <td th:text="${#numbers.formatDecimal(commercialOrderLine.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                        <td th:text="${#numbers.formatDecimal(commercialOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </dd>
-    </dl>
+            <dt class="col-sm-12">Lines:</dt>
+            <dd class="col-sm-12" th:if="${commercialOrder.getLines().isEmpty()}">
+                Commercial Order without lines!
+            </dd>
+            <dd class="col-sm-12" th:if="${!commercialOrder.getLines().isEmpty()}">
+                <table class="table table-striped table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Uuid</th>
+                            <th scope="col">Product</th>
+                            <th scope="col" class="text-right">Price</th>
+                            <th scope="col" class="text-right">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="commercialOrderLine : ${commercialOrder.getLines()}">
+                            <td class="text-monospace"><strong th:text="${commercialOrderLine.getUuid()}"></strong></td>
+                            <td class="text-monospace" th:text="${commercialOrderLine.getProductUuid()}"></td>
+                            <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(commercialOrderLine.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(commercialOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </dd>
+        </dl>
+    </div>
 </div>
 
 <p>

@@ -5,11 +5,14 @@
     <title>Commercial Order Line Split - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Commercial Order Line Split</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Commercial Order Line Split</h2>
+</div>
 
 <div th:if="${null == line}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The commercial order line split with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,48 +20,49 @@
 </div>
 
 <div th:if="${null != line}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/commercial-order/lines-split/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9">
+                <strong>
+                    <a th:href="@{/commercial-order/lines-split/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>Commercial Order Uuid:</dt>
-        <dd th:text="${line.getCommercialOrderUuid()}"></dd>
+            <dt class="col-sm-3">Commercial Order Uuid:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${line.getCommercialOrderUuid()}"></dd>
 
-        <dt>Commercial Order Date:</dt>
-        <dd th:text="${#calendars.format(line.getCommercialOrderDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
+            <dt class="col-sm-3">Commercial Order Date:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#calendars.format(line.getCommercialOrderDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
 
-        <dt>Shipping Country:</dt>
-        <dd th:text="${line.getShippingCountry()}"></dd>
+            <dt class="col-sm-3">Shipping Country:</dt>
+            <dd class="col-sm-9" th:text="${line.getShippingCountry()}"></dd>
 
-        <dt>Member Uuid:</dt>
-        <dd th:text="${line.getMemberUuid()}"></dd>
+            <dt class="col-sm-3">Member Uuid:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${line.getMemberUuid()}"></dd>
 
-        <dt>Product Uuid:</dt>
-        <dd th:text="${line.getProductUuid()}"></dd>
+            <dt class="col-sm-3">Product Uuid:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${line.getProductUuid()}"></dd>
 
-        <dt>Product Name:</dt>
-        <dd th:text="${line.getProductName()}"></dd>
+            <dt class="col-sm-3">Product Name:</dt>
+            <dd class="col-sm-9" th:text="${line.getProductName()}"></dd>
 
-        <dt>Product Type:</dt>
-        <dd th:text="${line.getProductType()}"></dd>
+            <dt class="col-sm-3">Product Type:</dt>
+            <dd class="col-sm-9" th:text="${line.getProductType()}"></dd>
 
-        <dt>Product Bar Code:</dt>
-        <dd th:text="${line.getProductBarCode()}"></dd>
+            <dt class="col-sm-3">Product Bar Code:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${line.getProductBarCode()}"></dd>
 
-        <dt>Product Price:</dt>
-        <dd th:text="${#numbers.formatDecimal(line.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
+            <dt class="col-sm-3">Product Price:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(line.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
-        <dt>Sell Price:</dt>
-        <dd th:text="${#numbers.formatDecimal(line.getOrderLinePrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
+            <dt class="col-sm-3">Sell Price:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(line.getOrderLinePrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
-        <dt>Quantity:</dt>
-        <dd th:text="${#numbers.formatDecimal(line.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
-
-    </dl>
+            <dt class="col-sm-3">Quantity:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(line.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
+        </dl>
+    </div>
 </div>
 
 <p>

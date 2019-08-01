@@ -5,11 +5,14 @@
     <title>Purchase Order Line - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Purchase Order Line</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Purchase Order Line</h2>
+</div>
 
 <div th:if="${null == purchaseOrderLine}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The purchase order line with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,41 +20,43 @@
 </div>
 
 <div th:if="${null != purchaseOrderLine}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/purchase-order/line/{id}(id=${purchaseOrderLine.getUuid()})}" th:text="${purchaseOrderLine.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/purchase-order/line/{id}(id=${purchaseOrderLine.getUuid()})}" th:text="${purchaseOrderLine.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>Aggregation Key:</dt>
-        <dd th:text="${purchaseOrderLine.getAggregationKey()}"></dd>
+            <dt class="col-sm-3">Aggregation Key:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${purchaseOrderLine.getAggregationKey()}"></dd>
 
-        <dt>Country:</dt>
-        <dd th:text="${purchaseOrderLine.getCountry()}"></dd>
+            <dt class="col-sm-3">Country:</dt>
+            <dd class="col-sm-9" th:text="${purchaseOrderLine.getCountry()}"></dd>
 
-        <dt>Date:</dt>
-        <dd th:text="${#calendars.format(purchaseOrderLine.getDate(), 'yyyy-MM-dd')}"></dd>
+            <dt class="col-sm-3">Date:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#calendars.format(purchaseOrderLine.getDate(), 'yyyy-MM-dd')}"></dd>
 
-        <dt>Product Uuid:</dt>
-        <dd th:text="${purchaseOrderLine.getProductUuid()}"></dd>
+            <dt class="col-sm-3">Product Uuid:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${purchaseOrderLine.getProductUuid()}"></dd>
 
-        <dt>Product Name:</dt>
-        <dd th:text="${purchaseOrderLine.getProductName()}"></dd>
+            <dt class="col-sm-3">Product Name:</dt>
+            <dd class="col-sm-9" th:text="${purchaseOrderLine.getProductName()}"></dd>
 
-        <dt>Product Type:</dt>
-        <dd th:text="${purchaseOrderLine.getProductType()}"></dd>
+            <dt class="col-sm-3">Product Type:</dt>
+            <dd class="col-sm-9" th:text="${purchaseOrderLine.getProductType()}"></dd>
 
-        <dt>Product Bar Code:</dt>
-        <dd th:text="${purchaseOrderLine.getProductBarCode()}"></dd>
+            <dt class="col-sm-3">Product Bar Code:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${purchaseOrderLine.getProductBarCode()}"></dd>
 
-        <dt>Product Price:</dt>
-        <dd th:text="${#numbers.formatDecimal(purchaseOrderLine.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
+            <dt class="col-sm-3">Product Price:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(purchaseOrderLine.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
-        <dt>Quantity:</dt>
-        <dd th:text="${#numbers.formatDecimal(purchaseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
-    </dl>
+            <dt class="col-sm-3">Quantity:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(purchaseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
+        </dl>
+    </div>
 </div>
 
 <p>

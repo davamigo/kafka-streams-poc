@@ -5,11 +5,14 @@
     <title>Commercial Order Converted - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Commercial Order Converted</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Commercial Order Converted</h2>
+</div>
 
 <div th:if="${null == commercialOrder}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The commercial order converted with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,42 +20,43 @@
 </div>
 
 <div th:if="${null != commercialOrder}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/commercial-order/converted/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/commercial-order/converted/{id}(id=${commercialOrder.getUuid()})}" th:text="${commercialOrder.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>Date:</dt>
-        <dd th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
+            <dt class="col-sm-3">Date:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#calendars.format(commercialOrder.getDatetime(), 'yyyy-MM-dd HH:mm:ss')}"></dd>
 
-        <dt>Member Uuid:</dt>
-        <dd th:text="${commercialOrder.getMemberUuid()}"></dd>
+            <dt class="col-sm-3">Member Uuid:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${commercialOrder.getMemberUuid()}"></dd>
 
-        <dt>Member First Name:</dt>
-        <dd th:text="${commercialOrder.getMemberFirstName()}"></dd>
+            <dt class="col-sm-3">Member First Name:</dt>
+            <dd class="col-sm-9" th:text="${commercialOrder.getMemberFirstName()}"></dd>
 
-        <dt>Member Last Name:</dt>
-        <dd th:text="${commercialOrder.getMemberLastName()}"></dd>
+            <dt class="col-sm-3">Member Last Name:</dt>
+            <dd class="col-sm-9" th:text="${commercialOrder.getMemberLastName()}"></dd>
 
-        <dt>Shipping Country:</dt>
-        <dd th:text="${commercialOrder.getShippingCountry()}"></dd>
+            <dt class="col-sm-3">Shipping Country:</dt>
+            <dd class="col-sm-9" th:text="${commercialOrder.getShippingCountry()}"></dd>
 
-        <dt>Shipping City:</dt>
-        <dd th:text="${commercialOrder.getShippingCity()}"></dd>
+            <dt class="col-sm-3">Shipping City:</dt>
+            <dd class="col-sm-9" th:text="${commercialOrder.getShippingCity()}"></dd>
 
-        <dt>Shipping Zip Code:</dt>
-        <dd th:text="${commercialOrder.getShippingZipCode()}"></dd>
+            <dt class="col-sm-3">Shipping Zip Code:</dt>
+            <dd class="col-sm-9" th:text="${commercialOrder.getShippingZipCode()}"></dd>
 
-        <dt>Total Amount:</dt>
-        <dd th:text="${#numbers.formatDecimal(commercialOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
+            <dt class="col-sm-3">Total Amount:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(commercialOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
-        <dt>Total Quantity:</dt>
-        <dd th:text="${#numbers.formatDecimal(commercialOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
-
-    </dl>
+            <dt class="col-sm-3">Total Quantity:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(commercialOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
+        </dl>
+    </div>
 </div>
 
 <p>

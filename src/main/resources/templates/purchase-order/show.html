@@ -5,11 +5,14 @@
     <title>Purchase Order - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Purchase Order</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Purchase Order</h2>
+</div>
 
 <div th:if="${null == purchaseOrder}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The purchase order with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,56 +20,58 @@
 </div>
 
 <div th:if="${null != purchaseOrder}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getUuid()})}" th:text="${purchaseOrder.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9">
+                <strong>
+                    <a th:href="@{/purchase-order/{id}(id=${purchaseOrder.getUuid()})}" th:text="${purchaseOrder.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>Aggregation Key:</dt>
-        <dd th:text="${purchaseOrder.getAggregationKey()}"></dd>
+            <dt class="col-sm-3">Aggregation Key:</dt>
+            <dd class="col-sm-9" th:text="${purchaseOrder.getAggregationKey()}"></dd>
 
-        <dt>Country:</dt>
-        <dd th:text="${purchaseOrder.getCountry()}"></dd>
+            <dt class="col-sm-3">Country:</dt>
+            <dd class="col-sm-9" th:text="${purchaseOrder.getCountry()}"></dd>
 
-        <dt>Date:</dt>
-        <dd th:text="${#calendars.format(purchaseOrder.getDate(), 'yyyy-MM-dd')}"></dd>
+            <dt class="col-sm-3">Date:</dt>
+            <dd class="col-sm-9" th:text="${#calendars.format(purchaseOrder.getDate(), 'yyyy-MM-dd')}"></dd>
 
-        <dt>Total Amount:</dt>
-        <dd th:text="${#numbers.formatDecimal(purchaseOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
+            <dt class="col-sm-3">Total Amount:</dt>
+            <dd class="col-sm-9" th:text="${#numbers.formatDecimal(purchaseOrder.getTotalAmount(), 1, 'DEFAULT', 2, 'DEFAULT')}"></dd>
 
-        <dt>Total Quantity:</dt>
-        <dd th:text="${#numbers.formatDecimal(purchaseOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
+            <dt class="col-sm-3">Total Quantity:</dt>
+            <dd class="col-sm-9" th:text="${#numbers.formatDecimal(purchaseOrder.getTotalQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
 
-        <dt>Lines:</dt>
-        <dd th:if="${purchaseOrder.getLines().isEmpty()}">
-            Purchase Order without lines!
-        </dd>
-        <dd th:if="${!purchaseOrder.getLines().isEmpty()}">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Uuid</th>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="purchaseOrderLine : ${purchaseOrder.getLines()}">
-                        <td>
-                            <strong th:text="${purchaseOrderLine.getUuid()}"></strong>
-                        </td>
-                        <td th:text="${purchaseOrderLine.getProductUuid()}"></td>
-                        <td th:text="${#numbers.formatDecimal(purchaseOrderLine.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
-                        <td th:text="${#numbers.formatDecimal(purchaseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </dd>
-    </dl>
+            <dt class="col-sm-12">Lines:</dt>
+            <dd class="col-sm-12" th:if="${purchaseOrder.getLines().isEmpty()}">
+                Purchase Order without lines!
+            </dd>
+            <dd class="col-sm-12" th:if="${!purchaseOrder.getLines().isEmpty()}">
+                <table class="table table-striped table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Uuid</th>
+                            <th scope="col">Product</th>
+                            <th scope="col" class="text-right">Price</th>
+                            <th scope="col" class="text-right">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="purchaseOrderLine : ${purchaseOrder.getLines()}">
+                            <td class="text-monospace">
+                                <strong th:text="${purchaseOrderLine.getUuid()}"></strong>
+                            </td>
+                            <td class="text-monospace" th:text="${purchaseOrderLine.getProductUuid()}"></td>
+                            <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(purchaseOrderLine.getPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                            <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(purchaseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </dd>
+        </dl>
+    </div>
 </div>
 
 <p>

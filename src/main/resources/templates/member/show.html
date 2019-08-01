@@ -5,11 +5,14 @@
     <title>Member - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Member</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Member</h2>
+</div>
 
 <div th:if="${null == member}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The member with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,51 +20,53 @@
 </div>
 
 <div th:if="${null != member}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/member/{id}(id=${member.getUuid()})}" th:text="${member.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>First Name:</dt>
-        <dd th:text="${member.getFirstName()}"></dd>
+            <dt class="col-sm-3">First Name:</dt>
+            <dd class="col-sm-9" th:text="${member.getFirstName()}"></dd>
 
-        <dt>Last Name:</dt>
-        <dd th:text="${member.getLastName()}"></dd>
+            <dt class="col-sm-3">Last Name:</dt>
+            <dd class="col-sm-9" th:text="${member.getLastName()}"></dd>
 
-        <dt>Addresses:</dt>
-        <dd th:if="${member.getAddresses().isEmpty()}">
-            Member without addresses!
-        </dd>
-        <dd th:if="${!member.getAddresses().isEmpty()}">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Street</th>
-                        <th>Number</th>
-                        <th>Extra</th>
-                        <th>Zip Code</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>Country</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="address : ${member.getAddresses()}">
-                        <td th:text="${address.getStreet()}"></td>
-                        <td th:text="${address.getNumber()}"></td>
-                        <td th:text="${address.getExtra()}"></td>
-                        <td th:text="${address.getZipCode()}"></td>
-                        <td th:text="${address.getCity()}"></td>
-                        <td th:text="${address.getState()}"></td>
-                        <td th:text="${address.getCountry()}"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </dd>
-    </dl>
+            <dt class="col-sm-12">Addresses:</dt>
+            <dd class="col-sm-12" th:if="${member.getAddresses().isEmpty()}">
+                Member without addresses!
+            </dd>
+            <dd class="col-sm-12" th:if="${!member.getAddresses().isEmpty()}">
+                <table class="table table-striped table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Street</th>
+                            <th scope="col">Number</th>
+                            <th scope="col">Extra</th>
+                            <th scope="col">Zip Code</th>
+                            <th scope="col">City</th>
+                            <th scope="col">State</th>
+                            <th scope="col">Country</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="address : ${member.getAddresses()}">
+                            <td th:text="${address.getStreet()}"></td>
+                            <td th:text="${address.getNumber()}"></td>
+                            <td th:text="${address.getExtra()}"></td>
+                            <td th:text="${address.getZipCode()}"></td>
+                            <td th:text="${address.getCity()}"></td>
+                            <td th:text="${address.getState()}"></td>
+                            <td th:text="${address.getCountry()}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </dd>
+        </dl>
+    </div>
 </div>
 
 <p>
