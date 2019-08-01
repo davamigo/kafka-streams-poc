@@ -57,7 +57,7 @@ public class WarehouseOrderController {
      */
     @GetMapping("/line/details")
     public ModelAndView getOrderLinessDetailsAction() {
-        return new ModelAndView("warehouse-order/details");
+        return new ModelAndView("warehouse-order/details-line");
     }
 
     /**
@@ -69,7 +69,7 @@ public class WarehouseOrderController {
      */
     @GetMapping("/line/match/details")
     public ModelAndView getOrderLinesMatchDetailsAction() {
-        return new ModelAndView("warehouse-order/details-match");
+        return new ModelAndView("warehouse-order/details-line-match");
     }
 
     /**
@@ -81,7 +81,7 @@ public class WarehouseOrderController {
      */
     @GetMapping("/line/recover/details")
     public ModelAndView getOrderLinesRecoverDetailsAction() {
-        return new ModelAndView("warehouse-order/details-recover");
+        return new ModelAndView("warehouse-order/details-line-recover");
     }
 
     /**
@@ -93,7 +93,19 @@ public class WarehouseOrderController {
      */
     @GetMapping("/line/merger/details")
     public ModelAndView getOrderLinesMergerDetailsAction() {
-        return new ModelAndView("warehouse-order/details-merger");
+        return new ModelAndView("warehouse-order/details-line-merger");
+    }
+
+    /**
+     * GET /warehouse-order/details
+     *
+     * Shows the details the warehouse orders generator process
+     *
+     * @return the model and view
+     */
+    @GetMapping("/details")
+    public ModelAndView getOrderGeneratorDetailsAction() {
+        return new ModelAndView("warehouse-order/details");
     }
 
     /**

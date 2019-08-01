@@ -2,13 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Match  Warehouse Order Lines Win Legacy Product Process - Kafka Streams PoC</title>
+    <title>Match  Warehouse Order Lines With Legacy Product Id Process - Kafka Streams PoC</title>
 </head>
 <body>
 
 <div>
     <h1>Kafka Streams PoC</h1>
-    <h2 id="js-modal-topics-content-title">Match  Warehouse Order Lines Win Legacy Product Process</h2>
+    <h2 id="js-modal-topics-content-title">Match  Warehouse Order Lines With Legacy Product Id Process</h2>
 </div>
 
 <div>
@@ -24,7 +24,7 @@
             depending on the legacy product id was found or not.
         </p>
 
-        <img src="#" th:src="@{/images/stream-match-warehouse-order-lines.png}" alt="Match  Warehouse Order Lines Win Legacy Product Process" class="img-fluid">
+        <img src="#" th:src="@{/images/stream-match-warehouse-order-lines.png}" alt="Match  Warehouse Order Lines With Legacy Product Id Process" class="img-fluid">
 
         <pre class="alert alert-secondary" role="alert"><code>
 KStream&lt;String, WarehouseOrderLine&gt; generatedWarehouseOrderLinesStream = builder.stream("t.warehouse-order-line.generated", /* ... */);

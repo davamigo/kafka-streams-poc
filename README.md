@@ -1,8 +1,34 @@
 # Kafka Streams Proof of Concept
 
-Proof of Concept showing different use cases with Apache Kafka and Kafka Streams.
+This ia Proof of Concept showing different use cases with **Apache Kafka** and **Kafka Streams**, with a real world examples.
+
+The point is to show how to use Kafka Streams to transform data in real time.
 
 **GitHub**: https://github.com/davamigo/kafka-streams-poc
+
+---
+
+## Statement (the problem to solve)
+
+We have three entities: `commercial-orders`, `products` and `members`.
+
+* Each `commercial-order` has the `member-uuid`, the `sell-date` and one or more `commercial-order-lines`.
+
+* Each `commercial-order-line` contains the `product-uuid`, the `sell-price` and the `quantity`.
+
+We want to get create `purchase-orders` per country and day.
+
+* Each `purchase-order` will have the `country`, the `day` and a list or `purchase-order-lines`.
+
+* Each `purchase-order-line` will have the `product-uuid`, the `product-name`, the `product-price` and the sum of the `quantities`.
+
+Also we want to get create `warehouse-orders` per country and day.
+
+* Each `warehouse-order` will have the `country` , the `day` and a list or `warehouse-order-lines`.
+
+* Each `warehouse-order-line` will have the `product-legacy-id`, the `product-barcode` and the sum of the `quantities`.
+
+* The `product-legacy-id` is not in the `product` entity, but can be recovered from a REST API.
 
 ---
 
@@ -151,8 +177,19 @@ The order is not guaranteed!
 ![](docs/images/stream-merge-warehouse-order-lines.png)
 
 - From `t.warehouse-order-lines.matched`
-- Merge `t.warehouse-orders-lines.recovered`
-- To `t.warehouse-orders-lines.new`
+- Merge `t.warehouse-order-lines.recovered`
+- To `t.warehouse-order-lines.new`
+
+---
+
+### Generate warehouse orders
+
+Generates the **warehouse orders** by aggregating the **warehouse order lines**.
+
+![](docs/images/stream-generate-warehouse-orders.png)
+
+- From `t.warehouse-order-lines.new`
+- To `t.warehouse-orders.generated`
 
 ---
 
@@ -164,7 +201,7 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 ![](docs/images/stream-feed-product-legacy-id-cache.png)
 
 - From `t.product-legacy-ids.cache`
-- To `t.warehouse-orders-lines.recovered`
+- To `t.warehouse-order-lines.recovered`
 
 ---
 

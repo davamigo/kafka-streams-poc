@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Generate Warehouse Order Lines Process - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Generate Warehouse Order Lines Process</h2>
+</div>
+
+<div>
+    <div id="js-modal-topics-content-body">
+        <p>
+            Generates the <strong>warehouse order lines</strong> from the <strong>purchase order lines</strong>.
+            The key will be the <code>uuid</code> of the new warehouse order line.
+        </p>
+
+        <img th:src="@{/images/stream-generate-warehouse-order-lines.png}" alt="Generate Warehouse Order Lines Process" class="img-fluid">
+
+        <pre class="alert alert-secondary" role="alert"><code>
+KStream&lt;String, PurchaseOrderLine&gt; purchaseOrderLinesStream = builder.stream("t.purchase-order-lines.aggregated", /* ... */);
+
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesStrem = purchaseOrderLinesStream
+        .<strong>groupBy</strong>(
+                (String purchaseOrderLineUuid, PurchaseOrderLine purchaseOrderLine) -&gt; purchaseOrderLine.getAggregationKey(),
+                Serialized.with(/* ... */)
+        )
+        .<strong>aggregate</strong>(
+                WarehouseOrderLine::new,
+                (String aggregationKey, PurchaseOrderLine newPurchaseOrderLine, WarehouseOrderLine aggregatedWarehouseOrderLine) -&gt; {
+                        /* ... */
+                        WarehouseOrderLine resultOrder = WarehouseOrderLine
+                                .newBuilder()
+                                .setUuid(uuid)
+                                .setCountry(newPurchaseOrderLine.getCountry())
+                                .setDate(newPurchaseOrderLine.getDate())
+                                .setProductUuid(newPurchaseOrderLine.getProductUuid())
+                                .setProductName(newPurchaseOrderLine.getProductName())
+                                .setProductBarCode(newPurchaseOrderLine.getProductBarCode())
+                                .setQuantity(newPurchaseOrderLine.getQuantity())
+                                .build();
+                        return resultOrder;
+                },
+                Materialized.with(/* ... */)
+        )
+        .toStream()
+        .selectKey(
+                (String dummy, WarehouseOrderLine warehouseOrderLine) -&gt; warehouseOrderLine.getUuid()
+        );
+
+warehouseOrderLinesStrem.to("t.warehouse-order-lines.generated", /* ... */);
+        </code></pre>
+    </div>
+</div>
+</body>
+</html>
