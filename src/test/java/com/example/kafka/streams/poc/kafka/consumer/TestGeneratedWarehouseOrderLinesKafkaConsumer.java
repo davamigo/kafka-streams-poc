@@ -2,8 +2,7 @@ package com.example.kafka.streams.poc.kafka.consumer;
 
 import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import com.example.kafka.streams.poc.service.processor.exception.ProcessorException;
-import com.example.kafka.streams.poc.service.processor.warehouse.DefaultFailedWarehouseOrderLineReceptionProcessor;
-import com.example.kafka.streams.poc.service.processor.warehouse.WarehouseOrderLineReceptionProcessorInterface;
+import com.example.kafka.streams.poc.service.processor.warehouse.DefaultWarehouseOrderLineReceptionProcessor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -18,15 +17,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Unit tests for FailedWarehouseOrderLinesKafkaConsumer class
+ * Unit tests for GeneratedWarehouseOrderLinesKafkaConsumer class
  */
 @SpringBootTest
 @DirtiesContext
 @RunWith(MockitoJUnitRunner.class)
-public class TestFailedWarehouseOrderLinesKafkaConsumer {
+public class TestGeneratedWarehouseOrderLinesKafkaConsumer {
 
     @Mock
-    DefaultFailedWarehouseOrderLineReceptionProcessor failedWarehouseOrderLineReceptionProcessorMock;
+    DefaultWarehouseOrderLineReceptionProcessor warehouseOrderLineReceptionProcessorMock;
 
     @Mock
     Acknowledgment ack;
@@ -38,11 +37,11 @@ public class TestFailedWarehouseOrderLinesKafkaConsumer {
         WarehouseOrderLine warehouseOrderLine = getTestWarehouseOrderLine();
 
         // Run the test
-        FailedWarehouseOrderLinesKafkaConsumer failedWarehouseOrderLinesKafkaConsumer = new FailedWarehouseOrderLinesKafkaConsumer(failedWarehouseOrderLineReceptionProcessorMock);
-        failedWarehouseOrderLinesKafkaConsumer.listen(warehouseOrderLine, ack, "101", "ttt");
+        GeneratedWarehouseOrderLinesKafkaConsumer generatedWarehouseOrderLinesKafkaConsumer = new GeneratedWarehouseOrderLinesKafkaConsumer(warehouseOrderLineReceptionProcessorMock);
+        generatedWarehouseOrderLinesKafkaConsumer.listen(warehouseOrderLine, ack, "101", "ttt");
 
         // Assertions
-        verify(failedWarehouseOrderLineReceptionProcessorMock, times(1)).process(any(
+        verify(warehouseOrderLineReceptionProcessorMock, times(1)).process(any(
                 com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine.class
         ));
 
@@ -55,14 +54,14 @@ public class TestFailedWarehouseOrderLinesKafkaConsumer {
         // Prepare test data
         WarehouseOrderLine warehouseOrderLine = getTestWarehouseOrderLine();
 
-        Mockito.doThrow(new ProcessorException("_msg_")).when(failedWarehouseOrderLineReceptionProcessorMock).process(any());
+        Mockito.doThrow(new ProcessorException("_msg_")).when(warehouseOrderLineReceptionProcessorMock).process(any());
 
         // Run the test
-        FailedWarehouseOrderLinesKafkaConsumer failedWarehouseOrderLinesKafkaConsumer = new FailedWarehouseOrderLinesKafkaConsumer(failedWarehouseOrderLineReceptionProcessorMock);
-        failedWarehouseOrderLinesKafkaConsumer.listen(warehouseOrderLine, ack, "101", "ttt");
+        GeneratedWarehouseOrderLinesKafkaConsumer generatedWarehouseOrderLinesKafkaConsumer = new GeneratedWarehouseOrderLinesKafkaConsumer(warehouseOrderLineReceptionProcessorMock);
+        generatedWarehouseOrderLinesKafkaConsumer.listen(warehouseOrderLine, ack, "101", "ttt");
 
         // Assertions
-        verify(failedWarehouseOrderLineReceptionProcessorMock, times(1)).process(any(
+        verify(warehouseOrderLineReceptionProcessorMock, times(1)).process(any(
                 com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine.class
         ));
 

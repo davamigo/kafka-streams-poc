@@ -40,6 +40,9 @@ public class RecordCountRepositoryTest {
     PurchaseOrderLineRepository purchaseOrderLineRepository;
 
     @Mock
+    private WarehouseOrderLineRepository warehouseOrderLineRepository;
+
+    @Mock
     private WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
 
     @Test
@@ -219,6 +222,50 @@ public class RecordCountRepositoryTest {
         Assert.assertEquals(result, -1);
     }
 
+    @Test
+    public void testCountWarehouseOrderLinesWhenSuccess() {
+
+        when(warehouseOrderLineRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countWarehouseOrderLines();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesWhenError() {
+
+        when(warehouseOrderLineRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countWarehouseOrderLines();
+
+        Assert.assertEquals(result, -1);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesFailedWhenSuccess() {
+
+        when(warehouseOrderLineFailedRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countFailedWarehouseOrderLines();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesFailedWhenError() {
+
+        when(warehouseOrderLineFailedRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countFailedWarehouseOrderLines();
+
+        Assert.assertEquals(result, -1);
+    }
+
     private RecordCountRepository createTestRepo() {
         return new RecordCountRepository(
                 productRepository,
@@ -228,6 +275,7 @@ public class RecordCountRepositoryTest {
                 commercialOrderLineSplitRepository,
                 purchaseOrderRepository,
                 purchaseOrderLineRepository,
+                warehouseOrderLineRepository,
                 warehouseOrderLineFailedRepository
         );
 

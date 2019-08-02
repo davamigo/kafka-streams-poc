@@ -15,7 +15,7 @@ import java.util.Optional;
  * Service to process the reception of a failed warehouse order line which stores it in a mongoDB collection.
  */
 @Component
-public class DefaultFailedWarehouseOrderLineReceptionProcessor implements FailedWarehouseOrderLineReceptionProcessorInterface {
+public class DefaultFailedWarehouseOrderLineReceptionProcessor implements WarehouseOrderLineReceptionProcessorInterface {
 
     /** Logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultFailedWarehouseOrderLineReceptionProcessor.class);
@@ -34,7 +34,7 @@ public class DefaultFailedWarehouseOrderLineReceptionProcessor implements Failed
     }
 
     /**
-     * Process the reception of a generated warehouse order line
+     * Process the reception of a failed warehouse order line
      *
      * @param line the failed warehouse order line received
      * @throws ProcessorException when an error occurred
@@ -46,15 +46,15 @@ public class DefaultFailedWarehouseOrderLineReceptionProcessor implements Failed
             Optional<WarehouseOrderLineFailedEntity> queryResult = repository.findById(line.getUuid());
             if (queryResult.isPresent()) {
                 repository.save(new WarehouseOrderLineFailedEntity(line));
-                LOGGER.info(">>> Warehouse order line key={} updated in mongoDB", line.getUuid());
+                LOGGER.info(">>> Warehouse order line failed key={} updated in mongoDB", line.getUuid());
             }
             else {
                 repository.insert(new WarehouseOrderLineFailedEntity(line));
-                LOGGER.info(">>> Warehouse order line key={} inserted in mongoDB", line.getUuid());
+                LOGGER.info(">>> Warehouse order line failed key={} inserted in mongoDB", line.getUuid());
             }
         }
         catch (Exception exc) {
-            throw new ProcessorException("An error occurred storing a warehouse order in the mongoDB database", exc);
+            throw new ProcessorException("An error occurred storing a warehouse order failed in the mongoDB database", exc);
         }
     }
 }

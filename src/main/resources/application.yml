@@ -32,7 +32,8 @@ spring:
       commercial-order-lines-split: "${spring.application.name}.commercial-order-lines.split"
       purchase-order-lines-aggregated: "${spring.application.name}.purchase-order-lines.generated"
       purchase-orders-generated: "${spring.application.name}.purchase-orders.generated"
-      warehouse-order-lines-failed: "${spring.application.name}.warehouse-order-lines-failed"
+      warehouse-order-lines-generated: "${spring.application.name}.warehouse-order-lines.generated"
+      warehouse-order-lines-failed: "${spring.application.name}.warehouse-order-lines.failed"
     topics:
       members-new: "t.members.new"
       products-new: "t.products.new"
