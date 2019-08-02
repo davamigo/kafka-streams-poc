@@ -36,21 +36,37 @@ public class RecordCountRepository {
     /** The mongoDB repository where to retrieve the generated warehouse order lines */
     private final WarehouseOrderLineRepository warehouseOrderLineRepository;
 
+    /** The mongoDB repository where to retrieve the matched warehouse order lines */
+    private final WarehouseOrderLineMatchedRepository warehouseOrderLineMatchedRepository;
+
+    /** The mongoDB repository where to retrieve the unmatched warehouse order lines */
+    private final WarehouseOrderLineUnmatchedRepository warehouseOrderLineUnmatchedRepository;
+
+    /** The mongoDB repository where to retrieve the recovered warehouse order lines */
+    private final WarehouseOrderLineRecoveredRepository warehouseOrderLineRecoveredRepository;
+
     /** The mongoDB repository where to retrieve the failed warehouse order lines */
     private final WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
+
+    /** The mongoDB repository where to retrieve the merged warehouse order lines */
+    private final WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository;
 
     /**
      * Autowired constructor
      *
-     * @param productRepository                  the mongoDB product repository
-     * @param memberRepository                   the mongoDB member repository
-     * @param commercialOrderRepository          the mongoDB commercial order repository
-     * @param commercialOrderConvertedRepository the mongoDB converted commercial order repository
-     * @param commercialOrderLineSplitRepository the mongoDB split commercial order line repository
-     * @param purchaseOrderRepository            the mongoDB purchase order repository
-     * @param purchaseOrderLineRepository        the mongoDB purchase order lines repository
-     * @param warehouseOrderLineRepository       the mongoDB warehouse order repository
-     * @param warehouseOrderLineFailedRepository the mongoDB failed warehouse order repository
+     * @param productRepository                     the mongoDB product repository
+     * @param memberRepository                      the mongoDB member repository
+     * @param commercialOrderRepository             the mongoDB commercial order repository
+     * @param commercialOrderConvertedRepository    the mongoDB converted commercial order repository
+     * @param commercialOrderLineSplitRepository    the mongoDB split commercial order line repository
+     * @param purchaseOrderRepository               the mongoDB purchase order repository
+     * @param purchaseOrderLineRepository           the mongoDB purchase order lines repository
+     * @param warehouseOrderLineRepository          the mongoDB warehouse order repository
+     * @param warehouseOrderLineMatchedRepository   the mongoDB matched warehouse order repository
+     * @param warehouseOrderLineUnmatchedRepository the mongoDB unmatched warehouse order repository
+     * @param warehouseOrderLineRecoveredRepository the mongoDB recovered warehouse order repository
+     * @param warehouseOrderLineFailedRepository    the mongoDB failed warehouse order repository
+     * @param warehouseOrderLineMergedRepository    the mongoDB merged warehouse order repository
      */
     @Autowired
     public RecordCountRepository(
@@ -62,7 +78,11 @@ public class RecordCountRepository {
             PurchaseOrderRepository purchaseOrderRepository,
             PurchaseOrderLineRepository purchaseOrderLineRepository,
             WarehouseOrderLineRepository warehouseOrderLineRepository,
-            WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository
+            WarehouseOrderLineMatchedRepository warehouseOrderLineMatchedRepository,
+            WarehouseOrderLineUnmatchedRepository warehouseOrderLineUnmatchedRepository,
+            WarehouseOrderLineRecoveredRepository warehouseOrderLineRecoveredRepository,
+            WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository,
+            WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository
     ) {
         this.productRepository = productRepository;
         this.memberRepository = memberRepository;
@@ -72,7 +92,11 @@ public class RecordCountRepository {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.purchaseOrderLineRepository = purchaseOrderLineRepository;
         this.warehouseOrderLineRepository = warehouseOrderLineRepository;
+        this.warehouseOrderLineMatchedRepository = warehouseOrderLineMatchedRepository;
+        this.warehouseOrderLineUnmatchedRepository = warehouseOrderLineUnmatchedRepository;
+        this.warehouseOrderLineRecoveredRepository = warehouseOrderLineRecoveredRepository;
         this.warehouseOrderLineFailedRepository = warehouseOrderLineFailedRepository;
+        this.warehouseOrderLineMergedRepository = warehouseOrderLineMergedRepository;
     }
     /**
      * Count the records in all the collections
@@ -93,7 +117,7 @@ public class RecordCountRepository {
         result.put("unmatched-warehouse-order-lines", countUnmatchedWarehouseOrderLines());
         result.put("recovered-warehouse-order-lines", countRecoveredWarehouseOrderLines());
         result.put("failed-warehouse-order-lines", countFailedWarehouseOrderLines());
-        result.put("full-warehouse-order-lines", countFullWarehouseOrderLines());
+        result.put("full-warehouse-order-lines", countMergedWarehouseOrderLines());
         result.put("warehouse-orders", countWarehouseOrders());
         result.put("products-cache", countProductsCache());
         return result;
@@ -199,24 +223,36 @@ public class RecordCountRepository {
      * @return the number of matched warehouse order lines
      */
     synchronized long countMatchedWarehouseOrderLines() {
-        // TODO
-        return -1;
+        try {
+            return warehouseOrderLineMatchedRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
     }
 
     /**
      * @return the number of unmatched warehouse order lines
      */
     synchronized long countUnmatchedWarehouseOrderLines() {
-        // TODO
-        return -1;
+        try {
+            return warehouseOrderLineUnmatchedRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
     }
 
     /**
      * @return the number of recovered warehouse order lines
      */
     synchronized long countRecoveredWarehouseOrderLines() {
-        // TODO
-        return -1;
+        try {
+            return warehouseOrderLineRecoveredRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
     }
 
     /**
@@ -234,9 +270,13 @@ public class RecordCountRepository {
     /**
      * @return the number of full warehouse order lines
      */
-    synchronized long countFullWarehouseOrderLines() {
-        // TODO
-        return -1;
+    synchronized long countMergedWarehouseOrderLines() {
+        try {
+            return warehouseOrderLineMergedRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
     }
 
     /**

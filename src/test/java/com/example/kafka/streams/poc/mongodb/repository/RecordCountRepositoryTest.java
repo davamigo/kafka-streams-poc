@@ -43,7 +43,19 @@ public class RecordCountRepositoryTest {
     private WarehouseOrderLineRepository warehouseOrderLineRepository;
 
     @Mock
+    private WarehouseOrderLineMatchedRepository warehouseOrderLineMatchedRepository;
+
+    @Mock
+    private WarehouseOrderLineUnmatchedRepository warehouseOrderLineUnmatchedRepository;
+
+    @Mock
+    private WarehouseOrderLineRecoveredRepository warehouseOrderLineRecoveredRepository;
+
+    @Mock
     private WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
+
+    @Mock
+    private WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository;
 
     @Test
     public void testCountRecords() {
@@ -245,6 +257,72 @@ public class RecordCountRepositoryTest {
     }
 
     @Test
+    public void testCountWarehouseOrderLinesMatchedWhenSuccess() {
+
+        when(warehouseOrderLineMatchedRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countMatchedWarehouseOrderLines();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesMatchedWhenError() {
+
+        when(warehouseOrderLineMatchedRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countMatchedWarehouseOrderLines();
+
+        Assert.assertEquals(result, -1);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesUnmatchedWhenSuccess() {
+
+        when(warehouseOrderLineUnmatchedRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countUnmatchedWarehouseOrderLines();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesUnmatchedWhenError() {
+
+        when(warehouseOrderLineUnmatchedRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countUnmatchedWarehouseOrderLines();
+
+        Assert.assertEquals(result, -1);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesRecoveredWhenSuccess() {
+
+        when(warehouseOrderLineRecoveredRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countRecoveredWarehouseOrderLines();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesRecoveredWhenError() {
+
+        when(warehouseOrderLineRecoveredRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countRecoveredWarehouseOrderLines();
+
+        Assert.assertEquals(result, -1);
+    }
+
+    @Test
     public void testCountWarehouseOrderLinesFailedWhenSuccess() {
 
         when(warehouseOrderLineFailedRepository.count()).thenReturn(new Long(3));
@@ -266,6 +344,28 @@ public class RecordCountRepositoryTest {
         Assert.assertEquals(result, -1);
     }
 
+    @Test
+    public void testCountWarehouseOrderLinesMergedWhenSuccess() {
+
+        when(warehouseOrderLineMergedRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countMergedWarehouseOrderLines();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountWarehouseOrderLinesMergedWhenError() {
+
+        when(warehouseOrderLineMergedRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countMergedWarehouseOrderLines();
+
+        Assert.assertEquals(result, -1);
+    }
+
     private RecordCountRepository createTestRepo() {
         return new RecordCountRepository(
                 productRepository,
@@ -276,7 +376,11 @@ public class RecordCountRepositoryTest {
                 purchaseOrderRepository,
                 purchaseOrderLineRepository,
                 warehouseOrderLineRepository,
-                warehouseOrderLineFailedRepository
+                warehouseOrderLineMatchedRepository,
+                warehouseOrderLineUnmatchedRepository,
+                warehouseOrderLineRecoveredRepository,
+                warehouseOrderLineFailedRepository,
+                warehouseOrderLineMergedRepository
         );
 
     }
