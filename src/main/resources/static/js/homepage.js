@@ -291,13 +291,13 @@ window.onload = function() {
 
                             $targetLink = $('#js-modal-topics-content-next', response);
                             setButtonClickHandler($topicContentButtonNext, $targetLink.attr('href'));
-
-                            $('a', $topicContentBody).click(function (ev) {
-                                ev.preventDefault();
-                                var url = $(this).attr('href');
-                                loadTopicContent(url);
-                            });
                         }
+
+                        $('a', $topicContentBody).click(function (ev) {
+                            ev.preventDefault();
+                            var url = $(this).attr('href');
+                            loadTopicContent(url);
+                        });
                     }
 
                     $topicContentModal.modal('show');
