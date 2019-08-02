@@ -199,6 +199,15 @@ public class KafkaConfig {
     }
 
     /**
+     * Creates a factory for consuming Product Legacy Id messages from Kafka
+     *
+     * @return the default kafka consumer factory.
+     */
+    ConsumerFactory<String, Integer> productLegacyIdConsumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    }
+
+    /**
      * Kafka template bean for producing Member messages to Kafka
      *
      * @return a new Kafka template for producing messages
@@ -338,6 +347,19 @@ public class KafkaConfig {
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, WarehouseOrderLine>> warehouseOrderLineKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, WarehouseOrderLine> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(warehouseOrderLineConsumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        return factory;
+    }
+
+    /**
+     * Kafka listener container factory bean for consuming product legacy id messages from Kafka
+     *
+     * @return the kafka listener container factory for consumer.
+     */
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Integer>> productLegacyIdKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Integer> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(productLegacyIdConsumerFactory());
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         return factory;
     }

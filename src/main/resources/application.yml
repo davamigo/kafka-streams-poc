@@ -27,6 +27,7 @@ spring:
     group-ids:
       members-new:                     "${spring.application.name}.members.new"
       products-new:                    "${spring.application.name}.products.new"
+      product-legacy-ids:              "${spring.application.name}.product-legacy-ids.cache"
       commercial-orders-new:           "${spring.application.name}.commercial-orders.new"
       commercial-orders-converted:     "${spring.application.name}.commercial-orders.converted"
       commercial-order-lines-split:    "${spring.application.name}.commercial-order-lines.split"
@@ -54,9 +55,9 @@ spring:
       warehouse-order-lines-failed:    "t.warehouse-order-lines.failed"
       warehouse-order-lines-new:       "t.warehouse-order-lines.new"
     stores:
-      members: "members.materialized"
-      products: "products.materialized"
-      warehouse-order-lines-failed: "warehouse-order-lines-failed.materialized"
+      members:                         "members.materialized"
+      products:                        "products.materialized"
+      warehouse-order-lines-failed:    "warehouse-order-lines-failed.materialized"
 
 management:
   endpoint:

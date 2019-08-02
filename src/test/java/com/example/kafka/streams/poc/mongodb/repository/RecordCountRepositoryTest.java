@@ -22,6 +22,9 @@ public class RecordCountRepositoryTest {
     private ProductRepository productRepository;
 
     @Mock
+    private ProductLegacyIdRepository productLegacyIdRepository;
+
+    @Mock
     private MemberRepository memberRepository;
 
     @Mock
@@ -64,6 +67,7 @@ public class RecordCountRepositoryTest {
         Map<String, Long> result = repo.countRecords();
 
         Assert.assertTrue(result.containsKey("products"));
+        Assert.assertTrue(result.containsKey("products-cache"));
         Assert.assertTrue(result.containsKey("members"));
         Assert.assertTrue(result.containsKey("commercial-orders"));
         Assert.assertTrue(result.containsKey("full-commercial-orders"));
@@ -77,7 +81,6 @@ public class RecordCountRepositoryTest {
         Assert.assertTrue(result.containsKey("failed-warehouse-order-lines"));
         Assert.assertTrue(result.containsKey("full-warehouse-order-lines"));
         Assert.assertTrue(result.containsKey("warehouse-orders"));
-        Assert.assertTrue(result.containsKey("products-cache"));
     }
 
     @Test
@@ -98,6 +101,28 @@ public class RecordCountRepositoryTest {
 
         RecordCountRepository repo = createTestRepo();
         long result = repo.countProducts();
+
+        Assert.assertEquals(result, -1);
+    }
+
+    @Test
+    public void testCountProductsCacheWhenSuccess() {
+
+        when(productLegacyIdRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countProductsCache();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountProductsCacheWhenError() {
+
+        when(productLegacyIdRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countProductsCache();
 
         Assert.assertEquals(result, -1);
     }
@@ -369,6 +394,7 @@ public class RecordCountRepositoryTest {
     private RecordCountRepository createTestRepo() {
         return new RecordCountRepository(
                 productRepository,
+                productLegacyIdRepository,
                 memberRepository,
                 commercialOrderRepository,
                 commercialOrderConvertedRepository,

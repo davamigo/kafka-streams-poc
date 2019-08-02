@@ -15,6 +15,9 @@ public class RecordCountRepository {
     /** The mongoDB repository where to retrieve the products */
     private final ProductRepository productRepository;
 
+    /** The mongoDB repository where to retrieve the product legacy ids */
+    private final ProductLegacyIdRepository productLegacyIdRepository;
+
     /** The mongoDB repository where to retrieve the members */
     private final MemberRepository memberRepository;
 
@@ -55,6 +58,7 @@ public class RecordCountRepository {
      * Autowired constructor
      *
      * @param productRepository                     the mongoDB product repository
+     * @param productLegacyIdRepository             the mongoDB product legacy id repository
      * @param memberRepository                      the mongoDB member repository
      * @param commercialOrderRepository             the mongoDB commercial order repository
      * @param commercialOrderConvertedRepository    the mongoDB converted commercial order repository
@@ -71,6 +75,7 @@ public class RecordCountRepository {
     @Autowired
     public RecordCountRepository(
             ProductRepository productRepository,
+            ProductLegacyIdRepository productLegacyIdRepository,
             MemberRepository memberRepository,
             CommercialOrderRepository commercialOrderRepository,
             CommercialOrderConvertedRepository commercialOrderConvertedRepository,
@@ -85,6 +90,7 @@ public class RecordCountRepository {
             WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository
     ) {
         this.productRepository = productRepository;
+        this.productLegacyIdRepository = productLegacyIdRepository;
         this.memberRepository = memberRepository;
         this.commercialOrderRepository = commercialOrderRepository;
         this.commercialOrderLineSplitRepository = commercialOrderLineSplitRepository;
@@ -106,6 +112,7 @@ public class RecordCountRepository {
     public Map<String, Long> countRecords() {
         Map<String, Long> result = new HashMap<>();
         result.put("products", countProducts());
+        result.put("products-cache", countProductsCache());
         result.put("members", countMembers());
         result.put("commercial-orders", countCommercialOrders());
         result.put("full-commercial-orders", countFullCommercialOrders());
@@ -119,7 +126,6 @@ public class RecordCountRepository {
         result.put("failed-warehouse-order-lines", countFailedWarehouseOrderLines());
         result.put("full-warehouse-order-lines", countMergedWarehouseOrderLines());
         result.put("warehouse-orders", countWarehouseOrders());
-        result.put("products-cache", countProductsCache());
         return result;
     }
 
@@ -129,6 +135,18 @@ public class RecordCountRepository {
     synchronized long countProducts() {
         try {
             return productRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
+    }
+
+    /**
+     * @return the number items in the products legacy id cache
+     */
+    synchronized long countProductsCache() {
+        try {
+            return productLegacyIdRepository.count();
         }
         catch (Exception exc) {
             return -1;
@@ -283,14 +301,6 @@ public class RecordCountRepository {
      * @return the number of warehouse orders
      */
     synchronized long countWarehouseOrders() {
-        // TODO
-        return -1;
-    }
-
-    /**
-     * @return the number items in the products cache
-     */
-    synchronized long countProductsCache() {
         // TODO
         return -1;
     }

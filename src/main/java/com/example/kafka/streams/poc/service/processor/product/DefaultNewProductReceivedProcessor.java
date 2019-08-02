@@ -26,7 +26,7 @@ public class DefaultNewProductReceivedProcessor implements NewProductReceptionPr
     /**
      * Autowired constructor
      *
-     * @param repository the mongoDB cproduct repository
+     * @param repository the mongoDB product repository
      */
     @Autowired
     public DefaultNewProductReceivedProcessor(ProductRepository repository) {
