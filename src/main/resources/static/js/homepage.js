@@ -20,6 +20,7 @@ window.onload = function() {
     var $splitCommercialOrderLinesTopicBox = $('#svg-commercial-order-lines-topic-box', $svgDocument);
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
     var $purchaseOrderLinesTopicBox = $('#svg-purchase-order-lines-topic-box', $svgDocument);
+    var $generatedWarehouseOrderLinesTopic = $('#svg-warehouse-order-lines-topic-box', $svgDocument);
 
     var $commercialOrderConverterStreamBox = $('#svg-stream-commercial-orders-converter-box', $svgDocument);
     var $commercialOrderLinesSplitStreamBox = $('#svg-stream-commercial-order-lines-split-box', $svgDocument);
@@ -99,15 +100,21 @@ window.onload = function() {
         loadTopicContent(url);
     });
 
+    $purchaseOrdersTopicBox.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.attr('data-get-purchase-orders-url');
+        loadTopicContent(url);
+    });
+
     $purchaseOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.attr('data-get-purchase-order-lines-url');
         loadTopicContent(url);
     });
 
-    $purchaseOrdersTopicBox.click(function (ev) {
+    $generatedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-purchase-orders-url');
+        var url = $topicContentModal.attr('data-get-warehouse-order-lines-generated-url');
         loadTopicContent(url);
     });
 

@@ -72,6 +72,10 @@
 
 <ul>
     <li>
+        <a th:href="@{/warehouse-order/line/generated}">Show generated warehouse order lines</a>
+        (<span th:text="${topicCount['warehouse-order-lines']}"></span>)
+    </li>
+    <li>
         <a th:href="@{/warehouse-order/line/failed}">Show failed warehouse order lines</a>
         (<span th:text="${topicCount['failed-warehouse-order-lines']}"></span>)
     </li>

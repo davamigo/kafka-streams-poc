@@ -1,8 +1,10 @@
 package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine;
+import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineEntity;
 import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineFailedEntity;
 import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineFailedRepository;
+import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineRepository;
 import com.example.kafka.streams.poc.service.producer.warehouseorder.ManuallyRecoveredWarehouseOrderLineProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,9 @@ public class WarehouseOrderController {
     /** Logger object */
     private static final Logger LOGGER = LoggerFactory.getLogger(WarehouseOrderController.class);
 
+    /** The mongoDB repository where to retrieve the generated warehouse order lines */
+    private final WarehouseOrderLineRepository warehouseOrderLineGeneratedRepository;
+
     /** The mongoDB repository where to retrieve the failed warehouse order lines */
     private final WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
 
@@ -41,16 +46,73 @@ public class WarehouseOrderController {
     /**
      * Autowired constructor
      *
-     * @param warehouseOrderLineFailedRepository the mongoDB warehouse order line failed repository
-     * @param warehouseOrderLineProducer         the service to publish the recovered warehouse order line
+     * @param warehouseOrderLineGeneratedRepository the mongoDB warehouse order line generated repository
+     * @param warehouseOrderLineFailedRepository    the mongoDB warehouse order line failed repository
+     * @param warehouseOrderLineProducer            the service to publish the recovered warehouse order line
      */
     @Autowired
     public WarehouseOrderController(
+            WarehouseOrderLineRepository warehouseOrderLineGeneratedRepository,
             WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository,
             ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer
     ) {
+        this.warehouseOrderLineGeneratedRepository = warehouseOrderLineGeneratedRepository;
         this.warehouseOrderLineFailedRepository = warehouseOrderLineFailedRepository;
         this.warehouseOrderLineProducer = warehouseOrderLineProducer;
+    }
+
+    /**
+     * GET /warehouse-order/line/generated
+     *
+     * Lists the generated warehouse order lines
+     *
+     * @param size  the page size (default = 15)
+     * @param page  the page number (default = 0)
+     * @return the model and view
+     */
+    @GetMapping("/line/generated")
+    public ModelAndView getGeneratedWarehouseOrderLinesAction(
+            @RequestParam(value="size", required=false, defaultValue="15") int size,
+            @RequestParam(value="page", required=false, defaultValue="0") int page
+    )  {
+        LOGGER.info("WarehouseOrderController.getGeneratedWarehouseOrderLinesAction(size=" + size + ", page=" + page + ")");
+
+        final List<WarehouseOrderLineEntity> orderLines = warehouseOrderLineGeneratedRepository
+                .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "date")))
+                .getContent();
+
+        final long count = warehouseOrderLineGeneratedRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
+
+        final ModelAndView mav  = new ModelAndView("warehouse-order/list-generated-lines");
+        mav.addObject("orderLines", orderLines);
+        mav.addObject("count", count);
+        mav.addObject("size", size);
+        mav.addObject("page", page);
+        mav.addObject("prev", prev);
+        mav.addObject("next", next);
+        return mav;
+    }
+
+    /**
+     * GET /warehouse-order/line/generated/{id}
+     *
+     * Shows a generated warehouse order line
+     *
+     * @param uuid the uuid of the warehouse order line
+     * @return the model and view
+     */
+    @GetMapping("/line/generated/{id}")
+    public ModelAndView getGeneratedWarehouseOrderLineAction(@PathVariable("id") String uuid) {
+        LOGGER.info("WarehouseOrderController.getGeneratedWarehouseOrderLineAction(id=" + uuid + ")");
+
+        final Optional<WarehouseOrderLineEntity> warehouseOrderLine = warehouseOrderLineGeneratedRepository.findById(uuid);
+
+        final ModelAndView mav  = new ModelAndView("warehouse-order/show-generated-line");
+        mav.addObject("uuid", uuid);
+        mav.addObject("warehouseOrderLine", warehouseOrderLine.orElse(null));
+        return mav;
     }
 
     /**

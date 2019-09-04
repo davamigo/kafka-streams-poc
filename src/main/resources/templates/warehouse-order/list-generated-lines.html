@@ -2,22 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>Purchase Order Lines - Kafka Streams PoC</title>
+    <title>Generated Warehouse Order Lines - Kafka Streams PoC</title>
 </head>
 <body>
 
 <div>
     <h1>Kafka Streams PoC</h1>
-    <h2 id="js-modal-topics-content-title">Purchase Order Lines</h2>
+    <h2 id="js-modal-topics-content-title">Generated Warehouse Order Lines</h2>
 </div>
 
-<div th:if="${purchaseOrderLines.isEmpty()}">
+<div th:if="${orderLines.isEmpty()}">
     <p id="js-modal-topics-content-error">
-        No purchase order lines found!
+        No generated warehouse order lines found!
     </p>
 </div>
 
-<div th:if="${!purchaseOrderLines.isEmpty()}">
+<div th:if="${!orderLines.isEmpty()}">
     <table id="js-modal-topics-content-table" class="table table-striped table-sm">
         <thead class="thead-light">
             <tr>
@@ -26,31 +26,31 @@
                 <th scope="col">Date</th>
                 <th scope="col">Product Uuid</th>
                 <th scope="col">Product Name</th>
-                <th scope="col" class="text-right">Product Price</th>
+                <th scope="col">Product Bar Code</th>
                 <th scope="col" class="text-right">Quantity</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="line : ${purchaseOrderLines}">
+            <tr th:each="line : ${orderLines}">
                 <td class="text-monospace">
                     <strong>
-                        <a th:href="@{/purchase-order/line/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
+                        <a th:href="@{/warehouse-order/line/generated/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
                     </strong>
                 </td>
                 <td th:text="${line.getCountry()}"></td>
                 <td class="text-monospace" th:text="${#calendars.format(line.getDate(), 'yyyy-MM-dd')}"></td>
                 <td class="text-monospace" th:text="${line.getProductUuid()}"></td>
                 <td th:text="${line.getProductName()}"></td>
-                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(line.getProductPrice(), 1, 'DEFAULT', 2, 'DEFAULT')}"></td>
+                <td class="text-monospace" th:text="${line.getProductBarCode()}"></td>
                 <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(line.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
             </tr>
         </tbody>
     </table>
     <p id="js-modal-topics-content-total">
-        Showing purchase order lines
+        Showing generated warehouse order lines
         <span th:text="${(page * size) + 1}"></span>
         to
-        <span th:text="${(page * size) + purchaseOrderLines.size()}"></span>
+        <span th:text="${(page * size) + orderLines.size()}"></span>
         of
         <span th:text="${count}"></span>
     </p>
@@ -61,13 +61,13 @@
         Pagination
         <span th:if="${prev < page}">
             &ndash;
-            <a id="js-modal-topics-content-first" th:href="@{/purchase-order/lines(page=0,size=${size})}">First</a>
+            <a id="js-modal-topics-content-first" th:href="@{/warehouse-order/line/generated(page=0,size=${size})}">First</a>
             &ndash;
-            <a id="js-modal-topics-content-prev" th:href="@{/purchase-order/lines(page=${prev},size=${size})}">Prev</a>
+            <a id="js-modal-topics-content-prev" th:href="@{/warehouse-order/line/generated(page=${prev},size=${size})}">Prev</a>
         </span>
         <span th:if="${next > page}">
             &ndash;
-            <a id="js-modal-topics-content-next" th:href="@{/purchase-order/line(page=${next},size=${size})}">Next</a>
+            <a id="js-modal-topics-content-next" th:href="@{/warehouse-order/line/generated(page=${next},size=${size})}">Next</a>
         </span>
     </p>
 </div>

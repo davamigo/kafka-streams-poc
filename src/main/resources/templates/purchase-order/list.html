@@ -65,7 +65,7 @@
         </span>
         <span th:if="${next > page}">
             &ndash;
-            <a d="js-modal-topics-content-next" th:href="@{/purchase-order(page=${next},size=${size})}">Next</a>
+            <a id="js-modal-topics-content-next" th:href="@{/purchase-order(page=${next},size=${size})}">Next</a>
         </span>
     </p>
 </div>
