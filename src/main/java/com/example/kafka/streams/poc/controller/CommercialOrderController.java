@@ -8,6 +8,8 @@ import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderConverted
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderLineSplitRepository;
 import com.example.kafka.streams.poc.mongodb.repository.CommercialOrderRepository;
 import com.example.kafka.streams.poc.service.producer.commercialorder.RandomCommercialOrderProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -25,6 +27,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/commercial-order")
 public class CommercialOrderController {
+
+    /** Logger object */
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommercialOrderController.class);
 
     /** Service to produce one or more commercial order with random data */
     private final RandomCommercialOrderProducer randomCommercialOrderProducer;
@@ -69,6 +74,8 @@ public class CommercialOrderController {
      */
     @PostMapping("/create")
     public ModelAndView postCreateOrdersAction(@RequestParam Integer orderCount) {
+        LOGGER.info("CommercialOrderController.postCreateOrdersAction(orderCount=" + orderCount + ")");
+
         final ModelAndView mav  = new ModelAndView("commercial-order/created");
         mav.addObject("orderCount", orderCount);
 
@@ -98,6 +105,8 @@ public class CommercialOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("CommercialOrderController.getNewOrdersAction(size=" + size + ", page=" + page + ")");
+
         final List<CommercialOrderEntity> commercialOrders = newCommercialOrderRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "datetime")))
                 .getContent();
@@ -125,7 +134,8 @@ public class CommercialOrderController {
      * @return the model and view
      */
     @GetMapping("/new-orders/{id}")
-    public ModelAndView getNewOrdersAction(@PathVariable("id") String uuid) {
+    public ModelAndView getNewOrderAction(@PathVariable("id") String uuid) {
+        LOGGER.info("CommercialOrderController.getNewOrderAction(id=" + uuid + ")");
 
         final Optional<CommercialOrderEntity> commercialOrder = newCommercialOrderRepository.findById(uuid);
 
@@ -149,6 +159,8 @@ public class CommercialOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("CommercialOrderController.getConvertedOrdersAction(size=" + size + ", page=" + page + ")");
+
         final List<CommercialOrderConvertedEntity> orders = convertedCommercialOrderRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "datetime")))
                 .getContent();
@@ -177,6 +189,7 @@ public class CommercialOrderController {
      */
     @GetMapping("/converted/{id}")
     public ModelAndView getConvertedOrdersAction(@PathVariable("id") String uuid) {
+        LOGGER.info("CommercialOrderController.getConvertedOrdersAction(id=" + uuid + ")");
 
         final Optional<CommercialOrderConvertedEntity> commercialOrder = convertedCommercialOrderRepository.findById(uuid);
 
@@ -184,18 +197,6 @@ public class CommercialOrderController {
         mav.addObject("uuid", uuid);
         mav.addObject("commercialOrder", commercialOrder.orElse(null));
         return mav;
-    }
-
-    /**
-     * GET /commercial-order/converted/details
-     *
-     * Shows the details the commercial order converter process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/converted/details")
-    public ModelAndView getConvertedOrdersDetailsAction() {
-        return new ModelAndView("commercial-order/details-converted");
     }
 
     /**
@@ -208,10 +209,12 @@ public class CommercialOrderController {
      * @return the model and view
      */
     @GetMapping("/lines-split")
-    public ModelAndView getSplitOrderLinessAction(
+    public ModelAndView getSplitOrderLinesAction(
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("CommercialOrderController.getSplitOrderLinesAction(size=" + size + ", page=" + page + ")");
+
         final List<CommercialOrderLineSplitEntity> lines = splitCommercialOrderLineRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "datetime")))
                 .getContent();
@@ -239,7 +242,8 @@ public class CommercialOrderController {
      * @return the model and view
      */
     @GetMapping("/lines-split/{id}")
-    public ModelAndView getSplitOrderLinessAction(@PathVariable("id") String uuid) {
+    public ModelAndView getSplitOrderLineAction(@PathVariable("id") String uuid) {
+        LOGGER.info("CommercialOrderController.getSplitOrderLineAction(id=" + uuid + ")");
 
         final Optional<CommercialOrderLineSplitEntity> line = splitCommercialOrderLineRepository.findById(uuid);
 
@@ -247,17 +251,5 @@ public class CommercialOrderController {
         mav.addObject("uuid", uuid);
         mav.addObject("line", line.orElse(null));
         return mav;
-    }
-
-    /**
-     * GET /commercial-order/lines-split/details
-     *
-     * Shows the details the commercial order lines split process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/lines-split/details")
-    public ModelAndView getOrderLinesDetailsAction() {
-        return new ModelAndView("commercial-order/details-lines-split");
     }
 }

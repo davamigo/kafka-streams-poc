@@ -4,6 +4,8 @@ import com.example.kafka.streams.poc.domain.entity.warehouse.WarehouseOrderLine;
 import com.example.kafka.streams.poc.mongodb.entity.WarehouseOrderLineFailedEntity;
 import com.example.kafka.streams.poc.mongodb.repository.WarehouseOrderLineFailedRepository;
 import com.example.kafka.streams.poc.service.producer.warehouseorder.ManuallyRecoveredWarehouseOrderLineProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,6 +29,9 @@ import java.util.Optional;
 @RequestMapping("/warehouse-order")
 public class WarehouseOrderController {
 
+    /** Logger object */
+    private static final Logger LOGGER = LoggerFactory.getLogger(WarehouseOrderController.class);
+
     /** The mongoDB repository where to retrieve the failed warehouse order lines */
     private final WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
 
@@ -49,66 +54,6 @@ public class WarehouseOrderController {
     }
 
     /**
-     * GET /warehouse-order/line/details
-     *
-     * Shows the details the warehouse order lines generation process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/line/details")
-    public ModelAndView getOrderLinessDetailsAction() {
-        return new ModelAndView("warehouse-order/details-line");
-    }
-
-    /**
-     * GET /warehouse-order/line/match/details
-     *
-     * Shows the details the warehouse order lines matching with legacy product process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/line/match/details")
-    public ModelAndView getOrderLinesMatchDetailsAction() {
-        return new ModelAndView("warehouse-order/details-line-match");
-    }
-
-    /**
-     * GET /warehouse-order/line/recover/details
-     *
-     * Shows the details the warehouse order lines recover process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/line/recover/details")
-    public ModelAndView getOrderLinesRecoverDetailsAction() {
-        return new ModelAndView("warehouse-order/details-line-recover");
-    }
-
-    /**
-     * GET /warehouse-order/line/merger/details
-     *
-     * Shows the details the warehouse order lines merger process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/line/merger/details")
-    public ModelAndView getOrderLinesMergerDetailsAction() {
-        return new ModelAndView("warehouse-order/details-line-merger");
-    }
-
-    /**
-     * GET /warehouse-order/details
-     *
-     * Shows the details the warehouse orders generator process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/details")
-    public ModelAndView getOrderGeneratorDetailsAction() {
-        return new ModelAndView("warehouse-order/details");
-    }
-
-    /**
      * GET /warehouse-order/line/failed
      *
      * Lists the failed warehouse order liness
@@ -122,6 +67,8 @@ public class WarehouseOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("WarehouseOrderController.getFailedWarehouseOrderLinesAction(size=" + size + ", page=" + page + ")");
+
         final List<WarehouseOrderLineFailedEntity> orderLines = warehouseOrderLineFailedRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "date")))
                 .getContent();
@@ -149,7 +96,8 @@ public class WarehouseOrderController {
      * @return the model and view
      */
     @GetMapping("/line/failed/{id}")
-    public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
+    public ModelAndView getFailedWarehouseOrderLineAction(@PathVariable("id") String uuid) {
+        LOGGER.info("WarehouseOrderController.getFailedWarehouseOrderLineAction(id=" + uuid + ")");
 
         final Optional<WarehouseOrderLineFailedEntity> warehouseOrderLine = warehouseOrderLineFailedRepository.findById(uuid);
 
@@ -169,10 +117,12 @@ public class WarehouseOrderController {
      * @return the model and view
      */
     @PostMapping("/line/failed/{id}")
-    public ModelAndView postCreateOrdersAction(
+    public ModelAndView postFailedWarehouseOrderLineAction(
             @PathVariable("id") String uuid,
             @RequestParam Integer productLegacyId
     ) {
+        LOGGER.info("WarehouseOrderController.postFailedWarehouseOrderLineAction(id=" + uuid + ", productLegacyId=" + productLegacyId + ")");
+
         // Read the warehouse order line from the MongoDB database
         WarehouseOrderLineFailedEntity entity = warehouseOrderLineFailedRepository.findById(uuid).orElse(null);
         if (entity == null) {

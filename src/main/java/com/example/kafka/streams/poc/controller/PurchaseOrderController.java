@@ -4,6 +4,8 @@ import com.example.kafka.streams.poc.mongodb.entity.PurchaseOrderEntity;
 import com.example.kafka.streams.poc.mongodb.entity.PurchaseOrderLineEntity;
 import com.example.kafka.streams.poc.mongodb.repository.PurchaseOrderLineRepository;
 import com.example.kafka.streams.poc.mongodb.repository.PurchaseOrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -21,6 +23,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/purchase-order")
 public class PurchaseOrderController {
+
+    /** Logger object */
+    private static final Logger LOGGER = LoggerFactory.getLogger(PurchaseOrderController.class);
 
     /** The mongoDB repository where to retrieve the purchase orders */
     private final PurchaseOrderRepository purchaseOrderRepository;
@@ -57,6 +62,8 @@ public class PurchaseOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("PurchaseOrderController.getOrdersAction(size=" + size + ", page=" + page + ")");
+
         final List<PurchaseOrderEntity> purchaseOrders = purchaseOrderRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "datetime")))
                 .getContent();
@@ -84,7 +91,8 @@ public class PurchaseOrderController {
      * @return the model and view
      */
     @GetMapping("/{id}")
-    public ModelAndView getOrdersAction(@PathVariable("id") String uuid) {
+    public ModelAndView getOrderAction(@PathVariable("id") String uuid) {
+        LOGGER.info("PurchaseOrderController.getOrderAction(id=" + uuid + ")");
 
         final Optional<PurchaseOrderEntity> purchaseOrder = purchaseOrderRepository.findById(uuid);
 
@@ -92,18 +100,6 @@ public class PurchaseOrderController {
         mav.addObject("uuid", uuid);
         mav.addObject("purchaseOrder", purchaseOrder.orElse(null));
         return mav;
-    }
-
-    /**
-     * GET /purchase-order/details
-     *
-     * Shows the details the purchase order lines aggregation process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/details")
-    public ModelAndView getOrdersDetailsAction() {
-        return new ModelAndView("purchase-order/details");
     }
 
     /**
@@ -120,6 +116,8 @@ public class PurchaseOrderController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("PurchaseOrderController.getOrderLinesAction(size=" + size + ", page=" + page + ")");
+
         final List<PurchaseOrderLineEntity> purchaseOrderLines = purchaseOrderLineRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "date")))
                 .getContent();
@@ -147,7 +145,8 @@ public class PurchaseOrderController {
      * @return the model and view
      */
     @GetMapping("/line/{id}")
-    public ModelAndView getOrderLinesAction(@PathVariable("id") String uuid) {
+    public ModelAndView getOrderLineAction(@PathVariable("id") String uuid) {
+        LOGGER.info("PurchaseOrderController.getOrderLineAction(id=" + uuid + ")");
 
         final Optional<PurchaseOrderLineEntity> purchaseOrderLine = purchaseOrderLineRepository.findById(uuid);
 
@@ -155,17 +154,5 @@ public class PurchaseOrderController {
         mav.addObject("uuid", uuid);
         mav.addObject("purchaseOrderLine", purchaseOrderLine.orElse(null));
         return mav;
-    }
-
-    /**
-     * GET /purchase-order/line/details
-     *
-     * Shows the details the purchase order lines aggregation process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/line/details")
-    public ModelAndView getOrderLinesDetailsAction() {
-        return new ModelAndView("purchase-order/details-line");
     }
 }

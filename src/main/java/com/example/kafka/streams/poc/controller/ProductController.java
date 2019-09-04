@@ -2,6 +2,8 @@ package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.mongodb.entity.ProductEntity;
 import com.example.kafka.streams.poc.mongodb.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,6 +25,9 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/product")
 public class ProductController {
+
+    /** Logger object */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     /** The mongoDB repository where to retrieve the products */
     private final ProductRepository productRepository;
@@ -51,6 +56,8 @@ public class ProductController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("ProductController.getProductsAction(size=" + size + ", page=" + page + ")");
+
         final List<ProductEntity> products = productRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, Arrays.asList("firstName", "lastName"))))
                 .getContent();
@@ -78,7 +85,8 @@ public class ProductController {
      * @return the model and view
      */
     @GetMapping("/{id}")
-    public ModelAndView getProductsAction(@PathVariable("id") String uuid) {
+    public ModelAndView getProductAction(@PathVariable("id") String uuid) {
+        LOGGER.info("ProductController.getProductAction(id=" + uuid + ")");
 
         final Optional<ProductEntity> product = productRepository.findById(uuid);
 
@@ -86,17 +94,5 @@ public class ProductController {
         mav.addObject("uuid", uuid);
         mav.addObject("product", product.orElse(null));
         return mav;
-    }
-
-    /**
-     * GET /product/legacy/details
-     *
-     * Shows the details of the legacy product feeder process
-     *
-     * @return the model and view
-     */
-    @GetMapping("/legacy/details")
-    public ModelAndView getOrderLinesRecoverDetailsAction() {
-        return new ModelAndView("product/details-legacy");
     }
 }

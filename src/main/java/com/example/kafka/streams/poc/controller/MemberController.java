@@ -2,6 +2,8 @@ package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.mongodb.entity.MemberEntity;
 import com.example.kafka.streams.poc.mongodb.repository.MemberRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,6 +20,9 @@ import java.util.*;
 @Controller
 @RequestMapping("/member")
 public class MemberController {
+
+    /** Logger object */
+    private static final Logger LOGGER = LoggerFactory.getLogger(MemberController.class);
 
     /** The mongoDB repository where to retrieve the members */
     private final MemberRepository memberRepository;
@@ -46,6 +51,8 @@ public class MemberController {
             @RequestParam(value="size", required=false, defaultValue="15") int size,
             @RequestParam(value="page", required=false, defaultValue="0") int page
     )  {
+        LOGGER.info("MemberController.getMembersAction(size=" + size + ", page=" + page + ")");
+
         final List<MemberEntity> members = memberRepository
                 .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, Arrays.asList("firstName", "lastName"))))
                 .getContent();
@@ -73,14 +80,14 @@ public class MemberController {
      * @return the model and view
      */
     @GetMapping("/{id}")
-    public ModelAndView getMembersAction(@PathVariable("id") String uuid) {
-        ModelAndView mav  = new ModelAndView("member/show");
+    public ModelAndView getMemberAction(@PathVariable("id") String uuid) {
+        LOGGER.info("MemberController.getMemberAction(id=" + uuid + ")");
 
         Optional<MemberEntity> member = memberRepository.findById(uuid);
 
+        ModelAndView mav  = new ModelAndView("member/show");
         mav.addObject("uuid", uuid);
         mav.addObject("member", member.orElse(null));
-
         return mav;
     }
 }
