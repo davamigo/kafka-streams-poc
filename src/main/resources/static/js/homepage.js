@@ -34,14 +34,14 @@ window.onload = function() {
     var $warehouseOrdersGeneratorStreamBox = $('#svg-generate-warehouse-orders-box', $svgDocument);
     var $productLegacyIdFeederStreamBox = $('#svg-product-legacy-id-feeder-box', $svgDocument);
 
-    var $topicContentModal = $('#js-modal-topics-content');
-    var $topicContentTitle = $('#js-modal-topics-content-title');
-    var $topicContentBody = $('#js-modal-topics-content-body');
-    var $topicContentTable = $('#js-modal-topics-content-table');
-    var $topicContentTotal = $('#js-modal-topics-content-total');
-    var $topicContentButtonFirst = $('#js-modal-topics-content-first');
-    var $topicContentButtonPrev = $('#js-modal-topics-content-prev');
-    var $topicContentButtonNext = $('#js-modal-topics-content-next');
+    var $contentModal = $('#js-modal-content-');
+    var $contentTitle = $('#js-modal-content-title');
+    var $contentBody = $('#js-modal-content-body');
+    var $contentTable = $('#js-modal-content-table');
+    var $contentTotal = $('#js-modal-content-total');
+    var $contentButtonFirst = $('#js-modal-content-first');
+    var $contentButtonPrev = $('#js-modal-content-prev');
+    var $contentButtonNext = $('#js-modal-content-next');
 
     var $streamToggler = $('a[id^="svg-"][id$="-toggle"]', $svgDocument);
 
@@ -73,115 +73,115 @@ window.onload = function() {
 
     $productsTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-products-url');
+        var url = $contentModal.attr('data-get-products-url');
         loadTopicContent(url);
     });
 
     $membersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-members-url');
+        var url = $contentModal.attr('data-get-members-url');
         loadTopicContent(url);
     });
 
     $commercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-commercial-orders-url');
+        var url = $contentModal.attr('data-get-commercial-orders-url');
         loadTopicContent(url);
     });
 
     $convertedCommercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-converted-commercial-orders-url');
+        var url = $contentModal.attr('data-get-converted-commercial-orders-url');
         loadTopicContent(url);
     });
 
     $splitCommercialOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-split-commercial-order-lines-url');
+        var url = $contentModal.attr('data-get-split-commercial-order-lines-url');
         loadTopicContent(url);
     });
 
     $purchaseOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-purchase-orders-url');
+        var url = $contentModal.attr('data-get-purchase-orders-url');
         loadTopicContent(url);
     });
 
     $purchaseOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-purchase-order-lines-url');
+        var url = $contentModal.attr('data-get-purchase-order-lines-url');
         loadTopicContent(url);
     });
 
     $generatedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-warehouse-order-lines-generated-url');
+        var url = $contentModal.attr('data-get-warehouse-order-lines-generated-url');
         loadTopicContent(url);
     });
 
     $failedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-get-warehouse-order-lines-failed-url');
+        var url = $contentModal.attr('data-get-warehouse-order-lines-failed-url');
         loadTopicContent(url);
     });
 
     $commercialOrderConverterStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-commercial-orders-converter-details-url');
+        var url = $contentModal.attr('data-show-commercial-orders-converter-details-url');
         loadTopicContent(url);
     });
 
     $commercialOrderLinesSplitStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-commercial-order-lines-details-url');
+        var url = $contentModal.attr('data-show-commercial-order-lines-details-url');
         loadTopicContent(url);
     });
 
     $purchaseOrderLinesGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-purchase-order-lines-details-url');
+        var url = $contentModal.attr('data-show-purchase-order-lines-details-url');
         loadTopicContent(url);
     });
 
     $purchaseOrdersGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-purchase-orders-details-url');
+        var url = $contentModal.attr('data-show-purchase-orders-details-url');
         loadTopicContent(url);
     });
 
     $warehouseOrderLinesGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-warehouse-order-lines-details-url');
+        var url = $contentModal.attr('data-show-warehouse-order-lines-details-url');
         loadTopicContent(url);
     });
 
     $warehouseOrderLinesMatcherStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-warehouse-order-lines-match-details-url');
+        var url = $contentModal.attr('data-show-warehouse-order-lines-match-details-url');
         loadTopicContent(url);
     });
 
     $warehouseOrderLinesRecoverStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-warehouse-order-lines-recover-details-url');
+        var url = $contentModal.attr('data-show-warehouse-order-lines-recover-details-url');
         loadTopicContent(url);
     });
 
     $warehouseOrderLinesMergerStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-warehouse-order-lines-merger-details-url');
+        var url = $contentModal.attr('data-show-warehouse-order-lines-merger-details-url');
         loadTopicContent(url);
     });
 
     $warehouseOrdersGeneratorStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-warehouse-orders-details-url');
+        var url = $contentModal.attr('data-show-warehouse-orders-details-url');
         loadTopicContent(url);
     });
 
     $productLegacyIdFeederStreamBox.click(function (ev) {
         ev.preventDefault();
-        var url = $topicContentModal.attr('data-show-product-legacy-id-feeder-details-url');
+        var url = $contentModal.attr('data-show-product-legacy-id-feeder-details-url');
         loadTopicContent(url);
     });
 
@@ -270,50 +270,50 @@ window.onload = function() {
         else {
             $.get(url)
                 .done(function (response) {
-                    var $title = $('#js-modal-topics-content-title', response);
-                    $topicContentTitle.html($title.text());
+                    var $title = $('#js-modal-content-title', response);
+                    $contentTitle.html($title.text());
 
-                    var $error = $('#js-modal-topics-content-error', response);
+                    var $error = $('#js-modal-content-error', response);
                     if ($error.length > 0) {
                         var alert = '<div class="alert alert-danger" role="alert">' + $error.html() + '</div>';
-                        $topicContentBody.html(alert);
-                        $topicContentTotal.html('');
-                        $topicContentButtonFirst.hide();
-                        $topicContentButtonPrev.hide();
-                        $topicContentButtonNext.hide();
+                        $contentBody.html(alert);
+                        $contentTotal.html('');
+                        $contentButtonFirst.hide();
+                        $contentButtonPrev.hide();
+                        $contentButtonNext.hide();
                     } else {
-                        var $body = $('#js-modal-topics-content-body', response);
+                        var $body = $('#js-modal-content-body', response);
                         if ($body.length > 0) {
-                            $topicContentBody.html($body.html());
-                            $topicContentTotal.html('');
-                            $topicContentButtonFirst.hide();
-                            $topicContentButtonPrev.hide();
-                            $topicContentButtonNext.hide();
+                            $contentBody.html($body.html());
+                            $contentTotal.html('');
+                            $contentButtonFirst.hide();
+                            $contentButtonPrev.hide();
+                            $contentButtonNext.hide();
                         } else {
-                            var $table = $('#js-modal-topics-content-table', response);
-                            var $total = $('#js-modal-topics-content-total', response);
-                            $topicContentBody.html($table);
-                            $topicContentTotal.replaceWith($total);
-                            $topicContentTable = $('#js-modal-topics-content-table');
-                            $topicContentTotal = $('#js-modal-topics-content-total');
+                            var $table = $('#js-modal-content-table', response);
+                            var $total = $('#js-modal-content-total', response);
+                            $contentBody.html($table);
+                            $contentTotal.replaceWith($total);
+                            $contentTable = $('#js-modal-content-table');
+                            $contentTotal = $('#js-modal-content-total');
 
-                            var $targetLink = $('#js-modal-topics-content-first', response);
-                            setButtonClickHandler($topicContentButtonFirst, $targetLink.attr('href'));
+                            var $targetLink = $('#js-modal-content-first', response);
+                            setButtonClickHandler($contentButtonFirst, $targetLink.attr('href'));
 
-                            $targetLink = $('#js-modal-topics-content-prev', response);
-                            setButtonClickHandler($topicContentButtonPrev, $targetLink.attr('href'));
+                            $targetLink = $('#js-modal-content-prev', response);
+                            setButtonClickHandler($contentButtonPrev, $targetLink.attr('href'));
 
-                            $targetLink = $('#js-modal-topics-content-next', response);
-                            setButtonClickHandler($topicContentButtonNext, $targetLink.attr('href'));
+                            $targetLink = $('#js-modal-content-next', response);
+                            setButtonClickHandler($contentButtonNext, $targetLink.attr('href'));
                         }
 
-                        $('a', $topicContentBody).click(function (ev) {
+                        $('a', $contentBody).click(function (ev) {
                             ev.preventDefault();
                             var url = $(this).attr('href');
                             loadTopicContent(url);
                         });
 
-                        $('form', $topicContentBody).submit(function (ev) {
+                        $('form', $contentBody).submit(function (ev) {
                             ev.preventDefault();
                             var $form = $(this);
                             $.ajax({
@@ -332,11 +332,11 @@ window.onload = function() {
                                 }
                             });
 
-                            $topicContentModal.modal('hide');
+                            $contentModal.modal('hide');
                         });
                     }
 
-                    $topicContentModal.modal('show');
+                    $contentModal.modal('show');
                 })
                 .fail(function (xhr) {
                     var defaultMsg = 'An error occurred getting data from the server!';

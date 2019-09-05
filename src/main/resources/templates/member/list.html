@@ -8,17 +8,17 @@
 
 <div>
     <h1>Kafka Streams PoC</h1>
-    <h2 id="js-modal-topics-content-title">Members</h2>
+    <h2 id="js-modal-content-title">Members</h2>
 </div>
 
 <div th:if="${members.isEmpty()}">
-    <p id="js-modal-topics-content-error">
+    <p id="js-modal-content-error">
         No members found!
     </p>
 </div>
 
 <div th:if="${!members.isEmpty()}">
-    <table id="js-modal-topics-content-table" class="table table-striped table-sm">
+    <table id="js-modal-content-table" class="table table-striped table-sm">
         <thead class="thead-light">
             <tr>
                 <th scope="col">Uuid</th>
@@ -40,7 +40,7 @@
             </tr>
         </tbody>
     </table>
-    <p id="js-modal-topics-content-total">
+    <p id="js-modal-content-total">
         Showing members
         <span th:text="${(page * size) + 1}"></span>
         to
@@ -55,13 +55,13 @@
         Pagination
         <span th:if="${prev < page}">
             &ndash;
-            <a id="js-modal-topics-content-first" th:href="@{/member(page=0,size=${size})}">First</a>
+            <a id="js-modal-content-first" th:href="@{/member(page=0,size=${size})}">First</a>
             &ndash;
-            <a id="js-modal-topics-content-prev" th:href="@{/member(page=${prev},size=${size})}">Prev</a>
+            <a id="js-modal-content-prev" th:href="@{/member(page=${prev},size=${size})}">Prev</a>
         </span>
         <span th:if="${next > page}">
             &ndash;
-            <a id="js-modal-topics-content-next" th:href="@{/member(page=${next},size=${size})}">Next</a>
+            <a id="js-modal-content-next" th:href="@{/member(page=${next},size=${size})}">Next</a>
         </span>
     </p>
 </div>

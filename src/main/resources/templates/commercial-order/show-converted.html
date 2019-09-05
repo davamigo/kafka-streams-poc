@@ -8,11 +8,11 @@
 
 <div>
     <h1>Kafka Streams PoC</h1>
-    <h2 id="js-modal-topics-content-title">Commercial Order Converted</h2>
+    <h2 id="js-modal-content-title">Commercial Order Converted</h2>
 </div>
 
 <div th:if="${null == commercialOrder}">
-    <p id="js-modal-topics-content-error">
+    <p id="js-modal-content-error">
         The commercial order converted with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -20,7 +20,7 @@
 </div>
 
 <div th:if="${null != commercialOrder}">
-    <div id="js-modal-topics-content-body">
+    <div id="js-modal-content-body">
         <dl class="row">
             <dt class="col-sm-3">Uuid:</dt>
             <dd class="col-sm-9 text-monospace">
