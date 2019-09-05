@@ -21,6 +21,7 @@ window.onload = function() {
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
     var $purchaseOrderLinesTopicBox = $('#svg-purchase-order-lines-topic-box', $svgDocument);
     var $generatedWarehouseOrderLinesTopic = $('#svg-warehouse-order-lines-topic-box', $svgDocument);
+    var $failedWarehouseOrderLinesTopic = $('#svg-failed-warehouse-order-lines-topic-box', $svgDocument);
 
     var $commercialOrderConverterStreamBox = $('#svg-stream-commercial-orders-converter-box', $svgDocument);
     var $commercialOrderLinesSplitStreamBox = $('#svg-stream-commercial-order-lines-split-box', $svgDocument);
@@ -115,6 +116,12 @@ window.onload = function() {
     $generatedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $topicContentModal.attr('data-get-warehouse-order-lines-generated-url');
+        loadTopicContent(url);
+    });
+
+    $failedWarehouseOrderLinesTopic.click(function (ev) {
+        ev.preventDefault();
+        var url = $topicContentModal.attr('data-get-warehouse-order-lines-failed-url');
         loadTopicContent(url);
     });
 
@@ -304,6 +311,28 @@ window.onload = function() {
                             ev.preventDefault();
                             var url = $(this).attr('href');
                             loadTopicContent(url);
+                        });
+
+                        $('form', $topicContentBody).submit(function (ev) {
+                            ev.preventDefault();
+                            var $form = $(this);
+                            $.ajax({
+                                data: $form.serialize(),
+                                dataType: 'html',
+                                type: $form.attr('method'),
+                                url: $form.attr('action'),
+                                success: function (response) {
+                                    startCountTopicsTimers();
+                                    showMessage('Form successfully submitted!');
+                                },
+                                error: function (xhr) {
+                                    var defaultMsg = 'An error occurred submitting the form!';
+                                    var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
+                                    showError(msg);
+                                }
+                            });
+
+                            $topicContentModal.modal('hide');
                         });
                     }
 

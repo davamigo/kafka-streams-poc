@@ -5,11 +5,14 @@
     <title>Failed Warehouse Order Lines - Kafka Streams PoC</title>
 </head>
 <body>
-<h1>Kafka Streams PoC</h1>
-<h2>Failed Warehouse Order Lines</h2>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-topics-content-title">Failed Warehouse Order Lines</h2>
+</div>
 
 <div th:if="${null == warehouseOrderLine}">
-    <p>
+    <p id="js-modal-topics-content-error">
         The failed warehouse order line with id
         <strong th:text="${uuid}"></strong>
         was not found!
@@ -17,41 +20,49 @@
 </div>
 
 <div th:if="${null != warehouseOrderLine}">
-    <dl>
-        <dt>Uuid:</dt>
-        <dd>
-            <strong>
-                <a th:href="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" th:text="${warehouseOrderLine.getUuid()}"></a>
-            </strong>
-        </dd>
+    <div id="js-modal-topics-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" th:text="${warehouseOrderLine.getUuid()}"></a>
+                </strong>
+            </dd>
 
-        <dt>Country:</dt>
-        <dd th:text="${warehouseOrderLine.getCountry()}"></dd>
+            <dt class="col-sm-3">Country:</dt>
+            <dd class="col-sm-9" th:text="${warehouseOrderLine.getCountry()}"></dd>
 
-        <dt>Date:</dt>
-        <dd th:text="${#calendars.format(warehouseOrderLine.getDate(), 'yyyy-MM-dd')}"></dd>
+            <dt class="col-sm-3">Date:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#calendars.format(warehouseOrderLine.getDate(), 'yyyy-MM-dd')}"></dd>
 
-        <dt>Product Uuid:</dt>
-        <dd th:text="${warehouseOrderLine.getProductUuid()}"></dd>
+            <dt class="col-sm-3">Product Uuid:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${warehouseOrderLine.getProductUuid()}"></dd>
 
-        <dt>Product Name:</dt>
-        <dd th:text="${warehouseOrderLine.getProductName()}"></dd>
+            <dt class="col-sm-3">Product Name:</dt>
+            <dd class="col-sm-9" th:text="${warehouseOrderLine.getProductName()}"></dd>
 
-        <dt>Bar Code:</dt>
-        <dd th:text="${warehouseOrderLine.getProductBarCode()}"></dd>
+            <dt class="col-sm-3">Product Bar Code:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${warehouseOrderLine.getProductBarCode()}"></dd>
 
-        <dt>Product Legacy Id</dt>
-        <dd>
-            <form id="productLegacyIdForm" action="#" th:action="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" method="post">
-                <label for="productLegacyId">Set to:</label>
-                <input type="number" id="productLegacyId" name="productLegacyId" placeholder="Legacy id." required>
-                <button type="submit">Update</button>
-            </form>
-        </dd>
+            <dt class="col-sm-3">Product Legacy Id</dt>
+            <dd class="col-sm-9">
+                <form class="form-inline" id="productLegacyIdForm" action="#" th:action="@{/warehouse-order/line/failed/{id}(id=${warehouseOrderLine.getUuid()})}" method="post">
+                    <div class="form-group">
+                        <label for="productLegacyId">Set to:</label>
+                        <div class="input-group">
+                            <input class="form-control form-control-sm" type="number" id="productLegacyId" name="productLegacyId" placeholder="Legacy id." required>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-primary btn-sm">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </dd>
 
-        <dt>Quantity:</dt>
-        <dd th:text="${#numbers.formatDecimal(warehouseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
-    </dl>
+            <dt class="col-sm-3">Quantity:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(warehouseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
+        </dl>
+    </div>
 </div>
 
 <p>
