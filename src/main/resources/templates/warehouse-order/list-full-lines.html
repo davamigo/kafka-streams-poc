@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Full Warehouse Order Lines - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-content-title">Full Warehouse Order Lines</h2>
+</div>
+
+<div th:if="${orderLines.isEmpty()}">
+    <p id="js-modal-content-error">
+        No full warehouse order lines found!
+    </p>
+</div>
+
+<div th:if="${!orderLines.isEmpty()}">
+    <table id="js-modal-content-table" class="table table-striped table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Uuid</th>
+                <th scope="col">Country</th>
+                <th scope="col">Date</th>
+                <th scope="col">Product Uuid</th>
+                <th scope="col">Product Legacy Id</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Product Bar Code</th>
+                <th scope="col" class="text-right">Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="line : ${orderLines}">
+                <td class="text-monospace">
+                    <strong>
+                        <a th:href="@{/warehouse-order/line/full/{id}(id=${line.getUuid()})}" th:text="${line.getUuid()}"></a>
+                    </strong>
+                </td>
+                <td th:text="${line.getCountry()}"></td>
+                <td class="text-monospace" th:text="${#calendars.format(line.getDate(), 'yyyy-MM-dd')}"></td>
+                <td class="text-monospace" th:text="${line.getProductUuid()}"></td>
+                <td class="text-monospace" th:text="${line.getProductLegacyId()}"></td>
+                <td th:text="${line.getProductName()}"></td>
+                <td class="text-monospace" th:text="${line.getProductBarCode()}"></td>
+                <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(line.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="js-modal-content-total">
+        Showing full warehouse order lines
+        <span th:text="${(page * size) + 1}"></span>
+        to
+        <span th:text="${(page * size) + orderLines.size()}"></span>
+        of
+        <span th:text="${count}"></span>
+    </p>
+</div>
+
+<div th:if="${prev < page || next > page}">
+    <p>
+        Pagination
+        <span th:if="${prev < page}">
+            &ndash;
+            <a id="js-modal-content-first" th:href="@{/warehouse-order/line/full(page=0,size=${size})}">First</a>
+            &ndash;
+            <a id="js-modal-content-prev" th:href="@{/warehouse-order/line/full(page=${prev},size=${size})}">Prev</a>
+        </span>
+        <span th:if="${next > page}">
+            &ndash;
+            <a id="js-modal-content-next" th:href="@{/warehouse-order/line/full(page=${next},size=${size})}">Next</a>
+        </span>
+    </p>
+</div>
+
+<div>
+    <p>
+        Navigation
+        &ndash;
+        <a th:href="@{/}">Homepage</a>
+    </p>
+</div>
+</body>
+</html>

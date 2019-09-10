@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Matched Warehouse Order Lines - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-content-title">Matched Warehouse Order Lines</h2>
+</div>
+
+<div th:if="${null == warehouseOrderLine}">
+    <p id="js-modal-content-error">
+        The matched warehouse order line with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != warehouseOrderLine}">
+    <div id="js-modal-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/warehouse-order/line/matched/{id}(id=${warehouseOrderLine.getUuid()})}" th:text="${warehouseOrderLine.getUuid()}"></a>
+                </strong>
+            </dd>
+
+            <dt class="col-sm-3">Country:</dt>
+            <dd class="col-sm-9" th:text="${warehouseOrderLine.getCountry()}"></dd>
+
+            <dt class="col-sm-3">Date:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#calendars.format(warehouseOrderLine.getDate(), 'yyyy-MM-dd')}"></dd>
+
+            <dt class="col-sm-3">Product Uuid:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${warehouseOrderLine.getProductUuid()}"></dd>
+
+            <dt class="col-sm-3">Product Legacy Id:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${warehouseOrderLine.getProductLegacyId()}"></dd>
+
+            <dt class="col-sm-3">Product Name:</dt>
+            <dd class="col-sm-9" th:text="${warehouseOrderLine.getProductName()}"></dd>
+
+            <dt class="col-sm-3">Product Bar Code:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${warehouseOrderLine.getProductBarCode()}"></dd>
+
+            <dt class="col-sm-3">Quantity:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#numbers.formatDecimal(warehouseOrderLine.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></dd>
+        </dl>
+    </div>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/warehouse-order/line/matched}">Show matched warehouse order lines</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>

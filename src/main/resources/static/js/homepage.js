@@ -21,7 +21,11 @@ window.onload = function() {
     var $purchaseOrdersTopicBox = $('#svg-purchase-orders-topic-box', $svgDocument);
     var $purchaseOrderLinesTopicBox = $('#svg-purchase-order-lines-topic-box', $svgDocument);
     var $generatedWarehouseOrderLinesTopic = $('#svg-warehouse-order-lines-topic-box', $svgDocument);
+    var $matchedWarehouseOrderLinesTopic = $('#svg-matched-warehouse-order-lines-topic-box', $svgDocument);
+    var $unmatchedWarehouseOrderLinesTopic = $('#svg-unmatched-warehouse-order-lines-topic-box', $svgDocument);
+    var $recoveredWarehouseOrderLinesTopic = $('#svg-recovered-warehouse-order-lines-topic-box', $svgDocument);
     var $failedWarehouseOrderLinesTopic = $('#svg-failed-warehouse-order-lines-topic-box', $svgDocument);
+    var $fullWarehouseOrderLinesTopic = $('#svg-full-warehouse-order-lines-topic-box', $svgDocument);
 
     var $commercialOrderConverterStreamBox = $('#svg-stream-commercial-orders-converter-box', $svgDocument);
     var $commercialOrderLinesSplitStreamBox = $('#svg-stream-commercial-order-lines-split-box', $svgDocument);
@@ -34,7 +38,7 @@ window.onload = function() {
     var $warehouseOrdersGeneratorStreamBox = $('#svg-generate-warehouse-orders-box', $svgDocument);
     var $productLegacyIdFeederStreamBox = $('#svg-product-legacy-id-feeder-box', $svgDocument);
 
-    var $contentModal = $('#js-modal-content-');
+    var $contentModal = $('#js-modal-content');
     var $contentTitle = $('#js-modal-content-title');
     var $contentBody = $('#js-modal-content-body');
     var $contentTable = $('#js-modal-content-table');
@@ -119,9 +123,33 @@ window.onload = function() {
         loadTopicContent(url);
     });
 
+    $matchedWarehouseOrderLinesTopic.click(function (ev) {
+        ev.preventDefault();
+        var url = $contentModal.attr('data-get-warehouse-order-lines-matched-url');
+        loadTopicContent(url);
+    });
+
+    $unmatchedWarehouseOrderLinesTopic.click(function (ev) {
+        ev.preventDefault();
+        var url = $contentModal.attr('data-get-warehouse-order-lines-unmatched-url');
+        loadTopicContent(url);
+    });
+
+    $recoveredWarehouseOrderLinesTopic.click(function (ev) {
+        ev.preventDefault();
+        var url = $contentModal.attr('data-get-warehouse-order-lines-recovered-url');
+        loadTopicContent(url);
+    });
+
     $failedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-failed-url');
+        loadTopicContent(url);
+    });
+
+    $fullWarehouseOrderLinesTopic.click(function (ev) {
+        ev.preventDefault();
+        var url = $contentModal.attr('data-get-warehouse-order-lines-full-url');
         loadTopicContent(url);
     });
 

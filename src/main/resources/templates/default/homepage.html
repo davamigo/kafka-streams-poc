@@ -76,8 +76,24 @@
         (<span th:text="${topicCount['warehouse-order-lines']}"></span>)
     </li>
     <li>
+        <a th:href="@{/warehouse-order/line/matched}">Show matched warehouse order lines</a>
+        (<span th:text="${topicCount['matched-warehouse-order-lines']}"></span>)
+    </li>
+    <li>
+        <a th:href="@{/warehouse-order/line/unmatched}">Show unmatched warehouse order lines</a>
+        (<span th:text="${topicCount['unmatched-warehouse-order-lines']}"></span>)
+    </li>
+    <li>
+        <a th:href="@{/warehouse-order/line/recovered}">Show recovered warehouse order lines</a>
+        (<span th:text="${topicCount['recovered-warehouse-order-lines']}"></span>)
+    </li>
+    <li>
         <a th:href="@{/warehouse-order/line/failed}">Show failed warehouse order lines</a>
         (<span th:text="${topicCount['failed-warehouse-order-lines']}"></span>)
+    </li>
+    <li>
+        <a th:href="@{/warehouse-order/line/full}">Show full warehouse order lines</a>
+        (<span th:text="${topicCount['full-warehouse-order-lines']}"></span>)
     </li>
 </ul>
 
