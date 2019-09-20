@@ -1,6 +1,8 @@
 package com.example.kafka.streams.poc.controller;
 
 import com.example.kafka.streams.poc.mongodb.entity.ProductEntity;
+import com.example.kafka.streams.poc.mongodb.entity.ProductLegacyIdEntity;
+import com.example.kafka.streams.poc.mongodb.repository.ProductLegacyIdRepository;
 import com.example.kafka.streams.poc.mongodb.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +34,19 @@ public class ProductController {
     /** The mongoDB repository where to retrieve the products */
     private final ProductRepository productRepository;
 
+    /** The mongoDB repository where to retrieve the legacy products */
+    private final ProductLegacyIdRepository productLegacyIdRepository;
+
     /**
      * Autowired constructor
      *
-     * @param productRepository the mongoDB product repository
+     * @param productRepository         the mongoDB product repository
+     * @param productLegacyIdRepository the mongoDB legacy product repository
      */
     @Autowired
-    public ProductController(ProductRepository productRepository) {
+    public ProductController(ProductRepository productRepository, ProductLegacyIdRepository productLegacyIdRepository) {
         this.productRepository = productRepository;
+        this.productLegacyIdRepository = productLegacyIdRepository;
     }
 
     /**
@@ -93,6 +100,40 @@ public class ProductController {
         final ModelAndView mav  = new ModelAndView("product/show");
         mav.addObject("uuid", uuid);
         mav.addObject("product", product.orElse(null));
+        return mav;
+    }
+
+    /**
+     * GET /product/legacy-id
+     *
+     * Lists the legacy ids for the  products
+     *
+     * @param size  the page size (default = 15)
+     * @param page  the page number (default = 0)
+     * @return the model and view
+     */
+    @GetMapping("/legacy-id")
+    public ModelAndView getLegacyProductsAction(
+            @RequestParam(value="size", required=false, defaultValue="15") int size,
+            @RequestParam(value="page", required=false, defaultValue="0") int page
+    )  {
+        LOGGER.info("ProductController.getLegacyProductsAction(size=" + size + ", page=" + page + ")");
+
+        final List<ProductLegacyIdEntity> products = productLegacyIdRepository
+                .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, Arrays.asList("firstName", "lastName"))))
+                .getContent();
+
+        final long count = productLegacyIdRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
+
+        final ModelAndView mav  = new ModelAndView("product/list-legacy-ids");
+        mav.addObject("products", products);
+        mav.addObject("count", count);
+        mav.addObject("size", size);
+        mav.addObject("page", page);
+        mav.addObject("prev", prev);
+        mav.addObject("next", next);
         return mav;
     }
 }

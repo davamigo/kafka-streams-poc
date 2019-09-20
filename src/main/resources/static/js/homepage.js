@@ -26,6 +26,7 @@ window.onload = function() {
     var $recoveredWarehouseOrderLinesTopic = $('#svg-recovered-warehouse-order-lines-topic-box', $svgDocument);
     var $failedWarehouseOrderLinesTopic = $('#svg-failed-warehouse-order-lines-topic-box', $svgDocument);
     var $fullWarehouseOrderLinesTopic = $('#svg-full-warehouse-order-lines-topic-box', $svgDocument);
+    var $productsCacheTopic = $('#svg-products-cache-topic-box', $svgDocument);
 
     var $commercialOrderConverterStreamBox = $('#svg-stream-commercial-orders-converter-box', $svgDocument);
     var $commercialOrderLinesSplitStreamBox = $('#svg-stream-commercial-order-lines-split-box', $svgDocument);
@@ -150,6 +151,12 @@ window.onload = function() {
     $fullWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-full-url');
+        loadTopicContent(url);
+    });
+
+    $productsCacheTopic.click(function (ev) {
+        ev.preventDefault();
+        var url = $contentModal.attr('data-get-products-cache-url');
         loadTopicContent(url);
     });
 

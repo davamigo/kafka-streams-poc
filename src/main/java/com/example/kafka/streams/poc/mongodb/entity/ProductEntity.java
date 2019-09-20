@@ -1,12 +1,8 @@
 package com.example.kafka.streams.poc.mongodb.entity;
 
-import com.example.kafka.streams.poc.domain.entity.address.Address;
 import com.example.kafka.streams.poc.domain.entity.product.Product;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Product MongoDB entity

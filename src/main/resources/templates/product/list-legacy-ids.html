@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Products legacy cache - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-content-title">Products legacy cache</h2>
+</div>
+
+<div th:if="${products.isEmpty()}">
+    <p id="js-modal-content-error">
+        No products found!
+    </p>
+</div>
+
+<div th:if="${!products.isEmpty()}">
+    <table id="js-modal-content-table" class="table table-striped table-sm">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Uuid</th>
+                <th scope="col" class="text-right">Legacy id.</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${products}">
+                <td class="text-monospace">
+                    <strong th:text="${product.getUuid()}"></strong>
+                </td>
+                <td class="text-monospace text-right" th:text="${product.getLegacyId()}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="js-modal-content-total">
+        Showing products
+        <strong th:text="${(page * size) + 1}"></strong>
+        to
+        <strong th:text="${(page * size) + products.size()}"></strong>
+        of
+        <strong th:text="${count}"></strong>
+    </p>
+</div>
+
+<div th:if="${prev < page || next > page}">
+    <p>
+        Pagination
+        <span th:if="${prev < page}">
+            &ndash;
+            <a id="js-modal-content-first" th:href="@{/product/legacy-id(page=0,size=${size})}">First</a>
+            &ndash;
+            <a id="js-modal-content-prev" th:href="@{/product/legacy-id(page=${prev},size=${size})}">Prev</a>
+        </span>
+        <span th:if="${next > page}">
+            &ndash;
+            <a id="js-modal-content-next" th:href="@{/product/legacy-id(page=${next},size=${size})}">Next</a>
+        </span>
+    </p>
+</div>
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
