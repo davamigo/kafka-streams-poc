@@ -138,4 +138,16 @@ public class ApiController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, exc.getMessage(), exc);
         }
     }
+
+    @PostMapping("/processes/start")
+    public void startAllProcess() throws ResponseStatusException {
+        LOGGER.info("ApiController.startAllProcess()");
+        kafkaStreamProcessesStatusMonitor.startAll();
+    }
+
+    @PostMapping("/processes/stop")
+    public void stopAllProcess() throws ResponseStatusException {
+        LOGGER.info("ApiController.stopAllProcess()");
+        kafkaStreamProcessesStatusMonitor.stopAll();
+    }
 }

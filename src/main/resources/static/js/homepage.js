@@ -9,6 +9,12 @@ window.onload = function() {
     var $alertTitle = $('#js-modal-alert-title');
     var $alertMessage = $('#js-modal-alert-message');
 
+    var $btnZoomIn = $('#js-btn-zoom-in');
+    var $btnZoom100 = $('#js-btn-zoom-100');
+    var $btnZoomOut = $('#js-btn-zoom-out');
+    var $btnStartAll = $('#js-btn-start-all-processes');
+    var $btnStopAll = $('#js-btn-stop-all-processes');
+
     var $producerBox = $('#svg-producer-box', $svgDocument);
     var $producerModal = $('#js-modal-producer');
     var $producerForm = $('#js-modal-producer-form');
@@ -50,6 +56,55 @@ window.onload = function() {
 
     var $streamToggler = $('a[id^="svg-"][id$="-toggle"]', $svgDocument);
 
+    $btnZoomIn.click(function (ev) {
+        ev.preventDefault();
+        var w = $svgObject.width();
+        w = (w * 1.10).toFixed(0);
+        $svgObject.width(w);
+    });
+
+    $btnZoom100.click(function (ev) {
+        ev.preventDefault();
+        $svgObject.width("100%");
+    });
+
+    $btnZoomOut.click(function (ev) {
+        ev.preventDefault();
+        var w = $svgObject.width();
+        w = (w / 1.10).toFixed(0);
+        $svgObject.width(w);
+    });
+
+    $btnStartAll.click(function (ev) {
+        ev.preventDefault();
+        var url = $svgObject.attr('data-process-start-url');
+        $.post(url)
+            .done(function () {
+                checkProcessesStatuses();
+                startCountTopicsTimers();
+            })
+            .fail(function (xhr) {
+                var defaultMsg = 'An error occurred starting all the processes!';
+                var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
+                showError(msg);
+            });
+    });
+
+    $btnStopAll.click(function (ev) {
+        ev.preventDefault();
+        var url = $svgObject.attr('data-process-stop-url');
+        $.post(url)
+            .done(function () {
+                checkProcessesStatuses();
+                startCountTopicsTimers();
+            })
+            .fail(function (xhr) {
+                var defaultMsg = 'An error occurred stopping all the processes!';
+                var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
+                showError(msg);
+            });
+    });
+
     $producerBox.click(function (ev) {
         ev.preventDefault();
         $producerModal.modal('show');
@@ -79,145 +134,145 @@ window.onload = function() {
     $productsTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-products-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $membersTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-members-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $commercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-commercial-orders-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $convertedCommercialOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-converted-commercial-orders-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $splitCommercialOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-split-commercial-order-lines-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $purchaseOrdersTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-purchase-orders-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $purchaseOrderLinesTopicBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-purchase-order-lines-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $generatedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-generated-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $matchedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-matched-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $unmatchedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-unmatched-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $recoveredWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-recovered-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $failedWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-failed-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $fullWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-full-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $productsCacheTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-products-cache-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $commercialOrderConverterStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-commercial-orders-converter-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $commercialOrderLinesSplitStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-commercial-order-lines-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $purchaseOrderLinesGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-purchase-order-lines-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $purchaseOrdersGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-purchase-orders-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $warehouseOrderLinesGenerateStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-warehouse-order-lines-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $warehouseOrderLinesMatcherStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-warehouse-order-lines-match-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $warehouseOrderLinesRecoverStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-warehouse-order-lines-recover-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $warehouseOrderLinesMergerStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-warehouse-order-lines-merger-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $warehouseOrdersGeneratorStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-warehouse-orders-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $productLegacyIdFeederStreamBox.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-show-product-legacy-id-feeder-details-url');
-        loadTopicContent(url);
+        loadModalContent(url);
     });
 
     $streamToggler.click(function (ev) {
@@ -261,6 +316,7 @@ window.onload = function() {
         setTimeout(countTopics, 5000);
         setTimeout(countTopics, 10000);
         setTimeout(countTopics, 25000);
+        setTimeout(countTopics, 50000);
     };
 
     var countTopics = function() {
@@ -298,7 +354,7 @@ window.onload = function() {
             });
     };
 
-    var loadTopicContent = function(url) {
+    var loadModalContent = function(url) {
         if (url === "" || url == null || typeof url == 'undefined') {
             showError('Can\'t get data from the server. Invalid URL!');
         }
@@ -345,7 +401,7 @@ window.onload = function() {
                         $('a', $contentBody).click(function (ev) {
                             ev.preventDefault();
                             var url = $(this).attr('href');
-                            loadTopicContent(url);
+                            loadModalContent(url);
                         });
 
                         $('form', $contentBody).submit(function (ev) {
@@ -387,7 +443,7 @@ window.onload = function() {
             $button.prop('disabled', false);
             $button.click(function (ev) {
                 ev.preventDefault();
-                loadTopicContent(url);
+                loadModalContent(url);
             });
         } else {
             $button.prop('disabled', true);
