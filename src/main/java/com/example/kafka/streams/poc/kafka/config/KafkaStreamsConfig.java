@@ -154,6 +154,16 @@ public class KafkaStreamsConfig {
     }
 
     /**
+     * Creates a bean for a Kafka Streams process to generate the warehouse order from the warehouse order lines.
+     *
+     * @return A factory to build the stream process
+     */
+    @Bean("warehouseOrdersGeneratorStreamBuilderFactoryBean")
+    public StreamsBuilderFactoryBean warehouseOrdersGeneratorStreamBuilderFactoryBean() {
+        return newCustomStreamsBuilderFactoryBean("warehouseOrdersGeneratorStream");
+    }
+
+    /**
      * Creates a bean for a Kafka Streams process feeding the product-legacy-id topic from the recovered warehouse order
      * lines stream.
      *
@@ -163,5 +173,4 @@ public class KafkaStreamsConfig {
     public StreamsBuilderFactoryBean productLegacyIdFeederStreamBuilderFactoryBean() {
         return newCustomStreamsBuilderFactoryBean("productLegacyIdFeederStream");
     }
-
 }

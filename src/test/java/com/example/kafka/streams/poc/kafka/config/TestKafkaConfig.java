@@ -352,4 +352,15 @@ public class TestKafkaConfig {
         // Assertions
         assertNotNull(factory);
     }
+
+    @Test
+    public void testProductLegacyIdKafkaListenerContainerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Integer>> factory = kafkaConfig.productLegacyIdKafkaListenerContainerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
 }

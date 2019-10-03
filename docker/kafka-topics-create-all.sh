@@ -3,16 +3,33 @@
 cd $(dirname $0)
 
 REGULAR_30DAYS_TOPICS="\
-    t.commercial-orders.new \
-    t.commercial-orders.converted \
     t.commercial-order-lines.split \
+    ";
+
+COMPACTED_30DAYS_TOPICS="\
+    t.purchase-order-lines.aggregated \
     t.warehouse-order-lines.generated \
     t.warehouse-order-lines.matched \
     t.warehouse-order-lines.unmatched \
     t.warehouse-order-lines.recovered \
     t.warehouse-order-lines.failed \
     t.warehouse-order-lines.new \
+    t.product-legacy-ids.cache \
     ";
+
+COMPACTED_FOREVER_TOPICS="\
+    t.members.new \
+    t.products.new \
+    t.commercial-orders.new \
+    t.commercial-orders.converted \
+    t.purchase-orders.generated \
+    t.warehouse-orders.new \
+    ";
+
+
+###############################################################################
+# REGULAR 30 DAYS TOPIC CREATION
+###############################################################################
 
 for TOPIC in ${REGULAR_30DAYS_TOPICS}; do
     COMMAND="docker exec -it \
@@ -34,11 +51,10 @@ for TOPIC in ${REGULAR_30DAYS_TOPICS}; do
     echo -e "";
 done;
 
-COMPACTED_30DAYS_TOPICS="\
-    t.purchase-order-lines.aggregated \
-    t.purchase-orders.generated \
-    t.product-legacy-ids.cache \
-    ";
+
+###############################################################################
+# COMPACTED 30 DAYS TOPIC CREATION
+###############################################################################
 
 for TOPIC in ${COMPACTED_30DAYS_TOPICS}; do
     COMMAND="docker exec -it \
@@ -60,10 +76,10 @@ for TOPIC in ${COMPACTED_30DAYS_TOPICS}; do
     echo -e "";
 done;
 
-COMPACTED_FOREVER_TOPICS="\
-    t.members.new \
-    t.products.new \
-    ";
+
+###############################################################################
+# COMPACTED LAST FOREVER TOPIC CREATION
+###############################################################################
 
 for TOPIC in ${COMPACTED_FOREVER_TOPICS}; do
     COMMAND="docker exec -it \

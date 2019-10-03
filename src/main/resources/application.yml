@@ -39,6 +39,7 @@ spring:
       warehouse-order-lines-recovered: "${spring.application.name}.warehouse-order-lines.recovered"
       warehouse-order-lines-failed:    "${spring.application.name}.warehouse-order-lines.failed"
       warehouse-order-lines-new:       "${spring.application.name}.warehouse-order-lines.new"
+      warehouse-orders-new:            "${spring.application.name}.warehouse-orders.new"
     topics:
       members-new:                     "t.members.new"
       products-new:                    "t.products.new"
@@ -54,6 +55,7 @@ spring:
       warehouse-order-lines-recovered: "t.warehouse-order-lines.recovered"
       warehouse-order-lines-failed:    "t.warehouse-order-lines.failed"
       warehouse-order-lines-new:       "t.warehouse-order-lines.new"
+      warehouse-orders-new:            "t.warehouse-orders.new"
     stores:
       members:                         "members.materialized"
       products:                        "products.materialized"

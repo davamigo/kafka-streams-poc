@@ -18,7 +18,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Kafka streams for generating the purchase order from the aggregated purchase order lines
@@ -33,7 +36,7 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
     private final String aggregatedPurchaseOrderLinesTopic;
 
     /** The name of the generated purchase order Kafka topic (output KStream) */
-    private final String generatedPurchaseOrdesTopic;
+    private final String generatedPurchaseOrdersTopic;
 
     /** Serde for the string avro key */
     private final Serde<String> stringKeyAvroSerde;
@@ -49,18 +52,18 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
      *
      * @param schemaRegistryUrl                 the URL of the schema registry
      * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
-     * @param generatedPurchaseOrdesTopic       the name of the generated purchase order Kafka topic (output KStream)
+     * @param generatedPurchaseOrdersTopic      the name of the generated purchase order Kafka topic (output KStream)
      */
     @Autowired
     public PurchaseOrderGeneratorStream(
             @Value("${spring.kafka.schema-registry-url}") String schemaRegistryUrl,
             @Value("${spring.kafka.topics.purchase-order-lines-aggregated}") String aggregatedPurchaseOrderLinesTopic,
-            @Value("${spring.kafka.topics.purchase-orders-generated}") String generatedPurchaseOrdesTopic
+            @Value("${spring.kafka.topics.purchase-orders-generated}") String generatedPurchaseOrdersTopic
     ) {
         super(schemaRegistryUrl);
 
         this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
-        this.generatedPurchaseOrdesTopic = generatedPurchaseOrdesTopic;
+        this.generatedPurchaseOrdersTopic = generatedPurchaseOrdersTopic;
 
         this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>();
         this.purchaseOrderLineValueAvroSerde = new SpecificAvroSerde<>();
@@ -75,18 +78,18 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
      * @param schemaRegistryClient              the schema registry client (for testing)
      * @param schemaRegistryUrl                 the URL of the schema registry
      * @param aggregatedPurchaseOrderLinesTopic the name of the aggregated purchase order lines Kafka topic (input KStream)
-     * @param generatedPurchaseOrdesTopic       the name of the generated purchase order Kafka topic (output KStream)
+     * @param generatedPurchaseOrdersTopic       the name of the generated purchase order Kafka topic (output KStream)
      */
     public PurchaseOrderGeneratorStream(
             SchemaRegistryClient schemaRegistryClient,
             String schemaRegistryUrl,
             String aggregatedPurchaseOrderLinesTopic,
-            String generatedPurchaseOrdesTopic
+            String generatedPurchaseOrdersTopic
     ) {
         super(schemaRegistryUrl);
 
         this.aggregatedPurchaseOrderLinesTopic = aggregatedPurchaseOrderLinesTopic;
-        this.generatedPurchaseOrdesTopic = generatedPurchaseOrdesTopic;
+        this.generatedPurchaseOrdersTopic = generatedPurchaseOrdersTopic;
 
         this.stringKeyAvroSerde = new GenericPrimitiveAvroSerde<>(schemaRegistryClient);
         this.purchaseOrderLineValueAvroSerde = new SpecificAvroSerde<>(schemaRegistryClient);
@@ -109,7 +112,7 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
      *
      * - The groupBy operation will group all the purchase order lines by a new key
      *
-     *   The result is a KGrouped stream which will be used to agrregate the purchase order lines in a purchase order.
+     *   The result is a KGrouped stream which will be used to aggregate the purchase order lines in a purchase order.
      *
      *   The new key will be composed by the country code and the date (one per day)
      *
@@ -206,7 +209,7 @@ public class PurchaseOrderGeneratorStream extends BaseStream {
                 .toStream();
 
         purchaseOrderStream.to(
-                generatedPurchaseOrdesTopic,
+                generatedPurchaseOrdersTopic,
                 Produced.with(stringKeyAvroSerde, purchaseOrderValueAvroSerde)
         );
 
