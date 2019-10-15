@@ -1,0 +1,297 @@
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 4480 1359">
+    <defs>
+        <style>
+            svg {
+                background-image: url("./global-architecture-long.png");
+                background-size: 100% 100%;
+                background-repeat: no-repeat;
+            }
+            svg circle {
+                fill: rgba(80, 180, 80, 0.50);
+            }
+            svg text {
+                font-family: sans-serif;
+                font-style: normal;
+                font-size: 2.0em;
+                text-anchor: middle;
+                alignment-baseline: central;
+            }
+            svg a:focus,
+            svg a:hover {
+                outline: none;
+            }
+            svg a rect {
+                fill: transparent;
+                cursor: pointer;
+                transition: fill 0.2s;
+            }
+            svg a:focus rect,
+            svg a:hover rect {
+                fill: rgba(80, 80, 80, 0.25);
+                cursor: pointer;
+            }
+            svg a text {
+                font-size: 5.0em;
+                cursor: pointer;
+            }
+            svg a:focus text,
+            svg a:hover text {
+                cursor: pointer;
+                fill-opacity: 0.5;
+            }
+        </style>
+    </defs>
+
+    <!-- *********************************************************************************************** -->
+
+    <g>
+        <title>Random Data Producer</title>
+        <a id="svg-producer-box">
+            <rect x="10" y="330" width="220" height="220" />
+        </a>
+    </g>
+
+    <g>
+        <title>Convert Commercial Orders</title>
+        <a id="svg-stream-commercial-orders-converter-box">
+            <rect x="570" y="490" width="220" height="220" />
+        </a>
+        <a id="svg-commercialOrderConverterStreamBuilderFactoryBean-toggle">
+            <text id="svg-commercialOrderConverterStreamBuilderFactoryBean-text" x="770" y="685">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Split Commercial Order Lines</title>
+        <a id="svg-stream-commercial-order-lines-split-box">
+            <rect x="570" y="170" width="220" height="220" />
+        </a>
+        <a id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-toggle">
+            <text id="svg-commercialOrderLineSplitStreamBuilderFactoryBean-text" x="770" y="365">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Generate Purchase Order Lines</title>
+        <a id="svg-stream-purchase-order-lines-generate-box">
+            <rect x="1130" y="170" width="220" height="220" />
+        </a>
+        <a id="svg-purchaseOrderLineAggregatedStreamBuilderFactoryBean-toggle">
+            <text id="svg-purchaseOrderLineAggregatedStreamBuilderFactoryBean-text" x="1330" y="365">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Generate Purchase Orders</title>
+        <a id="svg-stream-purchase-order-generate-box">
+            <rect x="1690" y="15" width="220" height="220" />
+        </a>
+        <a id="svg-purchaseOrderGeneratedStreamBuilderFactoryBean-toggle">
+            <text id="svg-purchaseOrderGeneratedStreamBuilderFactoryBean-text" x="1890" y="210">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Generate Warehouse Order Lines</title>
+        <a id="svg-stream-warehouse-order-line-generator-box">
+            <rect x="1690" y="330" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineGeneratorStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineGeneratorStreamBuilderFactoryBean-text" x="1890" y="525">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Match Warehouse Order Lines With Legacy Product Id.</title>
+        <a id="svg-match-with-legacy-product-id-box">
+            <rect x="2250" y="490" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineProductMatcherStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineProductMatcherStreamBuilderFactoryBean-text" x="2450" y="685">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Recover Warehouse Order Lines</title>
+        <a id="svg-recover-warehouse-order-lines-box">
+            <rect x="2810" y="810" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineProductRecoveryStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineProductRecoveryStreamBuilderFactoryBean-text" x="3010" y="1005">&#8634;</text>
+        </a>
+    </g>
+
+<!-- End -->
+
+    <g>
+        <title>Product Legacy Id Feeder</title>
+        <a id="svg-product-legacy-id-feeder-box">
+            <rect x="2250" y="1130" width="220" height="220" />
+        </a>
+        <a id="svg-productLegacyIdFeederStreamBuilderFactoryBean-toggle">
+            <text id="svg-productLegacyIdFeederStreamBuilderFactoryBean-text" x="2450" y="1325">&#8634;</text>
+        </a>
+    </g>
+
+<!-- Start -->
+
+    <g>
+        <title>Merge Warehouse Order Lines</title>
+        <a id="svg-merge-warehouse-order-lines-box">
+            <rect x="3370" y="330" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrderLineMergerStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrderLineMergerStreamBuilderFactoryBean-text" x="3570" y="515">&#8634;</text>
+        </a>
+    </g>
+
+    <g>
+        <title>Generate Warehouse Orders</title>
+        <a id="svg-generate-warehouse-orders-box">
+            <rect x="3930" y="330" width="220" height="220" />
+        </a>
+        <a id="svg-warehouseOrdersGeneratorStreamBuilderFactoryBean-toggle">
+            <text id="svg-warehouseOrdersGeneratorStreamBuilderFactoryBean-text" x="4130" y="515">&#8634;</text>
+        </a>
+    </g>
+
+    <!-- *********************************************************************************************** -->
+
+    <g>
+        <title>products topic</title>
+        <a id="svg-products-topic-box">
+            <rect x="250" y="50" width="300" height="170" />
+        </a>
+        <circle cx="400" cy="180" r="40" />
+        <text id="svg-products-topic-count" x="400" y="180">--</text>
+    </g>
+
+    <g>
+        <title>commercial-orders topic</title>
+        <a id="svg-commercial-orders-topic-box">
+            <rect x="250" y="370" width="300" height="170" />
+        </a>
+        <circle cx="400" cy="500" r="40" />
+        <text id="svg-commercial-orders-topic-count" x="400" y="500">--</text>
+    </g>
+
+    <g>
+        <title>members topic</title>
+        <a id="svg-members-topic-box">
+            <rect x="250" y="690" width="300" height="170" />
+        </a>
+        <circle cx="400" cy="820" r="40" />
+        <text id="svg-members-topic-count" x="400" y="820">--</text>
+    </g>
+
+    <g>
+        <title>full-commercial-orders topic</title>
+        <a id="svg-full-commercial-orders-topic-box">
+            <rect x="810" y="530" width="300" height="170" />
+        </a>
+        <circle cx="960" cy="660" r="40" />
+        <text id="svg-full-commercial-orders-topic-count" x="960" y="660">--</text>
+    </g>
+
+    <g>
+        <title>commercial-order-lines topic</title>
+        <a id="svg-commercial-order-lines-topic-box">
+            <rect x="810" y="210" width="300" height="170" />
+        </a>
+        <circle cx="960" cy="340" r="40" />
+        <text id="svg-commercial-order-lines-topic-count" x="960" y="340">--</text>
+    </g>
+
+    <g>
+        <title>purchase-order-lines topic</title>
+        <a id="svg-purchase-order-lines-topic-box">
+            <rect x="1370" y="210" width="300" height="170" />
+        </a>
+        <circle cx="1520" cy="340" r="40" />
+        <text id="svg-purchase-order-lines-topic-count" x="1520" y="340">--</text>
+    </g>
+
+    <g>
+        <title>purchase-orders topic</title>
+        <a id="svg-purchase-orders-topic-box">
+            <rect x="1925" y="50" width="300" height="170" />
+        </a>
+        <circle cx="2075" cy="180" r="40" />
+        <text id="svg-purchase-orders-topic-count" x="2075" y="180">--</text>
+    </g>
+
+    <g>
+        <title>warehouse-order-lines topic</title>
+        <a id="svg-warehouse-order-lines-topic-box">
+            <rect x="1925" y="370" width="300" height="170" />
+        </a>
+        <circle cx="2075" cy="500" r="40" />
+        <text id="svg-warehouse-order-lines-topic-count" x="2075" y="500">--</text>
+    </g>
+
+    <g>
+        <title>matched-warehouse-order-lines topic</title>
+        <a id="svg-matched-warehouse-order-lines-topic-box">
+            <rect x="2480" y="370" width="300" height="170" />
+        </a>
+        <circle cx="2630" cy="500" r="40" />
+        <text id="svg-matched-warehouse-order-lines-topic-count" x="2630" y="500">--</text>
+    </g>
+
+    <g>
+        <title>unmatched-warehouse-order-lines topic</title>
+        <a id="svg-unmatched-warehouse-order-lines-topic-box">
+            <rect x="2480" y="690" width="300" height="170" />
+        </a>
+        <circle cx="2630" cy="820" r="40" />
+        <text id="svg-unmatched-warehouse-order-lines-topic-count" x="2630" y="820">--</text>
+    </g>
+
+    <g>
+        <title>recovered-warehouse-order-lines topic</title>
+        <a id="svg-recovered-warehouse-order-lines-topic-box">
+            <rect x="3035" y="690" width="300" height="170" />
+        </a>
+        <circle cx="3185" cy="820" r="40" />
+        <text id="svg-recovered-warehouse-order-lines-topic-count" x="3185" y="820">--</text>
+    </g>
+
+    <g>
+        <title>failed-warehouse-order-lines topic</title>
+        <a id="svg-failed-warehouse-order-lines-topic-box">
+            <rect x="3035" y="1010" width="300" height="170" />
+        </a>
+        <circle cx="3185" cy="1140" r="40" />
+        <text id="svg-failed-warehouse-order-lines-topic-count" x="3185" y="1140">--</text>
+    </g>
+
+    <g>
+        <title>full-warehouse-order-lines topic</title>
+        <a id="svg-full-warehouse-order-lines-topic-box">
+            <rect x="3605" y="370" width="300" height="170" />
+        </a>
+        <circle cx="3755" cy="500" r="40" />
+        <text id="svg-full-warehouse-order-lines-topic-count" x="3755" y="500">--</text>
+    </g>
+
+    <g>
+        <title>warehouse-orders topic</title>
+        <a id="svg-warehouse-orders-topic-box">
+            <rect x="4165" y="370" width="300" height="170" />
+        </a>
+        <circle cx="4315" cy="500" r="40" />
+        <text id="svg-warehouse-orders-topic-count" x="4315" y="500">--</text>
+    </g>
+
+    <g>
+        <title>products-cache topic</title>
+        <a id="svg-products-cache-topic-box">
+            <rect x="1925" y="690" width="300" height="170" />
+        </a>
+        <circle cx="2070" cy="820" r="40" />
+        <text id="svg-products-cache-topic-count" x="2070" y="820">--</text>
+    </g>
+</svg>

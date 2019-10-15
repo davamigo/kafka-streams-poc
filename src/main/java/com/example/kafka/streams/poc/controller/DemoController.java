@@ -20,16 +20,30 @@ public class DemoController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoController.class);
 
     /**
-     * GET /newhome
+     * GET /demo
      *
-     * Shows the new homepage.
+     * Shows the demo homepage.
      *
      * @return the model and view for the template demohome.html
      */
     @GetMapping({"", "/"})
     public ModelAndView demoHomePage() {
         LOGGER.info("DemoController.demoHomePage()");
-        final ModelAndView mav  = new ModelAndView("demo/demohome");
+        final ModelAndView mav = new ModelAndView("demo/demohome");
+        return mav;
+    }
+
+    /**
+     * GET /demo/long
+     *
+     * Shows the long homepage.
+     *
+     * @return the model and view for the template longdemohome.html
+     */
+    @GetMapping("/long")
+    public ModelAndView longDemoHomePage() {
+        LOGGER.info("DemoController.demoHomePage()");
+        final ModelAndView mav = new ModelAndView("demo/longdemohome");
         return mav;
     }
 }
