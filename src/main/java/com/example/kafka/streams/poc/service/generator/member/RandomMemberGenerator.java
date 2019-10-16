@@ -65,11 +65,18 @@ public class RandomMemberGenerator implements MemberGeneratorInterface {
                 .setFirstName(createRandomFirstName())
                 .setLastName(createRandomLastName());
 
-        // Add 1 to 3 addresses
-        int num = 1 + ((new Random()).nextInt(3));
+        // Add 1 to 2 addresses
+        int num = 1 + ((new Random()).nextInt(2));
         List<Address> addresses = new ArrayList<>();
-        while (num-- > 0) {
-            addresses.add(createRandomAddress());
+        Address firstAddress = null;
+        while (num > addresses.size()) {
+            Address address = createRandomAddress();
+            if (null == firstAddress) {
+                firstAddress = address;
+                addresses.add(address);
+            } else if (firstAddress.getCountry().equals(address.getCountry())) {
+                addresses.add(address);
+            }
         }
         builder.setAddresses(addresses);
 
