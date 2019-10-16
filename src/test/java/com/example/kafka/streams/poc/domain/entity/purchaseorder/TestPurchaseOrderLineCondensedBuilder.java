@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotSame;
 public class TestPurchaseOrderLineCondensedBuilder {
 
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         PurchaseOrderLineCondensed.Builder builder = PurchaseOrderLineCondensed.newBuilder();
         PurchaseOrderLineCondensed line = builder

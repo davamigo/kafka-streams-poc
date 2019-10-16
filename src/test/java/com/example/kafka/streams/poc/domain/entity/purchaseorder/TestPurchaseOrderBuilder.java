@@ -80,8 +80,8 @@ public class TestPurchaseOrderBuilder {
                         .setUuid("321")
                         .setAggregationKey("322")
                         .setProductUuid("323")
-                        .setPrice(344f)
-                        .setQuantity(345)
+                        .setPrice(324f)
+                        .setQuantity(325)
                         .build();
 
         List<com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLineCondensed> sourceLines = new ArrayList<>();

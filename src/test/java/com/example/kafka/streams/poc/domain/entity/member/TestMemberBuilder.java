@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 public class TestMemberBuilder {
 
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         Member.Builder builder = Member.newBuilder();
         Member member = builder

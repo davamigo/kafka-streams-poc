@@ -54,6 +54,9 @@ public class RecordCountRepository {
     /** The mongoDB repository where to retrieve the merged warehouse order lines */
     private final WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository;
 
+    /** The mongoDB repository where to retrieve the generated warehouse orders */
+    private final WarehouseOrderRepository warehouseOrderRepository;
+
     /**
      * Autowired constructor
      *
@@ -64,13 +67,14 @@ public class RecordCountRepository {
      * @param commercialOrderConvertedRepository    the mongoDB converted commercial order repository
      * @param commercialOrderLineSplitRepository    the mongoDB split commercial order line repository
      * @param purchaseOrderRepository               the mongoDB purchase order repository
-     * @param purchaseOrderLineRepository           the mongoDB purchase order lines repository
-     * @param warehouseOrderLineRepository          the mongoDB warehouse order repository
-     * @param warehouseOrderLineMatchedRepository   the mongoDB matched warehouse order repository
-     * @param warehouseOrderLineUnmatchedRepository the mongoDB unmatched warehouse order repository
-     * @param warehouseOrderLineRecoveredRepository the mongoDB recovered warehouse order repository
-     * @param warehouseOrderLineFailedRepository    the mongoDB failed warehouse order repository
-     * @param warehouseOrderLineMergedRepository    the mongoDB merged warehouse order repository
+     * @param purchaseOrderLineRepository           the mongoDB purchase order line repository
+     * @param warehouseOrderLineRepository          the mongoDB warehouse order line repository
+     * @param warehouseOrderLineMatchedRepository   the mongoDB matched warehouse order line repository
+     * @param warehouseOrderLineUnmatchedRepository the mongoDB unmatched warehouse order line repository
+     * @param warehouseOrderLineRecoveredRepository the mongoDB recovered warehouse order line repository
+     * @param warehouseOrderLineFailedRepository    the mongoDB failed warehouse order line repository
+     * @param warehouseOrderLineMergedRepository    the mongoDB merged warehouse order line repository
+     * @param warehouseOrderRepository              the mongoDB warehouse order repository
      */
     @Autowired
     public RecordCountRepository(
@@ -87,7 +91,8 @@ public class RecordCountRepository {
             WarehouseOrderLineUnmatchedRepository warehouseOrderLineUnmatchedRepository,
             WarehouseOrderLineRecoveredRepository warehouseOrderLineRecoveredRepository,
             WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository,
-            WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository
+            WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository,
+            WarehouseOrderRepository warehouseOrderRepository
     ) {
         this.productRepository = productRepository;
         this.productLegacyIdRepository = productLegacyIdRepository;
@@ -103,6 +108,7 @@ public class RecordCountRepository {
         this.warehouseOrderLineRecoveredRepository = warehouseOrderLineRecoveredRepository;
         this.warehouseOrderLineFailedRepository = warehouseOrderLineFailedRepository;
         this.warehouseOrderLineMergedRepository = warehouseOrderLineMergedRepository;
+        this.warehouseOrderRepository = warehouseOrderRepository;
     }
     /**
      * Count the records in all the collections
@@ -301,7 +307,11 @@ public class RecordCountRepository {
      * @return the number of warehouse orders
      */
     synchronized long countWarehouseOrders() {
-        // TODO
-        return -1;
+        try {
+            return warehouseOrderRepository.count();
+        }
+        catch (Exception exc) {
+            return -1;
+        }
     }
 }

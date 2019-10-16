@@ -15,7 +15,7 @@ import java.util.Date;
 @RunWith(MockitoJUnitRunner.class)
 public class TestCommercialOrderLineSplitBuilder {
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         CommercialOrderLineSplit line = CommercialOrderLineSplit
                 .newBuilder()

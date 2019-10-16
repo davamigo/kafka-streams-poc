@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class TestCommercialOrderLineBuilder {
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         Product product = new Product("111", "112", "113", "114", 115f);
         CommercialOrderLine.Builder builder = CommercialOrderLine.newBuilder();

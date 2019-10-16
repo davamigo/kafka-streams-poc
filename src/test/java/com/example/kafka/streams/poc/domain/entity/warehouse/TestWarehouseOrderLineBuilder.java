@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotSame;
 public class TestWarehouseOrderLineBuilder {
 
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         WarehouseOrderLine.Builder builder = WarehouseOrderLine.newBuilder();
         WarehouseOrderLine line = builder

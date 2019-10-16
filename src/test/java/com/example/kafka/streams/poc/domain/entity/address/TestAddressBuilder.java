@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class TestAddressBuilder {
 
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         Address.Builder builder = Address.newBuilder();
         Address address = builder.setCountry("101")

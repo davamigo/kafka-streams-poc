@@ -16,7 +16,7 @@ import java.util.Date;
 public class TestPurchaseOrderLineBuilder {
 
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         PurchaseOrderLine.Builder builder = PurchaseOrderLine.newBuilder();
         PurchaseOrderLine line = builder

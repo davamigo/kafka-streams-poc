@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class TestProductBuilder {
 
     @Test
-    public void testBuiderSettersReturnExpectedResults() {
+    public void testBuilderSettersReturnExpectedResults() {
 
         Product.Builder builder = Product.newBuilder();
         Product product = builder

@@ -60,6 +60,9 @@ public class RecordCountRepositoryTest {
     @Mock
     private WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository;
 
+    @Mock
+    private WarehouseOrderRepository warehouseOrderRepository;
+
     @Test
     public void testCountRecords() {
 
@@ -391,6 +394,28 @@ public class RecordCountRepositoryTest {
         Assert.assertEquals(result, -1);
     }
 
+    @Test
+    public void testCountWarehouseOrderWhenSuccess() {
+
+        when(warehouseOrderRepository.count()).thenReturn(new Long(3));
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countWarehouseOrders();
+
+        Assert.assertEquals(result, 3);
+    }
+
+    @Test
+    public void testCountWarehouseOrdersWhenError() {
+
+        when(warehouseOrderRepository.count()).thenThrow(new IllegalArgumentException());
+
+        RecordCountRepository repo = createTestRepo();
+        long result = repo.countWarehouseOrders();
+
+        Assert.assertEquals(result, -1);
+    }
+
     private RecordCountRepository createTestRepo() {
         return new RecordCountRepository(
                 productRepository,
@@ -406,7 +431,8 @@ public class RecordCountRepositoryTest {
                 warehouseOrderLineUnmatchedRepository,
                 warehouseOrderLineRecoveredRepository,
                 warehouseOrderLineFailedRepository,
-                warehouseOrderLineMergedRepository
+                warehouseOrderLineMergedRepository,
+                warehouseOrderRepository
         );
 
     }
