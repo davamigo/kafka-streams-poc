@@ -7,6 +7,7 @@ import com.example.kafka.streams.poc.schemas.order.CommercialOrderLineSplit;
 import com.example.kafka.streams.poc.schemas.product.Product;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrder;
 import com.example.kafka.streams.poc.schemas.purchase.PurchaseOrderLine;
+import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrder;
 import com.example.kafka.streams.poc.schemas.warehouse.WarehouseOrderLine;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
@@ -189,17 +190,6 @@ public class TestKafkaConfig {
     }
 
     @Test
-    public void testWarehouseOrderLineConsumerFactory() {
-
-        // Run the test
-        KafkaConfig kafkaConfig = new KafkaConfig(environment);
-        ConsumerFactory<String, WarehouseOrderLine> factory = kafkaConfig.warehouseOrderLineConsumerFactory();
-
-        // Assertions
-        assertNotNull(factory);
-    }
-
-    @Test
     public void testPurchaseOrderConsumerFactory() {
 
         // Run the test
@@ -216,6 +206,39 @@ public class TestKafkaConfig {
         // Run the test
         KafkaConfig kafkaConfig = new KafkaConfig(environment);
         ConsumerFactory<String, PurchaseOrderLine> factory = kafkaConfig.purchaseOrderLineConsumerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testWarehouseOrderLineConsumerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        ConsumerFactory<String, WarehouseOrderLine> factory = kafkaConfig.warehouseOrderLineConsumerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testWarehouseOrderConsumerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        ConsumerFactory<String, WarehouseOrder> factory = kafkaConfig.warehouseOrderConsumerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testProductLegacyIdConsumerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        ConsumerFactory<String, Integer> factory = kafkaConfig.productLegacyIdConsumerFactory();
 
         // Assertions
         assertNotNull(factory);
@@ -348,6 +371,17 @@ public class TestKafkaConfig {
         // Run the test
         KafkaConfig kafkaConfig = new KafkaConfig(environment);
         KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, WarehouseOrderLine>> factory = kafkaConfig.warehouseOrderLineKafkaListenerContainerFactory();
+
+        // Assertions
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testWarehouseOrderKafkaListenerContainerFactory() {
+
+        // Run the test
+        KafkaConfig kafkaConfig = new KafkaConfig(environment);
+        KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, WarehouseOrder>> factory = kafkaConfig.warehouseOrderKafkaListenerContainerFactory();
 
         // Assertions
         assertNotNull(factory);
