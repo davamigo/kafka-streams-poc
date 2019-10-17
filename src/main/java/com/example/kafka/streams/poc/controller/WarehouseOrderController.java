@@ -47,11 +47,14 @@ public class WarehouseOrderController {
     /** The mongoDB repository where to retrieve the failed warehouse order lines */
     private final WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository;
 
-    /** The service to publish the recovered warehouse order line */
-    private final ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer;
-
     /** The mongoDB repository where to retrieve the merged warehouse order lines */
     private final WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository;
+
+    /** The mongoDB repository where to retrieve the warehouse orders */
+    private final WarehouseOrderRepository warehouseOrderRepository;
+
+    /** The service to publish the recovered warehouse order line */
+    private final ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer;
 
     /**
      * Autowired constructor
@@ -62,6 +65,7 @@ public class WarehouseOrderController {
      * @param warehouseOrderLineRecoveredRepository the mongoDB warehouse order line recovered repository
      * @param warehouseOrderLineFailedRepository    the mongoDB warehouse order line failed repository
      * @param warehouseOrderLineMergedRepository    the mongoDB warehouse order line merged repository
+     * @param warehouseOrderRepository              the mongoDB warehouse order repository
      * @param warehouseOrderLineProducer            the service to publish the recovered warehouse order line
      */
     @Autowired
@@ -72,7 +76,8 @@ public class WarehouseOrderController {
             WarehouseOrderLineRecoveredRepository warehouseOrderLineRecoveredRepository,
             WarehouseOrderLineFailedRepository warehouseOrderLineFailedRepository,
             WarehouseOrderLineMergedRepository warehouseOrderLineMergedRepository,
-            ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer
+            ManuallyRecoveredWarehouseOrderLineProducer warehouseOrderLineProducer,
+            WarehouseOrderRepository warehouseOrderRepository
     ) {
         this.warehouseOrderLineGeneratedRepository = warehouseOrderLineGeneratedRepository;
         this.warehouseOrderLineMatchedRepository = warehouseOrderLineMatchedRepository;
@@ -80,6 +85,7 @@ public class WarehouseOrderController {
         this.warehouseOrderLineRecoveredRepository = warehouseOrderLineRecoveredRepository;
         this.warehouseOrderLineFailedRepository = warehouseOrderLineFailedRepository;
         this.warehouseOrderLineMergedRepository = warehouseOrderLineMergedRepository;
+        this.warehouseOrderRepository = warehouseOrderRepository;
         this.warehouseOrderLineProducer = warehouseOrderLineProducer;
     }
 
@@ -436,6 +442,60 @@ public class WarehouseOrderController {
         final ModelAndView mav  = new ModelAndView("warehouse-order/show-full-line");
         mav.addObject("uuid", uuid);
         mav.addObject("warehouseOrderLine", warehouseOrderLine.orElse(null));
+        return mav;
+    }
+
+    /**
+     * GET /warehouse-order
+     *
+     * Lists the warehouse orders
+     *
+     * @param size  the page size (default = 15)
+     * @param page  the page number (default = 0)
+     * @return the model and view
+     */
+    @GetMapping({"", "/"})
+    public ModelAndView getWarehouseOrdersAction(
+            @RequestParam(value="size", required=false, defaultValue="15") int size,
+            @RequestParam(value="page", required=false, defaultValue="0") int page
+    )  {
+        LOGGER.info("WarehouseOrderController.getWarehouseOrdersAction(size=" + size + ", page=" + page + ")");
+
+        final List<WarehouseOrderEntity> orders = warehouseOrderRepository
+                .findAll(PageRequest.of(page, size, new Sort(Sort.Direction.DESC, "date")))
+                .getContent();
+
+        final long count = warehouseOrderRepository.count();
+        final long prev = (page > 0) ? page - 1 : 0;
+        final long next = (size * (page + 1) < count) ? page + 1 : page;
+
+        final ModelAndView mav  = new ModelAndView("warehouse-order/list-orders");
+        mav.addObject("orders", orders);
+        mav.addObject("count", count);
+        mav.addObject("size", size);
+        mav.addObject("page", page);
+        mav.addObject("prev", prev);
+        mav.addObject("next", next);
+        return mav;
+    }
+
+    /**
+     * GET /warehouse-order/{id}
+     *
+     * Shows a full warehouse order
+     *
+     * @param uuid the uuid of the warehouse order
+     * @return the model and view
+     */
+    @GetMapping("/{id}")
+    public ModelAndView getWarehouseOrderAction(@PathVariable("id") String uuid) {
+        LOGGER.info("WarehouseOrderController.getWarehouseOrderAction(id=" + uuid + ")");
+
+        final Optional<WarehouseOrderEntity> order = warehouseOrderRepository.findById(uuid);
+
+        final ModelAndView mav  = new ModelAndView("warehouse-order/show-order");
+        mav.addObject("uuid", uuid);
+        mav.addObject("order", order.orElse(null));
         return mav;
     }
 }

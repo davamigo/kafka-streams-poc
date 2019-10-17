@@ -32,6 +32,7 @@ window.onload = function() {
     var $recoveredWarehouseOrderLinesTopic = $('#svg-recovered-warehouse-order-lines-topic-box', $svgDocument);
     var $failedWarehouseOrderLinesTopic = $('#svg-failed-warehouse-order-lines-topic-box', $svgDocument);
     var $fullWarehouseOrderLinesTopic = $('#svg-full-warehouse-order-lines-topic-box', $svgDocument);
+    var $warehouseOrdersTopic = $('#svg-warehouse-orders-topic-box', $svgDocument);
     var $productsCacheTopic = $('#svg-products-cache-topic-box', $svgDocument);
 
     var $commercialOrderConverterStreamBox = $('#svg-stream-commercial-orders-converter-box', $svgDocument);
@@ -206,6 +207,12 @@ window.onload = function() {
     $fullWarehouseOrderLinesTopic.click(function (ev) {
         ev.preventDefault();
         var url = $contentModal.attr('data-get-warehouse-order-lines-full-url');
+        loadModalContent(url);
+    });
+
+    $warehouseOrdersTopic.click(function (ev) {
+        ev.preventDefault();
+        var url = $contentModal.attr('data-get-warehouse-orders-url');
         loadModalContent(url);
     });
 

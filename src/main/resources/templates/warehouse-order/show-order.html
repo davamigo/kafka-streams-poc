@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Warehouse Order - Kafka Streams PoC</title>
+</head>
+<body>
+
+<div>
+    <h1>Kafka Streams PoC</h1>
+    <h2 id="js-modal-content-title">Warehouse Order</h2>
+</div>
+
+<div th:if="${null == order}">
+    <p id="js-modal-content-error">
+        The warehouse order with id
+        <strong th:text="${uuid}"></strong>
+        was not found!
+    </p>
+</div>
+
+<div th:if="${null != order}">
+    <div id="js-modal-content-body">
+        <dl class="row">
+            <dt class="col-sm-3">Uuid:</dt>
+            <dd class="col-sm-9 text-monospace">
+                <strong>
+                    <a th:href="@{/warehouse-order/{id}(id=${order.getUuid()})}" th:text="${order.getUuid()}"></a>
+                </strong>
+            </dd>
+
+            <dt class="col-sm-3">Country:</dt>
+            <dd class="col-sm-9" th:text="${order.getCountry()}"></dd>
+
+            <dt class="col-sm-3">Date:</dt>
+            <dd class="col-sm-9 text-monospace" th:text="${#calendars.format(order.getDate(), 'yyyy-MM-dd')}"></dd>
+
+            <dt class="col-sm-12">Lines:</dt>
+            <dd class="col-sm-12" th:if="${order.getLines().isEmpty()}">
+                Warehouse Order without lines!
+            </dd>
+            <dd class="col-sm-12" th:if="${!order.getLines().isEmpty()}">
+                <table class="table table-striped table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Uuid</th>
+                            <th scope="col">Product Uuid</th>
+                            <th scope="col">Legacy Id.</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Bar Code</th>
+                            <th scope="col" class="text-right">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="line : ${order.getLines()}">
+                            <td class="text-monospace">
+                                <strong th:text="${line.getUuid()}"></strong>
+                            </td>
+                            <td class="text-monospace" th:text="${line.getProductUuid()}"></td>
+                            <td class="text-monospace text-right" th:text="${line.getProductLegacyId()}"></td>
+                            <td th:text="${line.getProductName()}"></td>
+                            <td class="text-monospace text-right" th:text="${line.getProductBarCode()}"></td>
+                            <td class="text-monospace text-right" th:text="${#numbers.formatDecimal(line.getQuantity(), 1, 'DEFAULT', 0, 'DEFAULT')}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<p>
+    Navigation
+    &ndash;
+    <a th:href="@{/warehouse-order}">Show warehouse orders</a>
+    &ndash;
+    <a th:href="@{/}">Homepage</a>
+</p>
+</body>
+</html>
