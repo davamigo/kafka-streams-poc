@@ -251,6 +251,8 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 
 - **`uuid`**: `string`
 - **`name`**: `string`
+- **`type`**: `string`
+- **`barCode`**: `string`, nullable, default `null`
 - **`price`**: `float`
 
 ### CommercialOrder
@@ -258,7 +260,7 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 #### CommercialOrder
 
 - **`uuid`**: `string`
-- **`datetime`**: `long`
+- **`datetime`**: `long`, logicalType `timestamp-millis`
 - **`memberUuid`**: `string`
 - **`shippingAddress`**: `CommercialOrderAddress`
 - **`billingAddress`**: `CommercialOrderAddress`, nullable, default `null`
@@ -285,7 +287,7 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 #### CommercialOrderConverted
 
 - **`uuid`**: `string`
-- **`datetime`**: `long`
+- **`datetime`**: `long`, logicalType `timestamp-millis`
 - **`memberUuid`**: `string`
 - **`memberFirstName`**: `string`
 - **`memberLastName`**: `string`
@@ -299,14 +301,79 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 
 - **`uuid`**: `string`
 - **`commercialOrderUuid`**: `string`
-- **`commercialOrderDatetime`**: `long`
+- **`commercialOrderDatetime`**: `long`, logicalType `timestamp-millis`
 - **`shippingCountry`**: `string`
 - **`memberUuid`**: `string`
 - **`productUuid`**: `string`
 - **`productName`**: `string`
+- **`productType`**: `string`
+- **`productBarCode`**: `string`, nullable, default `null`
 - **`productPrice`**: `float`
 - **`orderLinePrice`**: `float`
-- **`quantity`**: `int`
+- **`quantity`**: `int`, default `1`
+
+### PurchaseOrder
+
+#### PurchaseOrder
+
+- **`uuid`**: `string`
+- **`aggregationKey`**: `string`
+- **`country`**: `string`
+- **`date`**: `long`, logicalType `timestamp-millis`
+- **`lines`**: `array[PurchaseOrderLineCondensed]`
+- **`totalAmount`**: `float`
+- **`totalQuantity`**: `int`
+
+#### PurchaseOrderLineCondensed
+
+- **`uuid`**: `string`
+- **`aggregationKey`**: `string`
+- **`productUuid`**: `string`
+- **`price`**: `float`
+- **`quantity`**: `int`, default `1`
+
+#### PurchaseOrderLine
+
+- **`uuid`**: `string`
+- **`aggregationKey`**: `string`
+- **`country`**: `string`
+- **`date`**: `long`, logicalType `timestamp-millis`
+- **`productUuid`**: `string`
+- **`productName`**: `string`
+- **`productType`**: `string`
+- **`productBarCode`**: `string`, nullable, default `null`
+- **`productPrice`**: `float`
+- **`quantity`**: `int`, default `1`
+
+### WarehouseOrder
+
+#### WarehouseOrder
+
+- **`uuid`**: `string`
+- **`aggregationKey`**: `string`
+- **`country`**: `string`
+- **`date`**: `long`, logicalType `timestamp-millis`
+- **`lines`**: `array[WarehouseOrderLineCondensed]`
+
+#### WarehouseOrderLineCondensed
+
+- **`uuid`**: `string`
+- **`productUuid`**: `string`
+- **`productLegacyId`**: `int`
+- **`productName`**: `string`
+- **`productBarCode`**: `string`, nullable, default `null`
+- **`quantity`**: `int`, default `1`
+
+#### WarehouseOrderLine
+
+- **`uuid`**: `string`
+- **`country`**: `string`
+- **`date`**: `long`, logicalType `timestamp-millis`
+- **`productUuid`**: `string`
+- **`productLegacyId`**: `int`. nullable, default `null`
+- **`productName`**: `string`
+- **`productBarCode`**: `string`, nullable, default `null`
+- **`quantity`**: `int`, default `1`
 
 ## Links
 
