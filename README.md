@@ -399,10 +399,10 @@ $ docker/docker-compose.sh up -d
 $ docker/kafka-topics-create-all.sh
 
 > Build the project
-$ gradle build
+$ ./gradlew build
 
 > Start the project
-$ gradle bootRun
+$ ./gradlew bootRun
 ```
 
 Then open http://localhost:8080/demo/long in the browser.

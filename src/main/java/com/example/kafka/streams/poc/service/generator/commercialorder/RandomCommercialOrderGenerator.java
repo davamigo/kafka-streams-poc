@@ -29,8 +29,14 @@ public class RandomCommercialOrderGenerator implements CommercialOrderGeneratorI
     /** Service to generate products with random data */
     private ProductGeneratorInterface productGenerator;
 
+    /** Max order lines per order */
+    private static int MAX_LINES = 5;
+
     /** The price margin (1.3f = 3%) */
     private static float PRICE_MARGIN = 1.3f;
+
+    /** Max quantity per order line */
+    private static int MAX_QUANTITY = 5;
 
     /**
      * Autowired constructor
@@ -68,7 +74,6 @@ public class RandomCommercialOrderGenerator implements CommercialOrderGeneratorI
                 .setBillingAddress(billingAddress)
                 .setLines(lines);
 
-
         return builder.build();
     }
 
@@ -86,7 +91,7 @@ public class RandomCommercialOrderGenerator implements CommercialOrderGeneratorI
     private List<CommercialOrderLine> getOrderLines(String commercialOrderUuid) {
 
         // Add 1 to 10 order lines
-        int num = 1 + ((new Random()).nextInt(10));
+        int num = 1 + ((new Random()).nextInt(MAX_LINES));
         List<CommercialOrderLine> lines = new ArrayList<>();
         while (num-- > 0) {
             lines.add(createRandomOrderLine(commercialOrderUuid));
@@ -108,7 +113,7 @@ public class RandomCommercialOrderGenerator implements CommercialOrderGeneratorI
                 .setCommercialOrderUuid(commercialOrderUuid)
                 .setProduct(product)
                 .setPrice(((float) Math.round(100 * product.getPrice() * PRICE_MARGIN)) / 100)
-                .setQuantity(1 + ((new Random()).nextInt(5)));
+                .setQuantity(1 + ((new Random()).nextInt(MAX_QUANTITY)));
 
         return builder.build();
     }
