@@ -375,6 +375,40 @@ This topic was used before in the **Generate warehouse order lines** Kafka Strea
 - **`productBarCode`**: `string`, nullable, default `null`
 - **`quantity`**: `int`, default `1`
 
+---
+
+## How to run the project
+
+Yo can run the project from the command line in a Linux or MacOS computer.
+
+The pre-requisites are:
+- Have **[docker](https://docs.docker.com/)** installed.
+- Have **[docker-compose](https://docs.docker.com/compose/)** installed.
+- Have **[Java](https://docs.oracle.com/en/java/)** >= 8 installed.
+
+### Run from the command line
+
+```shell script
+> Go to project root folder
+$ cd kafka-streams-poc
+
+> Start the Kafka and MongoDB containers
+$ docker/docker-compose.sh up -d
+
+> Create all the topics with the right configuration
+$ docker/kafka-topics-create-all.sh
+
+> Build the project
+$ gradle build
+
+> Start the project
+$ gradle bootRun
+```
+
+Then open http://localhost:8080/demo/long in the browser.
+
+---
+
 ## Links
 
 - [Kafka Streams DSL Developer Guide](https://kafka.apache.org/20/documentation/streams/developer-guide/dsl-api.html)
