@@ -14,6 +14,7 @@ window.onload = function() {
     var $btnZoomOut = $('#js-btn-zoom-out');
     var $btnStartAll = $('#js-btn-start-all-processes');
     var $btnStopAll = $('#js-btn-stop-all-processes');
+    var $btnRefresh = $('#js-btn-refresh');
 
     var $producerBox = $('#svg-producer-box', $svgDocument);
     var $producerModal = $('#js-modal-producer');
@@ -104,6 +105,12 @@ window.onload = function() {
                 var msg = JSON.parse(xhr.responseText || '{}').message || defaultMsg;
                 showError(msg);
             });
+    });
+
+    $btnRefresh.click(function (ev) {
+        ev.preventDefault();
+        checkProcessesStatuses();
+        startCountTopicsTimers();
     });
 
     $producerBox.click(function (ev) {
@@ -317,13 +324,16 @@ window.onload = function() {
 
     var startCountTopicsTimers = function() {
         countTopics();
+        setTimeout(countTopics, 250);
         setTimeout(countTopics, 500);
+        setTimeout(countTopics, 750);
         setTimeout(countTopics, 1000);
-        setTimeout(countTopics, 2500);
+        setTimeout(countTopics, 2000);
+        setTimeout(countTopics, 3000);
+        setTimeout(countTopics, 4000);
         setTimeout(countTopics, 5000);
+        setTimeout(countTopics, 7500);
         setTimeout(countTopics, 10000);
-        setTimeout(countTopics, 25000);
-        setTimeout(countTopics, 50000);
     };
 
     var countTopics = function() {
