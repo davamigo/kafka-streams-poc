@@ -20,7 +20,38 @@
         <img th:src="@{/images/stream-generate-warehouse-orders.png}" alt="Generate Warehouse Orders Process" class="img-fluid">
 
         <pre class="alert alert-secondary" role="alert"><code>
-// TBD
+KStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesStream = builder.stream("t.warehouse-order-lines.generated", /* ... */);
+
+KGroupedStream&lt;String, WarehouseOrderLine&gt; warehouseOrderLinesGroupedStream = warehouseOrderLinesStream
+        .<strong>groupBy</strong>(
+                (String poLineAggregationKey, WarehouseOrderLine poLine) -> {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                        Date datetime = new Date(poLine.getDate());
+                        return poLine.getCountry() + "-" + df.format(datetime);
+                },
+                Serialized.with(/* ... */)
+            );
+
+KStream&lt;String, WarehouseOrder&gt; warehouseOrderStream = warehouseOrderLinesGroupedStream
+        .<strong>aggregate</strong>(
+                WarehouseOrder::new,
+                (String aggregationKey, WarehouseOrderLine newLine, WarehouseOrder aggregatedWO) -> {
+                        /* ... */
+                        WarehouseOrder result = WarehouseOrder
+                                .newBuilder(aggregatedWO)
+                                .setUuid(uuid)
+                                .setAggregationKey(aggregationKey)
+                                .setCountry(newLine.getCountry())
+                                .setDate(newLine.getDate())
+                                .setLines(newLines)
+                                .build();
+                        return result;
+                },
+                Materialized.with(/* ... */)
+        )
+        .toStream();
+
+warehouseOrderStream.to("t.warehouse-orders.generated",/* ... */);
         </code></pre>
     </div>
 </div>
